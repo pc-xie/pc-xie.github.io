@@ -1,0 +1,661 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
+  <link rel="icon" href="/img/fluid.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="pc-xie">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="启动过程创建bossGroup 和 workerGroup1234567891011121314151617EventLoopGroup bossGroup &#x3D; new NioEventLoopGroup(1);EventLoopGroup workerGroup &#x3D; new NioEventLoopGroup();ServerBootstrap bootstrap &#x3D; new ServerBoo">
+<meta property="og:type" content="article">
+<meta property="og:title" content="netty">
+<meta property="og:url" content="http://localhost:4000/2022/01/24/netty/eventLoop/index.html">
+<meta property="og:site_name" content="pc-xie">
+<meta property="og:description" content="启动过程创建bossGroup 和 workerGroup1234567891011121314151617EventLoopGroup bossGroup &#x3D; new NioEventLoopGroup(1);EventLoopGroup workerGroup &#x3D; new NioEventLoopGroup();ServerBootstrap bootstrap &#x3D; new ServerBoo">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2022-01-24T02:39:08.709Z">
+<meta property="article:modified_time" content="2022-11-20T14:13:39.574Z">
+<meta property="article:author" content="pc-xie">
+<meta name="twitter:card" content="summary_large_image">
+  
+  
+  
+  <title>netty - pc-xie</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"localhost","root":"/","version":"1.9.3","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Fluid</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="netty"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2022-01-24 10:39" pubdate>
+          2022年1月24日 上午
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          8.3k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          70 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">netty</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h2 id="启动过程"><a href="#启动过程" class="headerlink" title="启动过程"></a>启动过程</h2><h3 id="创建bossGroup-和-workerGroup"><a href="#创建bossGroup-和-workerGroup" class="headerlink" title="创建bossGroup 和 workerGroup"></a>创建bossGroup 和 workerGroup</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-type">EventLoopGroup</span> <span class="hljs-variable">bossGroup</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">NioEventLoopGroup</span>(<span class="hljs-number">1</span>);<br><span class="hljs-type">EventLoopGroup</span> <span class="hljs-variable">workerGroup</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">NioEventLoopGroup</span>();<br><span class="hljs-type">ServerBootstrap</span> <span class="hljs-variable">bootstrap</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">ServerBootstrap</span>();<br>bootstrap.group(bossGroup, workerGroup)<br>        .channel(NioServerSocketChannel.class)<br>        .handler(<span class="hljs-keyword">new</span> <span class="hljs-title class_">LoggingHandler</span>(LogLevel.INFO))<br>        .childHandler(<span class="hljs-keyword">new</span> <span class="hljs-title class_">ChannelInitializer</span>() &#123;<br>            <span class="hljs-meta">@Override</span><br>            <span class="hljs-keyword">protected</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">initChannel</span><span class="hljs-params">(Channel ch)</span> <span class="hljs-keyword">throws</span> Exception &#123;<br>                <span class="hljs-type">ChannelPipeline</span> <span class="hljs-variable">pipeline</span> <span class="hljs-operator">=</span> ch.pipeline();<br>                pipeline.addLast(<span class="hljs-keyword">new</span> <span class="hljs-title class_">IdleStateHandler</span>(<span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">3</span>, TimeUnit.SECONDS));<br>                pipeline.addLast(<span class="hljs-keyword">new</span> <span class="hljs-title class_">HttpResponseEncoder</span>());<br>                pipeline.addLast(<span class="hljs-keyword">new</span> <span class="hljs-title class_">HttpRequestDecoder</span>());<br>                pipeline.addLast(<span class="hljs-keyword">new</span> <span class="hljs-title class_">HttpObjectAggregator</span>(<span class="hljs-number">1024</span> * <span class="hljs-number">1024</span> * <span class="hljs-number">64</span>));<br>            &#125;<br>        &#125;);<br><span class="hljs-type">Channel</span> <span class="hljs-variable">ch</span> <span class="hljs-operator">=</span> bootstrap.bind(PORT).sync().channel();<br></code></pre></td></tr></table></figure>
+<h3 id="初始化NioEventLoopGroup"><a href="#初始化NioEventLoopGroup" class="headerlink" title="初始化NioEventLoopGroup"></a>初始化NioEventLoopGroup</h3><ul>
+<li>创建 eventLoopGroup 默认 的core 线程数: 不指定的情况下为核数的2倍</li>
+<li>初始化类的关系NioEventLoopGroup -&gt; MultithreadEventLoopGroup -&gt;MultithreadEventExecutorGroup -&gt; AbstractEventExecutorGroup</li>
+</ul>
+<h4 id="MultithreadEventExecutorGroup-初始化的流程"><a href="#MultithreadEventExecutorGroup-初始化的流程" class="headerlink" title="MultithreadEventExecutorGroup 初始化的流程"></a>MultithreadEventExecutorGroup 初始化的流程</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><code class="hljs java">children = <span class="hljs-keyword">new</span> <span class="hljs-title class_">EventExecutor</span>[nThreads];<br><span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> <span class="hljs-variable">i</span> <span class="hljs-operator">=</span> <span class="hljs-number">0</span>; i &lt; nThreads; i ++) &#123;<br>    <span class="hljs-type">boolean</span> <span class="hljs-variable">success</span> <span class="hljs-operator">=</span> <span class="hljs-literal">false</span>;<br>    <span class="hljs-keyword">try</span> &#123;<br>        children[i] = newChild(executor, args);<br>        success = <span class="hljs-literal">true</span>;<br>    &#125; <span class="hljs-keyword">catch</span> (Exception e) &#123;<br>        <span class="hljs-comment">// <span class="hljs-doctag">TODO:</span> Think about if this is a good exception type</span><br>        <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">IllegalStateException</span>(<span class="hljs-string">&quot;failed to create a child event loop&quot;</span>, e);<br>    &#125; <span class="hljs-keyword">finally</span> &#123;<br>        <span class="hljs-keyword">if</span> (!success) &#123;<br>            <span class="hljs-comment">//dosomething</span><br>        &#125;<br>    &#125;<br>&#125;<br>chooser = chooserFactory.newChooser(children);<br><span class="hljs-keyword">final</span> FutureListener&lt;Object&gt; terminationListener = <span class="hljs-keyword">new</span> <span class="hljs-title class_">FutureListener</span>&lt;Object&gt;() &#123;<br>    <span class="hljs-meta">@Override</span><br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">operationComplete</span><span class="hljs-params">(Future&lt;Object&gt; future)</span> <span class="hljs-keyword">throws</span> Exception &#123;<br>        <span class="hljs-keyword">if</span> (terminatedChildren.incrementAndGet() == children.length) &#123;<br>            terminationFuture.setSuccess(<span class="hljs-literal">null</span>);<br>        &#125;<br>    &#125;<br>&#125;;<br><span class="hljs-keyword">for</span> (EventExecutor e: children) &#123;<br>    e.terminationFuture().addListener(terminationListener);<br>&#125;<br>Set&lt;EventExecutor&gt; childrenSet = <span class="hljs-keyword">new</span> <span class="hljs-title class_">LinkedHashSet</span>&lt;EventExecutor&gt;(children.length);<br>Collections.addAll(childrenSet, children);<br>readonlyChildren = Collections.unmodifiableSet(childrenSet);    <br></code></pre></td></tr></table></figure>
+<p>其中children 初始化为EventExecutor[];newChild 初始化在 NioEventLoopGroup 中进行了初始化NioEventLoop -&gt; SingleThreadEventLoop -&gt; SingleThreadEventExecutor -&gt; AbstractScheduledEventExecutor -&gt; AbstractEventExecutor 其中在创建时进行传递的 NioEventLoopGroup 用的是this,因此传递过去的 loopGroup 是NioEventLoopGroup 自身EventExecutorChooser 在进行选择的时候会去根据判断loopGroup的size，如果是2的指数的话用指数选择器, 不是的话用普通选择器</p>
+<ul>
+<li>问题:为什么要这样去区分???<br>指数选择器和普通选择器可以更加高效去进行获取到loopGroup，原因是在进行 &amp; 操作比 % 更快</li>
+</ul>
+<h3 id="serverBootStrap相关初始化"><a href="#serverBootStrap相关初始化" class="headerlink" title="serverBootStrap相关初始化"></a>serverBootStrap相关初始化</h3><pre><code class="hljs">ServerBootstrap -&gt; AbstractBootstrap
+</code></pre>
+<h4 id="绑定boss和worker信息"><a href="#绑定boss和worker信息" class="headerlink" title="绑定boss和worker信息"></a>绑定boss和worker信息</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs java">bootstrap.group(bossGroup, workerGroup)<br></code></pre></td></tr></table></figure>
+<p>AbstractBootStrap 的group 绑定boss 信息, serverBootStrap 绑定worker信息</p>
+<h4 id="初始化channel-Factory"><a href="#初始化channel-Factory" class="headerlink" title="初始化channel Factory"></a>初始化channel Factory</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs java">channel(NioServerSocketChannel.class)<br></code></pre></td></tr></table></figure>
+<p>调用父类 AbstractBootstrap 的反射去构造channel</p>
+<h4 id="绑定handler"><a href="#绑定handler" class="headerlink" title="绑定handler"></a>绑定handler</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs java">handler(<span class="hljs-keyword">new</span> <span class="hljs-title class_">LoggingHandler</span>(LogLevel.INFO))<br>childHandler();<br></code></pre></td></tr></table></figure>
+<p>handler 方法是属于AbstractBootstrap的, childHandler 方法是属于 ServerBootstrap<br>childHandler 用于处理客户端建立连接后, handler 用于处理初始化的过程</p>
+<h4 id="绑定端口号"><a href="#绑定端口号" class="headerlink" title="绑定端口号"></a>绑定端口号</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">private</span> ChannelFuture <span class="hljs-title function_">doBind</span><span class="hljs-params">(<span class="hljs-keyword">final</span> SocketAddress localAddress)</span> &#123;<br>    <span class="hljs-comment">//初始化和注册</span><br>    <span class="hljs-keyword">final</span> <span class="hljs-type">ChannelFuture</span> <span class="hljs-variable">regFuture</span> <span class="hljs-operator">=</span> initAndRegister();<br>    <span class="hljs-comment">//拿到刚刚注册上去的channel</span><br>    <span class="hljs-keyword">final</span> <span class="hljs-type">Channel</span> <span class="hljs-variable">channel</span> <span class="hljs-operator">=</span> regFuture.channel();<br>    <span class="hljs-keyword">if</span> (regFuture.isDone()) &#123;<br>        <span class="hljs-type">ChannelPromise</span> <span class="hljs-variable">promise</span> <span class="hljs-operator">=</span> channel.newPromise();<br>        <span class="hljs-comment">//进行绑定</span><br>        doBind0(regFuture, channel, localAddress, promise);<br>        <span class="hljs-keyword">return</span> promise;<br>    &#125; <span class="hljs-keyword">else</span> &#123;<br>        <span class="hljs-keyword">final</span> <span class="hljs-type">PendingRegistrationPromise</span> <span class="hljs-variable">promise</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">PendingRegistrationPromise</span>(channel);<br>        regFuture.addListener(<span class="hljs-keyword">new</span> <span class="hljs-title class_">ChannelFutureListener</span>() &#123;<br>            <span class="hljs-meta">@Override</span><br>            <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">operationComplete</span><span class="hljs-params">(ChannelFuture future)</span> <span class="hljs-keyword">throws</span> Exception &#123;<br>                <span class="hljs-type">Throwable</span> <span class="hljs-variable">cause</span> <span class="hljs-operator">=</span> future.cause();<br>                <span class="hljs-keyword">if</span> (cause != <span class="hljs-literal">null</span>) &#123;<br>                    promise.setFailure(cause);<br>                &#125; <span class="hljs-keyword">else</span> &#123;<br>                    promise.registered();<br>                    doBind0(regFuture, channel, localAddress, promise);<br>                &#125;<br>            &#125;<br>        &#125;);<br>        <span class="hljs-keyword">return</span> promise;<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+<h6 id="初始化和注册"><a href="#初始化和注册" class="headerlink" title="初始化和注册"></a>初始化和注册</h6><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">final</span> ChannelFuture <span class="hljs-title function_">initAndRegister</span><span class="hljs-params">()</span> &#123;<br>    <span class="hljs-type">Channel</span> <span class="hljs-variable">channel</span> <span class="hljs-operator">=</span> <span class="hljs-literal">null</span>;<br>    <span class="hljs-keyword">try</span> &#123;<br>        <span class="hljs-comment">//通过反射去初始化创建channel,NioServerSocketChannel 属性</span><br>        channel = channelFactory.newChannel();<br>        <span class="hljs-comment">//进行初始化channel</span><br>        init(channel);<br>    &#125; <span class="hljs-keyword">catch</span> (Throwable t) &#123;<br>        <span class="hljs-comment">//dosomething</span><br>    &#125;<br>    <span class="hljs-comment">//group 注册</span><br>    <span class="hljs-type">ChannelFuture</span> <span class="hljs-variable">regFuture</span> <span class="hljs-operator">=</span> config().group().register(channel);<br>    <span class="hljs-keyword">if</span> (regFuture.cause() != <span class="hljs-literal">null</span>) &#123;<br>        <span class="hljs-keyword">if</span> (channel.isRegistered()) &#123;<br>            channel.close();<br>        &#125; <span class="hljs-keyword">else</span> &#123;<br>            channel.unsafe().closeForcibly();<br>        &#125;<br>    &#125;<br>    <span class="hljs-keyword">return</span> regFuture;<br>&#125;<br></code></pre></td></tr></table></figure>
+<p>channelFactory 是在 group 初始化channel Factory的时候传进来的，因此调用时创建的时 NioServerSocketChannel<br>NioServerSocketChannel -&gt; AbstractNioMessageChannel -&gt; AbstractNioChannel -&gt; AbstractChannel<br>NioServerSocketChannel 在初始化时指定 SelectionKey.OP_ACCEPT<br>在AbstractChannel 中设置了 pipieline, pipeline 中创建了 DefaultChannelPipeline, 初始化的设置了双链表  </p>
+<h4 id="初始化channel"><a href="#初始化channel" class="headerlink" title="初始化channel"></a>初始化channel</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">void</span> <span class="hljs-title function_">init</span><span class="hljs-params">(Channel channel)</span> &#123;<br>    setChannelOptions(channel, newOptionsArray(), logger);<br>    setAttributes(channel, attrs0().entrySet().toArray(EMPTY_ATTRIBUTE_ARRAY));<br>    <span class="hljs-comment">//拿到 NioServerSocketChannel 属性pipeline(DefaultChannelPipeline)</span><br>    <span class="hljs-type">ChannelPipeline</span> <span class="hljs-variable">p</span> <span class="hljs-operator">=</span> channel.pipeline();<br>    <span class="hljs-comment">//拿到 worker 的 group 信息</span><br>    <span class="hljs-keyword">final</span> <span class="hljs-type">EventLoopGroup</span> <span class="hljs-variable">currentChildGroup</span> <span class="hljs-operator">=</span> childGroup;<br>    <span class="hljs-comment">//拿到 worker 的 handler 信息</span><br>    <span class="hljs-keyword">final</span> <span class="hljs-type">ChannelHandler</span> <span class="hljs-variable">currentChildHandler</span> <span class="hljs-operator">=</span> childHandler;<br>    <span class="hljs-keyword">final</span> Entry&lt;ChannelOption&lt;?&gt;, Object&gt;[] currentChildOptions;<br>    <span class="hljs-keyword">synchronized</span> (childOptions) &#123;<br>        currentChildOptions = childOptions.entrySet().toArray(EMPTY_OPTION_ARRAY);<br>    &#125;<br>    <span class="hljs-keyword">final</span> Entry&lt;AttributeKey&lt;?&gt;, Object&gt;[] currentChildAttrs = childAttrs.entrySet().toArray(EMPTY_ATTRIBUTE_ARRAY);<br>    <span class="hljs-comment">// 增加pipeline</span><br>    p.addLast(<span class="hljs-keyword">new</span> <span class="hljs-title class_">ChannelInitializer</span>&lt;Channel&gt;() &#123;<br>        <span class="hljs-meta">@Override</span><br>        <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">initChannel</span><span class="hljs-params">(<span class="hljs-keyword">final</span> Channel ch)</span> &#123;<br>            <span class="hljs-keyword">final</span> <span class="hljs-type">ChannelPipeline</span> <span class="hljs-variable">pipeline</span> <span class="hljs-operator">=</span> ch.pipeline();<br>            <span class="hljs-comment">//将初始化的handler 进行加入进来</span><br>            <span class="hljs-type">ChannelHandler</span> <span class="hljs-variable">handler</span> <span class="hljs-operator">=</span> config.handler();<br>            <span class="hljs-keyword">if</span> (handler != <span class="hljs-literal">null</span>) &#123;<br>                pipeline.addLast(handler);<br>            &#125;<br><br>            ch.eventLoop().execute(<span class="hljs-keyword">new</span> <span class="hljs-title class_">Runnable</span>() &#123;<br>                <span class="hljs-meta">@Override</span><br>                <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">run</span><span class="hljs-params">()</span> &#123;<br>                    pipeline.addLast(<span class="hljs-keyword">new</span> <span class="hljs-title class_">ServerBootstrapAcceptor</span>(ch, currentChildGroup, currentChildHandler, currentChildOptions, currentChildAttrs));<br>                &#125;<br>            &#125;);<br>        &#125;<br>    &#125;);<br>&#125;<br></code></pre></td></tr></table></figure>
+<p>在进行 addLast 的时候将ChannelInitializer 封装成一个 task 用于后面的回掉</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">final</span> ChannelPipeline <span class="hljs-title function_">addLast</span><span class="hljs-params">(EventExecutorGroup group, String name, ChannelHandler handler)</span> &#123;<br>    <span class="hljs-keyword">final</span> AbstractChannelHandlerContext newCtx;<br>    <span class="hljs-keyword">synchronized</span> (<span class="hljs-built_in">this</span>) &#123;<br>        checkMultiplicity(handler);<br>        newCtx = newContext(group, filterName(name, handler), handler);<br>        addLast0(newCtx);<br>        <span class="hljs-keyword">if</span> (!registered) &#123;<br>            newCtx.setAddPending();<br>            callHandlerCallbackLater(newCtx, <span class="hljs-literal">true</span>);<br>            <span class="hljs-keyword">return</span> <span class="hljs-built_in">this</span>;<br>        &#125;<br>        <span class="hljs-comment">//dosomething</span><br>    &#125;<br>    <span class="hljs-comment">//dosomething</span><br>&#125;<br></code></pre></td></tr></table></figure>
+<h4 id="将channel-注册绑定"><a href="#将channel-注册绑定" class="headerlink" title="将channel 注册绑定"></a>将channel 注册绑定</h4><p>ChannelFuture regFuture &#x3D; config().group().register(channel);<br>其中EventGroup 是 刚刚在进行 group 绑定的是 bossGroup, bossGroup 中register 注册的是 MultithreadEventLoopGroup, MultithreadEventLoopGroup 在获取 EventLoop 的时候<br>调用的是父类的MultithreadEventExecutorGroup 的chooser选择一个线程池去创建，这里面选择的线程池是(初始化NioEventLoopGroup) 中提及的, NioEventLoop 调用<br>SingleThreadEventLoop中的register(Channel), 最终调用AbstractChannel 中 AbstractUnsafe 内部类 的 register 方法终于到了实际注册的地方</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">final</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">register</span><span class="hljs-params">(EventLoop eventLoop, <span class="hljs-keyword">final</span> ChannelPromise promise)</span> &#123;<br>    <span class="hljs-comment">//dosomething</span><br>    AbstractChannel.<span class="hljs-built_in">this</span>.eventLoop = eventLoop;<br>    <span class="hljs-keyword">if</span> (eventLoop.inEventLoop()) &#123;<br>        register0(promise);<br>    &#125; <span class="hljs-keyword">else</span> &#123;<br>        <span class="hljs-keyword">try</span> &#123;<br>            eventLoop.execute(<span class="hljs-keyword">new</span> <span class="hljs-title class_">Runnable</span>() &#123;<br>                <span class="hljs-meta">@Override</span><br>                <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">run</span><span class="hljs-params">()</span> &#123;<br>                    register0(promise);<br>                &#125;<br>            &#125;);<br>        &#125; <span class="hljs-keyword">catch</span> (Throwable t) &#123;<br>            <span class="hljs-comment">//dosomething</span><br>        &#125;<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+<h4 id="register0"><a href="#register0" class="headerlink" title="register0"></a>register0</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">private</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">register0</span><span class="hljs-params">(ChannelPromise promise)</span> &#123;<br>    <span class="hljs-keyword">try</span> &#123;<br>        <span class="hljs-keyword">if</span> (!promise.setUncancellable() || !ensureOpen(promise)) &#123;<br>            <span class="hljs-keyword">return</span>;<br>        &#125;<br>        <span class="hljs-type">boolean</span> <span class="hljs-variable">firstRegistration</span> <span class="hljs-operator">=</span> neverRegistered;<br>        doRegister();<br>        neverRegistered = <span class="hljs-literal">false</span>;<br>        registered = <span class="hljs-literal">true</span>;<br><br>        pipeline.invokeHandlerAddedIfNeeded();<br>        safeSetSuccess(promise);<br><br>        pipeline.fireChannelRegistered();<br>        <span class="hljs-keyword">if</span> (isActive()) &#123;<br>            <span class="hljs-keyword">if</span> (firstRegistration) &#123;<br>                pipeline.fireChannelActive();<br>            &#125; <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (config().isAutoRead()) &#123;<br>                beginRead();<br>            &#125;<br>        &#125;<br>    &#125; <span class="hljs-keyword">catch</span> (Throwable t) &#123;<br>        <span class="hljs-comment">//dosomething</span><br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+<h4 id="注册过程"><a href="#注册过程" class="headerlink" title="注册过程"></a>注册过程</h4><p>将自己去调用jdk 原生的进行注册<br>selectionKey &#x3D; javaChannel().register(eventLoop().unwrappedSelector(), 0, this);再去回掉绑定handler 时的 pendingHandlerCallbackHead, 里面会将child pipeline 和 boosBootStrap 绑定在一起拿到 boosBootStrap 的channel</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">final</span> <span class="hljs-type">ChannelPipeline</span> <span class="hljs-variable">pipeline</span> <span class="hljs-operator">=</span> ch.pipeline();<br><span class="hljs-type">ChannelHandler</span> <span class="hljs-variable">handler</span> <span class="hljs-operator">=</span> config.handler();<br><span class="hljs-keyword">if</span> (handler != <span class="hljs-literal">null</span>) &#123;<br>    pipeline.addLast(handler);<br>&#125;<br>ch.eventLoop().execute(<span class="hljs-keyword">new</span> <span class="hljs-title class_">Runnable</span>() &#123;<br>    <span class="hljs-meta">@Override</span><br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">run</span><span class="hljs-params">()</span> &#123;<br>        <span class="hljs-comment">//boosBootStrap的pipeline 添加ServerBootstrapAcceptor, 其中currentChildHandler 为worker的handler</span><br>        pipeline.addLast(<span class="hljs-keyword">new</span> <span class="hljs-title class_">ServerBootstrapAcceptor</span>(<br>                ch, currentChildGroup, currentChildHandler, currentChildOptions, currentChildAttrs));<br>    &#125;<br>&#125;);<br></code></pre></td></tr></table></figure>
+<pre><code class="hljs">inBound handler 中事件进行传递
+pipeline.fireChannelRegistered();
+</code></pre>
+<p>#2. reactor 思想<br>#3. bossEventLoop 是如何接收到客户端的请求的?<br>#4. bossEventLoop 如何将事件给workerEventLoop的？<br>#5. eventLoop 轮训的时候，如何解决jdk的空轮训的bug 的？</p>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/netty/" class="category-chain-item">netty</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>netty</div>
+      <div>http://localhost:4000/2022/01/24/netty/eventLoop/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>pc-xie</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2022年1月24日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2022/06/22/jdk/hashMap/" title="hashMap">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">hashMap</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>
