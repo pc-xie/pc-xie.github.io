@@ -4,6 +4,44 @@
   
   
   <entry>
+    <title>netty服务端启动流程</title>
+    <link href="/2022/11/19/netty/nettystart/"/>
+    <url>/2022/11/19/netty/nettystart/</url>
+    
+    <content type="html"><![CDATA[]]></content>
+    
+    
+    <categories>
+      
+      <category>netty</category>
+      
+    </categories>
+    
+    
+  </entry>
+  
+  
+  
+  <entry>
+    <title>线程池</title>
+    <link href="/2022/11/19/jdk/executor/"/>
+    <url>/2022/11/19/jdk/executor/</url>
+    
+    <content type="html"><![CDATA[]]></content>
+    
+    
+    <categories>
+      
+      <category>jdk</category>
+      
+    </categories>
+    
+    
+  </entry>
+  
+  
+  
+  <entry>
     <title>hexo-demo</title>
     <link href="/2022/11/19/hexo-demo/"/>
     <url>/2022/11/19/hexo-demo/</url>
