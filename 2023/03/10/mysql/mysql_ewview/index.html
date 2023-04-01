@@ -1,0 +1,736 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
+  <link rel="icon" href="/img/fluid.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="pc-xie">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="事物事物特性 原子性（Atomicity） ： 事务是最小的执行单位，不允许分割。事务的原子性确保动作要么全部完成，要么完全不起作用； 一致性（Consistency）： 执行事务前后，数据保持一致，例如转账业务中，无论事务是否成功，转账者和收款人的总额应该是不变的； 隔离性（Isolation）： 并发访问数据库时，一个用户的事务不被其他事务所干扰，各并发事务之间数据库是独立的； 持久性（Du">
+<meta property="og:type" content="article">
+<meta property="og:title" content="数据库面试">
+<meta property="og:url" content="http://localhost:4000/2023/03/10/mysql/mysql_ewview/index.html">
+<meta property="og:site_name" content="pc-xie">
+<meta property="og:description" content="事物事物特性 原子性（Atomicity） ： 事务是最小的执行单位，不允许分割。事务的原子性确保动作要么全部完成，要么完全不起作用； 一致性（Consistency）： 执行事务前后，数据保持一致，例如转账业务中，无论事务是否成功，转账者和收款人的总额应该是不变的； 隔离性（Isolation）： 并发访问数据库时，一个用户的事务不被其他事务所干扰，各并发事务之间数据库是独立的； 持久性（Du">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2023-03-10T06:11:34.391Z">
+<meta property="article:modified_time" content="2023-04-01T07:56:35.651Z">
+<meta property="article:author" content="pc-xie">
+<meta name="twitter:card" content="summary_large_image">
+  
+  
+  
+  <title>数据库面试 - pc-xie</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"localhost","root":"/","version":"1.9.3","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Fluid</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="数据库面试"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2023-03-10 14:11" pubdate>
+          2023年3月10日 下午
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          4.8k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          41 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">数据库面试</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <hr>
+<h1 id="事物"><a href="#事物" class="headerlink" title="事物"></a>事物</h1><h2 id="事物特性"><a href="#事物特性" class="headerlink" title="事物特性"></a>事物特性</h2><ol>
+<li><strong>原子性</strong>（<code>Atomicity</code>） ： 事务是最小的执行单位，不允许分割。事务的原子性确保动作要么全部完成，要么完全不起作用；</li>
+<li><strong>一致性</strong>（<code>Consistency</code>）： 执行事务前后，数据保持一致，例如转账业务中，无论事务是否成功，转账者和收款人的总额应该是不变的；</li>
+<li><strong>隔离性</strong>（<code>Isolation</code>）： 并发访问数据库时，一个用户的事务不被其他事务所干扰，各并发事务之间数据库是独立的；</li>
+<li><strong>持久性</strong>（<code>Durability</code>）： 一个事务被提交之后。它对数据库中数据的改变是持久的，即使数据库发生故障也不应该对其有任何影响。</li>
+</ol>
+<h2 id="事物并发带来的问题"><a href="#事物并发带来的问题" class="headerlink" title="事物并发带来的问题"></a>事物并发带来的问题</h2><h3 id="脏读（Dirty-read）"><a href="#脏读（Dirty-read）" class="headerlink" title="脏读（Dirty read）"></a>脏读（Dirty read）</h3><p>一个事务读取数据并且对数据进行了修改，这个修改对其他事务来说是可见的，即使当前事务没有提交。这时另外一个事务读取了这个还未提交的数据，但第一个事务突然回滚，导致数据并没有被提交到数据库，那第二个事务读取到的就是脏数据，这也就是脏读的由来。</p>
+<p>例如：事务 1 读取某表中的数据 A&#x3D;20，事务 1 修改 A&#x3D;A-1，事务 2 读取到 A &#x3D; 19,事务 1 回滚导致对 A 的修改并为提交到数据库， A 的值还是 20。</p>
+<h3 id="丢失修改（Lost-to-modify）"><a href="#丢失修改（Lost-to-modify）" class="headerlink" title="丢失修改（Lost to modify）"></a>丢失修改（Lost to modify）</h3><p>在一个事务读取一个数据时，另外一个事务也访问了该数据，那么在第一个事务中修改了这个数据后，第二个事务也修改了这个数据。这样第一个事务内的修改结果就被丢失，因此称为丢失修改。<br>例如：事务 1 读取某表中的数据 A&#x3D;20，事务 2 也读取 A&#x3D;20，事务 1 先修改 A&#x3D;A-1，事务 2 后来也修改 A&#x3D;A-1，最终结果 A&#x3D;19，事务 1 的修改被丢失。</p>
+<h3 id="不可重复读（Unrepeatable-read）"><a href="#不可重复读（Unrepeatable-read）" class="headerlink" title="不可重复读（Unrepeatable read）"></a>不可重复读（Unrepeatable read）</h3><p>指在一个事务内多次读同一数据。在这个事务还没有结束时，另一个事务也访问该数据。那么，在第一个事务中的两次读数据之间，由于第二个事务的修改导致第一个事务两次读取的数据可能不太一样。这就发生了在一个事务内两次读到的数据是不一样的情况，因此称为不可重复读。</p>
+<p>例如：事务 1 读取某表中的数据 A&#x3D;20，事务 2 也读取 A&#x3D;20，事务 1 修改 A&#x3D;A-1，事务 2 再次读取 A &#x3D;19，此时读取的结果和第一次读取的结果不同。</p>
+<h3 id="幻读（Phantom-read）"><a href="#幻读（Phantom-read）" class="headerlink" title="幻读（Phantom read）"></a>幻读（Phantom read）</h3><p>幻读与不可重复读类似。它发生在一个事务读取了几行数据，接着另一个并发事务插入了一些数据时。在随后的查询中，第一个事务就会发现多了一些原本不存在的记录，就好像发生了幻觉一样，所以称为幻读。<br>例如：事务 2 读取某个范围的数据，事务 1 在这个范围插入了新的数据，事务 1 再次读取这个范围的数据发现相比于第一次读取的结果多了新的数据。</p>
+<h3 id="不可重复读和幻读有什么区别？"><a href="#不可重复读和幻读有什么区别？" class="headerlink" title="不可重复读和幻读有什么区别？"></a>不可重复读和幻读有什么区别？</h3><ul>
+<li>不可重复读的重点是内容修改或者记录减少比如多次读取一条记录发现其中某些记录的值被修改；</li>
+<li>幻读的重点在于记录新增比如多次执行同一条查询语句（DQL）时，发现查到的记录增加了。<br>幻读其实可以看作是不可重复读的一种特殊情况，单独把区分幻读的原因主要是解决幻读和不可重复读的方案不一样。<br>举个例子：执行 <code>delete</code> 和 <code>update</code> 操作的时候，可以直接对记录加锁，保证事务安全。而执行 <code>insert</code> 操作的时候，由于记录锁（Record Lock）只能锁住已经存在的记录，为了避免插入新记录，需要依赖间隙锁（Gap Lock）。也就是说执行 <code>insert</code> 操作的时候需要依赖 Next-Key Lock（Record Lock+Gap Lock） 进行加锁来保证不出现幻读。</li>
+</ul>
+<h2 id="事物隔离级别"><a href="#事物隔离级别" class="headerlink" title="事物隔离级别"></a>事物隔离级别</h2><p>SQL 标准定义了四个隔离级别：</p>
+<ul>
+<li><strong>READ-UNCOMMITTED(读取未提交)</strong> ： 最低的隔离级别，允许读取尚未提交的数据变更，可能会导致脏读、幻读或不可重复读。</li>
+<li><strong>READ-COMMITTED(读取已提交)</strong> ： 允许读取并发事务已经提交的数据，可以阻止脏读，但是幻读或不可重复读仍有可能发生。</li>
+<li><strong>REPEATABLE-READ(可重复读)</strong> ： 对同一字段的多次读取结果都是一致的，除非数据是被本身事务自己所修改，可以阻止脏读和不可重复读，但幻读仍有可能发生。</li>
+<li><strong>SERIALIZABLE(可串行化)</strong> ： 最高的隔离级别，完全服从 ACID 的隔离级别。所有的事务依次逐个执行，这样事务之间就完全不可能产生干扰，也就是说，该级别可以防止脏读、不可重复读以及幻读。</li>
+</ul>
+<hr>
+<table>
+<thead>
+<tr>
+<th align="center">隔离级别</th>
+<th align="center">脏读</th>
+<th align="center">不可重复读</th>
+<th align="center">幻读</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">READ-UNCOMMITTED</td>
+<td align="center">√</td>
+<td align="center">√</td>
+<td align="center">√</td>
+</tr>
+<tr>
+<td align="center">READ-COMMITTED</td>
+<td align="center">×</td>
+<td align="center">√</td>
+<td align="center">√</td>
+</tr>
+<tr>
+<td align="center">REPEATABLE-READ</td>
+<td align="center">×</td>
+<td align="center">×</td>
+<td align="center">√</td>
+</tr>
+<tr>
+<td align="center">SERIALIZABLE</td>
+<td align="center">×</td>
+<td align="center">×</td>
+<td align="center">×</td>
+</tr>
+</tbody></table>
+<p>MySQL InnoDB 存储引擎的默认支持的隔离级别是 <strong>REPEATABLE-READ（可重读）</strong>。我们可以通过<code>SELECT @@tx_isolation;</code>命令来查看，MySQL 8.0 该命令改为<code>SELECT @@transaction_isolation;</code></p>
+<h1 id="B树和B-树共同点和区别"><a href="#B树和B-树共同点和区别" class="headerlink" title="B树和B+树共同点和区别"></a>B树和B+树共同点和区别</h1><p><a href="source/img/mysql/indexDataStruct.png">数据结构</a></p>
+<h2 id="共同点"><a href="#共同点" class="headerlink" title="共同点"></a>共同点</h2><ol>
+<li>根节点的儿子数的范围是[2,M]。</li>
+<li>每个中间节点包含 k-1 个关键字和 k 个孩子，孩子的数量 &#x3D; 关键字的数量 +1，k 的取值范围为[ceil(M&#x2F;2), M]。</li>
+<li>叶子节点包括 k-1 个关键字（叶子节点没有孩子），k 的取值范围为[ceil(M&#x2F;2), M]。</li>
+<li>假设中间节点节点的关键字为：Key[1], Key[2], …, Key[k-1]，且关键字按照升序排序，即 Key[i]</li>
+</ol>
+<h2 id="区别"><a href="#区别" class="headerlink" title="区别"></a>区别</h2><ol>
+<li>B+ 树的中间节点并不直接存储数据</li>
+<li>B+树 所有关键字都在叶子节点出现，叶子节点构成一个有序链表，而且叶子节点本身按照关键字的大小从小到大顺序链接。</li>
+<li>有 k 个孩子的节点就有 k 个关键字。也就是孩子数量 &#x3D; 关键字数，而 B 树中，孩子数量 &#x3D; 关键字数 +1。</li>
+</ol>
+<h1 id="创建索引条件"><a href="#创建索引条件" class="headerlink" title="创建索引条件"></a>创建索引条件</h1><p><a href="source/img/mysql/index_principle.png">索引使用条件</a></p>
+<h2 id="创建索引"><a href="#创建索引" class="headerlink" title="创建索引"></a>创建索引</h2><ol>
+<li>字段的数值有唯一性的限制，比如用户名<br>  索引本身可以起到约束的作用，比如唯一索引、主键索引都是可以起到唯一性约束的，因此在我们的数据表中，如果某个字段是唯一性的，就可以直接创建唯一性索引，或者主键索引。</li>
+<li>频繁作为 WHERE 查询条件的字段，尤其在数据表大的情况下<br>  在数据量大的情况下，某个字段在 SQL 查询的 WHERE 条件中经常被使用到，那么就需要给这个字段创建索引了。创建普通索引就可以大幅提升数据查询的效率</li>
+<li>需要经常 GROUP BY 和 ORDER BY 的列<br>  实际上多个单列索引在多条件查询时只会生效一个索引（MySQL 会选择其中一个限制最严格的作为索引），所以在多条件联合查询的时候最好创建联合索引</li>
+<li>UPDATE、DELETE 的 WHERE 条件列，一般也需要创建索引<br>  原理是因为我们需要先根据 WHERE 条件列检索出来这条记录，然后再对它进行更新或删除。如果进行更新的时候，更新的字段是非索引字段，提升的效率会更明显，这是因为非索引字段更新不需要对索引进行维护</li>
+<li>DISTINCT 字段需要创建索引</li>
+</ol>
+<h2 id="无需创建索引"><a href="#无需创建索引" class="headerlink" title="无需创建索引"></a>无需创建索引</h2><ol>
+<li>WHERE 条件（包括 GROUP BY、ORDER BY）里用不到的字段不需要创建索引</li>
+<li>如果表记录太少</li>
+<li>字段中如果有大量重复数据，也不用创建索引，比如性别字段</li>
+<li>频繁更新的字段不一定要创建索引</li>
+</ol>
+<h2 id="索引失效"><a href="#索引失效" class="headerlink" title="索引失效"></a>索引失效</h2><ol>
+<li>如果索引进行了表达式计算，则会失效</li>
+<li>如果对索引使用函数，也会造成失效</li>
+<li>在 WHERE 子句中，如果在 OR 前的条件列进行了索引，而在 OR 后的条件列没有进行索引，那么索引会失效。<br>  EXPLAIN SELECT comment_id, user_id, comment_text FROM product_comment WHERE comment_id &#x3D; 900001 OR comment_text &#x3D; ‘462eed7ac6e791292a79’</li>
+<li>当我们使用 LIKE 进行模糊查询的时候，前面不能是 %<br>like “xxx%” 不一定会走索引, 索引优化器会根据走索引和全表扫描去进行匹配, 索引的选择本质上就是离散性的不同表述</li>
+<li>索引列尽量设置为 NOT NULL 约束。可以将字符串的空值设置为’’,int 类型的值设置为0</li>
+<li>我们在使用联合索引的时候要注意最左原则<br>  mysql 会一直向右匹配直到遇到范围查询(&gt;、&lt;、between、like) 就停止匹配<br>  最左原则也就是需要从左到右的使用索引中的字段，一条 SQL 语句可以只使用联合索引的一部分，但是需要从最左侧开始，否则就会失效。我在讲联合索引的时候举过索引失效的例子。</li>
+</ol>
+<h2 id="使用B-树原因"><a href="#使用B-树原因" class="headerlink" title="使用B+树原因"></a>使用B+树原因</h2><ol>
+<li>高效的查找性能：B+树是一种高效的平衡树结构，具有非常高效的查找性能。它的平均查找时间复杂度为O(logN)，能够快速地定位到目标数据的位置。</li>
+<li>高效的范围查询：B+树是一种有序树结构，能够非常高效地支持范围查询操作。它可以快速地找到满足条件的起始位置和结束位置，从而快速地定位到需要查询的数据。</li>
+<li>内存友好：B+树的内部节点只存储索引信息，而不存储具体的数据，因此它的内存占用比较小。此外，B+树的叶子节点是顺序存储的，能够利用操作系统的预读特性，从而更加高效地利用内存。</li>
+<li>支持高效的插入和删除：B+树的平衡特性使得它支持高效的插入和删除操作。对于插入操作，B+树只需要在叶子节点上插入新的数据即可。对于删除操作，B+树只需要删除叶子节点上的数据即可。</li>
+</ol>
+<h2 id="什么是数据库回表，如何去减少回表"><a href="#什么是数据库回表，如何去减少回表" class="headerlink" title="什么是数据库回表，如何去减少回表"></a>什么是数据库回表，如何去减少回表</h2><p>数据库回表是指在查询操作中，如果需要返回的列不在索引列中，就需要到主键索引或数据页中读取对应的数据行，这个过程就称为回表。回表操作会增加I&#x2F;O的开销和数据库的负载，对数据库性能产生负面影响。<br>为了减少回表操作，可以采取以下措施：</p>
+<ol>
+<li>使用覆盖索引：覆盖索引是指索引中包含了查询需要返回的所有列，不需要回表操作即可返回查询结果。使用覆盖索引可以避免回表操作，提高查询性能。</li>
+<li>合理设计索引：合理的索引设计可以使得查询所需的列尽可能地包含在索引中，从而减少回表操作的次数。需要注意的是，索引也需要消耗存储空间和额外的维护成本，因此需要权衡索引数量、索引列数和索引覆盖范围等因素。</li>
+<li>使用查询缓存：查询缓存是指在查询结果被写入磁盘前，将查询结果缓存到内存中，下一次查询同样的结果时可以直接从缓存中获取，避免回表操作。需要注意的是，查询缓存可能会占用大量的内存空间，且对于数据更新比较频繁的数据库效果不佳。</li>
+<li>优化查询语句：尽可能地将查询条件放在索引列上，从而减少回表操作的次数。可以使用EXPLAIN语句来分析查询语句的执行计划，查看是否存在回表操作，从而优化查询语句。</li>
+</ol>
+<h2 id="索引下推，什么是索引下推"><a href="#索引下推，什么是索引下推" class="headerlink" title="索引下推，什么是索引下推"></a>索引下推，什么是索引下推</h2><p>索引下推（Index Condition Pushdown）是指在查询操作中，将查询条件下推到存储引擎层，让存储引擎在执行索引扫描的同时，过滤掉不符合条件的数据行，从而减少回表操作和减少扫描的数据量，提高查询性能。<br>在索引下推中，查询条件的过滤工作是在存储引擎层完成的。存储引擎根据查询条件和索引的结构，判断哪些索引键值能够满足查询条件，然后只读取这些索引键值对应的数据行，从而避免了回表操作和不必要的数据扫描。<br>例如，假设有一张名为employee的表，其中包含id、name、age和gender四个字段，其中id是主键，name上建有一个B+树索引。如果执行以下查询语句：<br>sql<br>Copy code<br>SELECT * FROM employee WHERE name &#x3D; ‘Tom’ AND age &gt; 25;<br>在没有索引下推的情况下，MySQL会先使用name索引扫描表中所有满足name&#x3D;’Tom’条件的数据行，然后再过滤掉不满足age &gt; 25的数据行，最后返回满足条件的数据行，这个过程中需要进行回表操作。<br>而在使用了索引下推的情况下，MySQL会将age &gt; 25的条件下推到存储引擎层，只读取满足name &#x3D; ‘Tom’和age &gt; 25两个条件的数据行，从而避免了回表操作和不必要的数据扫描。<br>需要注意的是，索引下推只对某些特定类型的查询有效，如WHERE条件中包含AND、OR、IN等逻辑操作符的查询语句。对于一些简单的查询语句，如WHERE条件只包含一个条件的查询语句，索引下推可能会降低查询性能。</p>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/mysql/" class="category-chain-item">mysql</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>数据库面试</div>
+      <div>http://localhost:4000/2023/03/10/mysql/mysql_ewview/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>pc-xie</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2023年3月10日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2023/03/06/interview/interview/" title="面试准备">
+                        <span class="hidden-mobile">面试准备</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>
