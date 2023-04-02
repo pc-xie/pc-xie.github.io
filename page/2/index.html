@@ -223,6 +223,60 @@
     <article class="col-12 col-md-12 mx-auto index-info">
       <h1 class="index-header">
         
+        <a href="/2022/12/05/netty/pageCache/" target="_self">
+          pageCache
+        </a>
+      </h1>
+
+      
+      <a class="index-excerpt index-excerpt__noimg" href="/2022/12/05/netty/pageCache/" target="_self">
+        <div>
+          pageCache对数据进行预读, 例如read() 每次读32KB的数据, 内核会将32～64KB的数据也读取到pageCache中 优点 缓存最近被访问的数据 预读功能  缺点 不适合读取大文件  大文件读取异步IO + 直接IO方式  用户进程发起异步IO请求获取数据 内核态中进行同步IO获取数据
+        </div>
+      </a>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2022-12-05 16:31" pubdate>
+              2022-12-05
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3 d-flex align-items-center">
+            <i class="iconfont icon-category"></i>
+            
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/netty/" class="category-chain-item">netty</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+          </div>
+        
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+    <article class="col-12 col-md-12 mx-auto index-info">
+      <h1 class="index-header">
+        
         <a href="/2022/11/28/netty/zeroCopy/" target="_self">
           netty-零拷贝
         </a>
