@@ -24,7 +24,7 @@
 <meta property="og:description" content="Netty 的线程模型是什么？ Netty 的 ByteBuf 是什么？有什么作用？ Netty 的事件模型是什么？ Netty 的消息编解码器是什么？如何自定义编解码器？ Netty 的心跳机制是什么？如何实现？ Netty 如何处理粘包和拆包问题？ Netty 中的 ChannelHandler 是什么？有哪些常用的 ChannelHandler？ Netty 的异步处理机制是什么？有哪些常">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2023-04-03T13:10:06.775Z">
-<meta property="article:modified_time" content="2023-04-03T14:03:40.319Z">
+<meta property="article:modified_time" content="2023-04-07T07:42:02.757Z">
 <meta property="article:author" content="pc-xie">
 <meta name="twitter:card" content="summary_large_image">
   
@@ -218,7 +218,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          4.9k 字
+          5.2k 字
         
       </span>
     
@@ -229,7 +229,7 @@
         
         
         
-          42 分钟
+          44 分钟
         
       </span>
     
@@ -311,8 +311,9 @@
 <li>SimpleChannelInboundHandler：ChannelInboundHandler 的一个简单实现，它自动释放处理完的数据，减少了开发人员的工作量。</li>
 <li>IdleStateHandler：实现心跳机制的 ChannelHandler，可以检测连接的空闲状态并发送心跳包。</li>
 <li>LengthFieldBasedFrameDecoder 和 LengthFieldPrepender：用于解决粘包和拆包问题的 ChannelHandler，可以根据自定义的协议格式进行数据的解析和封装。</li>
-<li>LoggingHandler：用于打印日志的 ChannelHandler，可以方便地跟踪和调试网络事件的处理流程。</li>
+<li>LoggingHandler：用于打印日志的 ChannelHandler，可以方便地跟踪和调试网络事件的处理流程。<br>Netty 中的 ChannelHandler 是什么？有哪些常用的 ChannelHandler</li>
 </ol>
+<h1 id="netty-如何解决jdk的空转问题"><a href="#netty-如何解决jdk的空转问题" class="headerlink" title="netty 如何解决jdk的空转问题"></a>netty 如何解决jdk的空转问题</h1><p>Netty 通过定时器的方式来解决 NIO 的空转问题。当某个通道在一段时间内没有事件发生时，Netty 会关闭这个通道，然后在稍后重新创建这个通道，这样可以避免空转导致的资源浪费。<br>具体来说，Netty 的解决方案是通过实现一个 IdleStateHandler 类来实现定时器。当一个通道的读或写操作空转了一定的时间，IdleStateHandler 就会触发一个事件，然后我们可以在事件处理方法中关闭这个通道或者执行其他操作。<br>总的来说，Netty 通过定时器来检测空转的通道并主动关闭它们，避免了 NIO 的空转问题，提高了系统的性能。</p>
 
                 
               </div>
@@ -395,6 +396,12 @@
                 <div class="post-prevnext my-3">
                   <article class="post-prev col-6">
                     
+                    
+                      <a href="/2023/04/06/jvm/zgc/" title="zgc">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">zgc</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
                     
                   </article>
                   <article class="post-next col-6">

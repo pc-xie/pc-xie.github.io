@@ -38,8 +38,10 @@
 <meta property="og:image" content="http://localhost:4000/pictures/jvm%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6/22018368.png">
 <meta property="og:image" content="http://localhost:4000/pictures/jvm%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6/parllel-scavenge%E6%94%B6%E9%9B%86%E5%99%A8.png">
 <meta property="og:image" content="http://localhost:4000/pictures/jvm%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6/CMS%E6%94%B6%E9%9B%86%E5%99%A8.png">
+<meta property="og:image" content="http://localhost:4000/img/jdk/g1.png">
+<meta property="og:image" content="http://localhost:4000/img/jdk/zgc.png">
 <meta property="article:published_time" content="2022-12-14T09:51:00.109Z">
-<meta property="article:modified_time" content="2022-12-14T09:52:10.269Z">
+<meta property="article:modified_time" content="2023-04-07T09:13:24.787Z">
 <meta property="article:author" content="pc-xie">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:image" content="http://localhost:4000/pictures/hotspot-heap-structure.png">
@@ -234,7 +236,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          12k 字
+          13k 字
         
       </span>
     
@@ -245,7 +247,7 @@
         
         
         
-          96 分钟
+          109 分钟
         
       </span>
     
@@ -493,7 +495,7 @@
 <li><strong>重新标记：</strong> 重新标记阶段就是为了修正并发标记期间因为用户程序继续运行而导致标记产生变动的那一部分对象的标记记录，这个阶段的停顿时间一般会比初始标记阶段的时间稍长，远远比并发标记阶段时间短</li>
 <li><strong>并发清除：</strong> 开启用户线程，同时 GC 线程开始对未标记的区域做清扫。</li>
 </ul>
-<p><img src="/./pictures/jvm%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6/CMS%E6%94%B6%E9%9B%86%E5%99%A8.png" srcset="/img/loading.gif" lazyload alt="CMS 垃圾收集器 "></p>
+<p><img src="/../pictures/jvm%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6/CMS%E6%94%B6%E9%9B%86%E5%99%A8.png" srcset="/img/loading.gif" lazyload alt="CMS 垃圾收集器 "></p>
 <p>从它的名字就可以看出它是一款优秀的垃圾收集器，主要优点：<strong>并发收集、低停顿</strong>。但是它有下面三个明显的缺点：</p>
 <ul>
 <li><strong>对 CPU 资源敏感；</strong></li>
@@ -519,6 +521,15 @@
 <h3 id="ZGC-收集器"><a href="#ZGC-收集器" class="headerlink" title="ZGC 收集器"></a>ZGC 收集器</h3><p>与 CMS 中的 ParNew 和 G1 类似，ZGC 也采用标记-复制算法，不过 ZGC 对该算法做了重大改进。</p>
 <p>在 ZGC 中出现 Stop The World 的情况会更少！</p>
 <p>详情可以看 ： <a target="_blank" rel="noopener" href="https://tech.meituan.com/2020/08/06/new-zgc-practice-in-meituan.html">《新一代垃圾回收器 ZGC 的探索与实践》</a></p>
+<h3 id="G1-和-ZGC"><a href="#G1-和-ZGC" class="headerlink" title="G1 和 ZGC"></a>G1 和 ZGC</h3><h4 id="G1"><a href="#G1" class="headerlink" title="G1"></a>G1</h4><p>标记-复制算法应用在CMS新生代（ParNew是CMS默认的新生代垃圾回收器）和G1垃圾回收器中。标记-复制算法可以分为三个阶段：</p>
+<ol>
+<li>标记阶段，即从GC Roots集合开始，标记活跃对象；</li>
+<li>转移阶段，即把活跃对象复制到新的内存地址上；</li>
+<li>重定位阶段，因为<strong>转移导致对象的地址发生了变化，在重定位阶段，所有指向对象旧地址的指针都要调整到对象新的地址上</strong> 需要复制。<br>下面以G1为例，通过G1中标记-复制算法过程（G1的Young GC和Mixed GC均采用该算法），分析G1停顿耗时的主要瓶颈。G1垃圾回收周期如下图所示：<br><img src="/../img/jdk/g1.png" srcset="/img/loading.gif" lazyload alt="g1"><br>G1的混合回收过程可以分为标记阶段、清理阶段和复制阶段。<br>1.1. 标记阶段停顿分析<br>1.1.1. 初始标记阶段：初始标记阶段是指从GC Roots出发标记全部直接子节点的过程，该阶段是STW的。由于GC Roots数量不多，通常该阶段耗时非常短。<br>1.1.2. 并发标记阶段：并发标记阶段是指从GC Roots开始对堆中对象进行可达性分析，找出存活对象。该阶段是并发的，即应用线程和GC线程可以同时活动。并发标记耗时相对长很多，但因为不是STW，所以我们不太关心该阶段耗时的长短。<br>1.1.3. 再标记阶段：重新标记那些在并发标记阶段发生变化的对象。该阶段是STW的。<br>清理阶段停顿分析<br>1.1.4. 清理阶段清点出有存活对象的分区和没有存活对象的分区，该阶段不会清理垃圾对象，也不会执行存活对象的复制。该阶段是STW的。<br>复制阶段停顿分析</li>
+</ol>
+<h5 id="g1-耗时长原因"><a href="#g1-耗时长原因" class="headerlink" title="g1 耗时长原因"></a>g1 耗时长原因</h5><p>复制算法中的转移阶段需要分配新内存和复制对象的成员变量。转移阶段是STW的，其中内存分配通常耗时非常短，但对象成员变量的复制耗时有可能较长，这是因为复制耗时与存活对象数量与对象复杂度成正比。对象越复杂，复制耗时越长。<br>四个STW过程中，初始标记因为只标记GC Roots，耗时较短。再标记因为对象数少，耗时也较短。清理阶段因为内存分区数量少，耗时也较短。<strong>转移阶段要处理所有存活的对象，耗时会较长。因此，G1停顿时间的瓶颈主要是标记-复制中的转移阶段STW。为什么转移阶段不能和标记阶段一样并发执行呢？主要是G1未能解决转移过程中准确定位对象地址的问题</strong>。</p>
+<h4 id="ZGC"><a href="#ZGC" class="headerlink" title="ZGC"></a>ZGC</h4><p>与CMS中的ParNew和G1类似，ZGC也采用标记-复制算法，不过ZGC对该算法做了重大改进：ZGC在标记、转移和重定位阶段几乎都是并发的，这是ZGC实现停顿时间小于10ms目标的最关键原因。<br>ZGC只有三个STW阶段：初始标记，再标记，初始转移。其中，初始标记和初始转移分别都只需要扫描所有GC Roots，其处理时间和GC Roots的数量成正比，一般情况耗时非常短；再标记阶段STW时间很短，最多1ms，超过1ms则再次进入并发标记阶段。即，ZGC几乎所有暂停都只依赖于GC Roots集合大小，停顿时间不会随着堆的大小或者活跃对象的大小而增加。与ZGC对比，G1的转移阶段完全STW的，且停顿时间随存活对象的大小增加而增加。<br><img src="/../img/jdk/zgc.png" srcset="/img/loading.gif" lazyload alt="zgc"></p>
+<h2 id="zgc-如何实现并发转移的复制"><a href="#zgc-如何实现并发转移的复制" class="headerlink" title="zgc 如何实现并发转移的复制"></a>zgc 如何实现并发转移的复制</h2><p>ZGC通过着色指针和读屏障技术，解决了转移过程中准确访问对象的问题，实现了并发转移。大致原理描述如下：并发转移中“并发”意味着GC线程在转移对象的过程中，应用线程也在不停地访问对象。假设对象发生转移，但对象地址未及时更新，那么应用线程可能访问到旧地址，从而造成错误。<code>而在ZGC中，应用线程访问对象将触发“读屏障”，如果发现对象被移动了，那么“读屏障”会把读出来的指针更新到对象的新地址上，这样应用线程始终访问的都是对象的新地址。那么，JVM是如何判断对象被移动过呢？就是利用对象引用的地址，即着色指针&#39;</code>。下面介绍着色指针和读屏障技术细节。</p>
 <h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ul>
 <li>《深入理解 Java 虚拟机：JVM 高级特性与最佳实践（第二版》</li>
 <li><a target="_blank" rel="noopener" href="https://my.oschina.net/hosee/blog/644618">https://my.oschina.net/hosee/blog/644618</a></li>

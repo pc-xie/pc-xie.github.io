@@ -23,10 +23,13 @@
 <meta property="og:site_name" content="pc-xie">
 <meta property="og:description" content="事物事物特性 原子性（Atomicity） ： 事务是最小的执行单位，不允许分割。事务的原子性确保动作要么全部完成，要么完全不起作用； 一致性（Consistency）： 执行事务前后，数据保持一致，例如转账业务中，无论事务是否成功，转账者和收款人的总额应该是不变的； 隔离性（Isolation）： 并发访问数据库时，一个用户的事务不被其他事务所干扰，各并发事务之间数据库是独立的； 持久性（Du">
 <meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://localhost:4000/img/mysql/indexDataStruct.png">
+<meta property="og:image" content="http://localhost:4000/img/mysql/index_principle.png">
 <meta property="article:published_time" content="2023-03-10T06:11:34.391Z">
-<meta property="article:modified_time" content="2023-04-01T07:56:35.651Z">
+<meta property="article:modified_time" content="2023-04-07T07:28:20.056Z">
 <meta property="article:author" content="pc-xie">
 <meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="http://localhost:4000/img/mysql/indexDataStruct.png">
   
   
   
@@ -332,7 +335,7 @@
 </tr>
 </tbody></table>
 <p>MySQL InnoDB 存储引擎的默认支持的隔离级别是 <strong>REPEATABLE-READ（可重读）</strong>。我们可以通过<code>SELECT @@tx_isolation;</code>命令来查看，MySQL 8.0 该命令改为<code>SELECT @@transaction_isolation;</code></p>
-<h1 id="B树和B-树共同点和区别"><a href="#B树和B-树共同点和区别" class="headerlink" title="B树和B+树共同点和区别"></a>B树和B+树共同点和区别</h1><p><a href="source/img/mysql/indexDataStruct.png">数据结构</a></p>
+<h1 id="B树和B-树共同点和区别"><a href="#B树和B-树共同点和区别" class="headerlink" title="B树和B+树共同点和区别"></a>B树和B+树共同点和区别</h1><p><img src="/../img/mysql/indexDataStruct.png" srcset="/img/loading.gif" lazyload alt="数据结构"></p>
 <h2 id="共同点"><a href="#共同点" class="headerlink" title="共同点"></a>共同点</h2><ol>
 <li>根节点的儿子数的范围是[2,M]。</li>
 <li>每个中间节点包含 k-1 个关键字和 k 个孩子，孩子的数量 &#x3D; 关键字的数量 +1，k 的取值范围为[ceil(M&#x2F;2), M]。</li>
@@ -344,7 +347,7 @@
 <li>B+树 所有关键字都在叶子节点出现，叶子节点构成一个有序链表，而且叶子节点本身按照关键字的大小从小到大顺序链接。</li>
 <li>有 k 个孩子的节点就有 k 个关键字。也就是孩子数量 &#x3D; 关键字数，而 B 树中，孩子数量 &#x3D; 关键字数 +1。</li>
 </ol>
-<h1 id="创建索引条件"><a href="#创建索引条件" class="headerlink" title="创建索引条件"></a>创建索引条件</h1><p><a href="source/img/mysql/index_principle.png">索引使用条件</a></p>
+<h1 id="创建索引条件"><a href="#创建索引条件" class="headerlink" title="创建索引条件"></a>创建索引条件</h1><p><img src="/../img/mysql/index_principle.png" srcset="/img/loading.gif" lazyload alt="索引使用条件"></p>
 <h2 id="创建索引"><a href="#创建索引" class="headerlink" title="创建索引"></a>创建索引</h2><ol>
 <li>字段的数值有唯一性的限制，比如用户名<br>  索引本身可以起到约束的作用，比如唯一索引、主键索引都是可以起到唯一性约束的，因此在我们的数据表中，如果某个字段是唯一性的，就可以直接创建唯一性索引，或者主键索引。</li>
 <li>频繁作为 WHERE 查询条件的字段，尤其在数据表大的情况下<br>  在数据量大的情况下，某个字段在 SQL 查询的 WHERE 条件中经常被使用到，那么就需要给这个字段创建索引了。创建普通索引就可以大幅提升数据查询的效率</li>
