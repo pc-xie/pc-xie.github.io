@@ -439,15 +439,15 @@
     <article class="col-12 col-md-12 mx-auto index-info">
       <h1 class="index-header">
         
-        <a href="/2023/03/10/mysql/mysql_ewview/" target="_self">
+        <a href="/2023/03/10/mysql/mysql_interview/" target="_self">
           数据库面试
         </a>
       </h1>
 
       
-      <a class="index-excerpt index-excerpt__noimg" href="/2023/03/10/mysql/mysql_ewview/" target="_self">
+      <a class="index-excerpt index-excerpt__noimg" href="/2023/03/10/mysql/mysql_interview/" target="_self">
         <div>
-          事物事物特性 原子性（Atomicity） ： 事务是最小的执行单位，不允许分割。事务的原子性确保动作要么全部完成，要么完全不起作用； 一致性（Consistency）： 执行事务前后，数据保持一致，例如转账业务中，无论事务是否成功，转账者和收款人的总额应该是不变的； 隔离性（Isolation）： 并发访问数据库时，一个用户的事务不被其他事务所干扰，各并发事务之间数据库是独立的； 持久性（Du
+          事物事物特性 原子性（Atomicity）: 事务是一个原子操作单位，要么全部执行成功，要么全部回滚到事务开始前的状态。如果事务中的任何一个操作失败，整个事务都会被回滚，不会对数据库造成影响。 一致性（Consistency）事务执行前后，数据库从一个一致的状态转变到另一个一致的状态。在事务开始之前和结束之后，数据库必须满足定义的完整性约束。 隔离性（Isolation）： 事务的执行是相互隔离
         </div>
       </a>
 

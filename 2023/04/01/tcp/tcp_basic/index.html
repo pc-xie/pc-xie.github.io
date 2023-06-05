@@ -26,7 +26,7 @@
 <meta property="og:image" content="http://localhost:4000/img/tcp/tcp_start_connection.png">
 <meta property="og:image" content="http://localhost:4000/img/tcp/tcp_finish_connection.png">
 <meta property="article:published_time" content="2023-04-01T12:00:05.922Z">
-<meta property="article:modified_time" content="2023-04-04T01:07:56.062Z">
+<meta property="article:modified_time" content="2023-04-25T07:10:46.287Z">
 <meta property="article:author" content="pc-xie">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:image" content="http://localhost:4000/img/tcp/tcp_start_connection.png">
@@ -221,7 +221,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          6.2k 字
+          6.3k 字
         
       </span>
     
@@ -232,7 +232,7 @@
         
         
         
-          52 分钟
+          53 分钟
         
       </span>
     
@@ -320,7 +320,9 @@
 <li>防止“已失效的连接请求报文段”出现在本连接中。<br>客户端在发送完最后一个ACK报文段后，再经过2MSL，就可以使本连接持续的时间内所产生的所有报文段都从网络中消失，使下一个新的连接中不会出现这种旧的连接请求报文段。</li>
 </ol>
 <h2 id="为什么TIME-WAIT状态需要经过2MSL才能返回到CLOSE状态？"><a href="#为什么TIME-WAIT状态需要经过2MSL才能返回到CLOSE状态？" class="headerlink" title="为什么TIME_WAIT状态需要经过2MSL才能返回到CLOSE状态？"></a>为什么TIME_WAIT状态需要经过2MSL才能返回到CLOSE状态？</h2><p>理论上，四个报文都发送完毕，就可以直接进入CLOSE状态了，但是可能网络是不可靠的，有可能最后一个ACK丢失。所以TIME_WAIT状态就是用来重发可能丢失的ACK报文。</p>
-<h2 id="TCP-的保活计时器"><a href="#TCP-的保活计时器" class="headerlink" title="TCP 的保活计时器"></a>TCP 的保活计时器</h2>
+<h2 id="TCP-的KeepAlive"><a href="#TCP-的KeepAlive" class="headerlink" title="TCP 的KeepAlive"></a>TCP 的KeepAlive</h2><p>如果一个时间段内没有任何连接的相关活动, TCP 保活机制就会启动, 每隔一定的时间间隔, 发送一个探测报文, 如果连续几个探测报文都没有得到响应, 则认为当前的连接已经死亡</p>
+<h1 id="常见参数"><a href="#常见参数" class="headerlink" title="常见参数"></a>常见参数</h1><p>存放路径: &#x2F;Proc&#x2F;sys&#x2F;net&#x2F;ipv4&#x2F;</p>
+
                 
               </div>
             
@@ -413,7 +415,7 @@
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2023/03/10/mysql/mysql_ewview/" title="数据库面试">
+                      <a href="/2023/03/10/mysql/mysql_interview/" title="数据库面试">
                         <span class="hidden-mobile">数据库面试</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
