@@ -1,0 +1,706 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
+  <link rel="icon" href="/img/fluid.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="pc-xie">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="tcp三次握手为什么需要三次握手:  假设只有两次握手, 第一个发过去的包, 由于网络等原因, 滞后了,然后又重新发送了一个数据包给服务端,此时服务端收到了第二次发过来的数据包, 并进行了建立链接,进行了响应, 后面发送过去的第一个数据包也到了服务端,服务端进行了建立链接, 等到客户端数据传输,此时客户端由于没有数据需要传输会忽略这个请求, 而服务端一直等着数据的传输,造成资源的浪费。 三次握手中">
+<meta property="og:type" content="article">
+<meta property="og:title" content="准备">
+<meta property="og:url" content="http://localhost:4000/2023/07/14/interview/ready/index.html">
+<meta property="og:site_name" content="pc-xie">
+<meta property="og:description" content="tcp三次握手为什么需要三次握手:  假设只有两次握手, 第一个发过去的包, 由于网络等原因, 滞后了,然后又重新发送了一个数据包给服务端,此时服务端收到了第二次发过来的数据包, 并进行了建立链接,进行了响应, 后面发送过去的第一个数据包也到了服务端,服务端进行了建立链接, 等到客户端数据传输,此时客户端由于没有数据需要传输会忽略这个请求, 而服务端一直等着数据的传输,造成资源的浪费。 三次握手中">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2023-07-14T13:35:07.066Z">
+<meta property="article:modified_time" content="2023-07-16T06:49:07.451Z">
+<meta property="article:author" content="pc-xie">
+<meta name="twitter:card" content="summary_large_image">
+  
+  
+  
+  <title>准备 - pc-xie</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"localhost","root":"/","version":"1.9.3","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Fluid</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="准备"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2023-07-14 21:35" pubdate>
+          2023年7月14日 晚上
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          3.9k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          33 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">准备</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h1 id="tcp"><a href="#tcp" class="headerlink" title="tcp"></a>tcp</h1><h2 id="三次握手"><a href="#三次握手" class="headerlink" title="三次握手"></a>三次握手</h2><h3 id="为什么需要三次握手"><a href="#为什么需要三次握手" class="headerlink" title="为什么需要三次握手:"></a>为什么需要三次握手:</h3><p>  假设只有两次握手, 第一个发过去的包, 由于网络等原因, 滞后了,然后又重新发送了一个数据包给服务端,此时服务端收到了第二次发过来的数据包, 并进行了建立链接,进行了响应, 后面发送过去的第一个数据包也到了服务端,服务端进行了建立链接, 等到客户端数据传输,此时客户端由于没有数据需要传输会忽略这个请求, 而服务端一直等着数据的传输,造成资源的浪费。</p>
+<h3 id="三次握手中传输数据可以不"><a href="#三次握手中传输数据可以不" class="headerlink" title="三次握手中传输数据可以不:"></a>三次握手中传输数据可以不:</h3><p>  在第三位次握手的时候可以进行发送数据, 在第一次握手的时候是不行的, 防止被恶意攻击,如果第一次就可以进行数据传输的话, 攻击者可以发送大量的SYN 包, 其中携带了大量的数据,由于服务端收到数据后要对数据进行解析处理, 造成服务端资源的浪费</p>
+<h3 id="三次握手的目的"><a href="#三次握手的目的" class="headerlink" title="三次握手的目的:"></a>三次握手的目的:</h3><p>  交换初始化序列号和确认号, 为后面的可靠性传输做保证</p>
+<h2 id="四次挥手"><a href="#四次挥手" class="headerlink" title="四次挥手"></a>四次挥手</h2><h3 id="为什么是四次挥手-三次可以不"><a href="#为什么是四次挥手-三次可以不" class="headerlink" title="为什么是四次挥手, 三次可以不"></a>为什么是四次挥手, 三次可以不</h3><p>  四次挥手是由于TCP 链接中, 发送方在结束他的发送后, 还能继续接受另外一端的数据, 在关闭连接的时候, 服务端收到了客户端发过来的FIN报文, 此时数据传输不一定完成了, 因此不可以直接对客户端响应一个ACK+FIN, 先对客户端进行响应一个ACK, 等需要发送的数据全都发完后, 再去发送一个FIN报文给发送方</p>
+<h3 id="2MSL-作用是什么"><a href="#2MSL-作用是什么" class="headerlink" title="2MSL 作用是什么"></a>2MSL 作用是什么</h3><ol>
+<li>保证客户端发送的最后一个ACK报文段能够到达服务端。<br>假设客户端发送完ACK后不去等待直接进行关闭,如果客户端在发送完ACK后不等待直接进行关闭，那么在网络原因等情况下，最后一个ACK报文段可能会丢失，导致服务器无法收到客户端发送的FIN-ACK的确认报文，从而无法正常进入关闭连接状态。此时，服务器会超时重传FIN-ACK报文，而客户端却已经关闭了连接。此时，服务器会收到客户端发送的RST报文，导致连接异常关闭。另外，如果客户端在2MSL时间内重新发送了一个新的连接请求，而这个连接请求的端口与之前的连接相同，服务器可能会收到之前连接的滞留报文，从而导致混淆。因此，2MSL的等待时间可以避免这种混淆的发生，保证连接的正常关闭。</li>
+<li>防止“已失效的连接请求报文段”出现在本连接中。<br>客户端在发送完最后一个ACK报文段后，再经过2MSL，就可以使本连接持续的时间内所产生的所有报文段都从网络中消失，使下一个新的连接中不会出现这种旧的连接请求报文段。</li>
+</ol>
+<h3 id="四次挥手的目的"><a href="#四次挥手的目的" class="headerlink" title="四次挥手的目的:"></a>四次挥手的目的:</h3><p>  通信双方可以正确的关闭并释放连接资源</p>
+<h1 id="MySQL"><a href="#MySQL" class="headerlink" title="MySQL"></a>MySQL</h1><h2 id="索引"><a href="#索引" class="headerlink" title="索引"></a>索引</h2><h3 id="索引分类"><a href="#索引分类" class="headerlink" title="索引分类"></a>索引分类</h3><ol>
+<li>是否使用的是数据表的主键列:<br>  主键索引: 数据表主键列使用的索引, 每个叶子节点包含了一个或多个数据行, 叶子节点存储了实际记录的数据, 一个表只能又一个主键索引<br>  二级索引: 叶子节点上存储的是数据的主键和索引列的值, 通过二级索引可以定位到主键的位置<br>1.1 二级索引又分类:<br>  唯一索引: 确保索引列唯一的索引, 与主键索引不同, 唯一索引允许空置, 非空值, 索引列必须唯一, 一个表可以创建多个唯一索引<br>  普通索引: 没有唯一性约束的条件, 允许值重复的索引, 通过普通索引, 可以加快对索引列查询的速度<br>  联合索引: 基于多个列组合而成的索引, 包含多个列, 用于按照给定的顺序对这些列排序和搜索</li>
+<li>逻辑结构分类:<br>  聚集索引: 叶子节点存储了实际数据<br>  非聚集索引: 叶子节点存储了索引的值以及指向数据行的引用</li>
+</ol>
+<h3 id="什么时候需要创建索引"><a href="#什么时候需要创建索引" class="headerlink" title="什么时候需要创建索引:"></a>什么时候需要创建索引:</h3><ol>
+<li>字段的数值有唯一性的限制，比如用户名</li>
+<li>频繁作为 WHERE 查询条件的字段</li>
+<li>需要经常 GROUP BY 和 ORDER BY 的列</li>
+<li>UPDATE、DELETE 的 WHERE 条件列</li>
+</ol>
+<h3 id="无需创建索引"><a href="#无需创建索引" class="headerlink" title="无需创建索引:"></a>无需创建索引:</h3><ol>
+<li>如果表记录太少</li>
+<li>where 条件中用不到的列</li>
+<li>字段中如果有大量重复数据，也不用创建索引，比如性别字段</li>
+</ol>
+<h3 id="索引失效"><a href="#索引失效" class="headerlink" title="索引失效"></a>索引失效</h3><ol>
+<li>如果索引进行了表达式计算、使用函数</li>
+<li>在 WHERE 子句中，如果在 OR 前的条件列进行了索引，而在 OR 后的条件列没有进行索引</li>
+<li>当我们使用 LIKE 进行模糊查询的时候，前面不能是 %</li>
+<li>我们在使用联合索引的时候要注意最左原则</li>
+</ol>
+<h3 id="最左前缀匹配"><a href="#最左前缀匹配" class="headerlink" title="最左前缀匹配"></a>最左前缀匹配</h3><p>索引的最左前缀原则，可以是联合索引的最左N个字段。比如你建立一个组合索引（a,b,c），其实可以相当于建了（a），（a,b）,(a,b,c)三个索引，大大提高了索引复用能力。</p>
+<h2 id="索引下推"><a href="#索引下推" class="headerlink" title="索引下推"></a>索引下推</h2><p>传统查询过程: MySQL 服务器先从存储引擎层获取满足条件的所有数据, 然后再根据条件在MySQL服务层去进行过滤, 这可能导致存储引擎层返回大量的不必要的数据到MySQL 的服务层, 增加了网络传输和数据的处理<br>索引下推通过将查询条件推送至存储引擎层进行过滤，可以在存储引擎层尽可能地提前过滤掉不符合条件的数据，从而减少从存储引擎返回到MySQL服务器层的数据量</p>
+<h3 id="场景"><a href="#场景" class="headerlink" title="场景"></a>场景</h3><p>适用于某些查询条件在索引上进行处理的情况</p>
+<h2 id="索引数据结构"><a href="#索引数据结构" class="headerlink" title="索引数据结构"></a>索引数据结构</h2><h3 id="hash表"><a href="#hash表" class="headerlink" title="hash表"></a>hash表</h3><p>不支持范围查询</p>
+<h3 id="跳表"><a href="#跳表" class="headerlink" title="跳表"></a>跳表</h3><p>当数据量增多的情况下, 索引层数也会变高</p>
+<h3 id="树"><a href="#树" class="headerlink" title="树"></a>树</h3><h4 id="二叉树"><a href="#二叉树" class="headerlink" title="二叉树"></a>二叉树</h4><p>在极端情况下，如果每次插入的数据都是最小或者都是最大的元素，那么树结构会退化成一条链表。查询数据是的时间复杂度就会是O(n)</p>
+<h4 id="平衡二叉查找树（AVL树"><a href="#平衡二叉查找树（AVL树" class="headerlink" title="平衡二叉查找树（AVL树"></a>平衡二叉查找树（AVL树</h4><p>让每个节点的左右子树高度差不能超过 1。： 随着数据量的变多, 导致树的高度变高, 意味着磁盘的IO变, 影响整体的查询销量</p>
+<h4 id="B树"><a href="#B树" class="headerlink" title="B树"></a>B树</h4><p>叶子节点没有形成链表, 范围查询的时候需要多次随机IO, 性能较低</p>
+<h4 id="B-树"><a href="#B-树" class="headerlink" title="B+树"></a>B+树</h4><p>B+树中的非叶子节点都不存储数据，而是只作为索引。由叶子节点存放整棵树的所有数据。而叶子节点之间构成一个从小到大有序的链表互相指向相邻的叶子节点，也就是叶子节点之间形成了有序的双向链表</p>
+<h4 id="B树和-B-树对比"><a href="#B树和-B-树对比" class="headerlink" title="B树和 B+树对比"></a>B树和 B+树对比</h4><ol>
+<li>更好的磁盘IO性能：B+树相较于B树，更适合在磁盘上进行存储和访问。B+树的内部节点（非叶子节点）只包含索引键值，而不存储实际数据，使得每个节点可以容纳更多的索引项。这意味着在同样的索引大小下，B+树的高度更低，减少了磁盘IO的次数，提高了数据访问的效率。</li>
+<li>有序性和范围查询：B+树的叶子节点使用链表连接，使得B+树的叶子节点在磁盘上是有序的。这使得B+树在范围查询时更加高效，因为可以利用顺序访问特性，避免随机磁盘IO。而B树的叶子节点并没有进行链表连接，导致范围查询需要进行多次随机IO，性能较低。</li>
+<li>更适合顺序访问：由于B+树的叶子节点形成了一个有序链表，对于顺序访问（如范围扫描、顺序遍历）的查询操作更加高效。相比之下，B树需要在内部节点和叶子节点之间进行来回跳跃，不利于顺序访问。</li>
+<li>更适合大规模数据存储：B+树适用于大规模数据存储，因为它具有更高的数据密度和更好的IO性能。B+树的内部节点只存储索引键值，相较于B树，可以容纳更多的索引项，减少了树的高度，降低了存储开销。</li>
+</ol>
+<h3 id="使用B-树的原因"><a href="#使用B-树的原因" class="headerlink" title="使用B+树的原因"></a>使用B+树的原因</h3><ol>
+<li>高效的查找性能：B+树是一种高效的平衡树结构，具有非常高效的查找性能。它的平均查找时间复杂度为O(logN)，能够快速地定位到目标数据的位置</li>
+<li>高效的范围查询：B+树是一种有序树结构，能够非常高效地支持范围查询操作。它可以快速地找到满足条件的起始位置和结束位置，从而快速地定位到需要查询的数据。</li>
+<li>内存友好：B+树的内部节点只存储索引信息，而不存储具体的数据，因此它的内存占用比较小。此外，B+树的叶子节点是顺序存储的，能够利用操作系统的预读特性，从而更加高效地利用内存。</li>
+<li>支持高效的插入和删除：B+树的平衡特性使得它支持高效的插入和删除操作。对于插入操作，B+树只需要在叶子节点上插入新的数据即可。对于删除操作，B+树只需要删除叶子节点上的数据即可。</li>
+</ol>
+<h2 id="数据库回表"><a href="#数据库回表" class="headerlink" title="数据库回表"></a>数据库回表</h2><h3 id="回表定义-如果返回的列不在索引列中-就需要到主键索引或者数据页当中读取对应的数据行"><a href="#回表定义-如果返回的列不在索引列中-就需要到主键索引或者数据页当中读取对应的数据行" class="headerlink" title="回表定义: 如果返回的列不在索引列中,就需要到主键索引或者数据页当中读取对应的数据行"></a>回表定义: 如果返回的列不在索引列中,就需要到主键索引或者数据页当中读取对应的数据行</h3><p>回表会增加I&#x2F;O 开销和数据库的负载, 对数据库性能有负面影响</p>
+<h3 id="如何降低回表"><a href="#如何降低回表" class="headerlink" title="如何降低回表"></a>如何降低回表</h3><ol>
+<li>使用覆盖索引: 指的是索引查询返回了所有的列, 不需要回表既可以返回查询结果, 从而避免回表操作, 提高性能</li>
+<li>合理设计索引: 查询所需的列尽可能包含在索引中, 从而减少回表的次数; 但是索引本身也是需要消耗存储空间和进行维护</li>
+<li>使用查询缓存: 查询缓存指的是查询结果被写入磁盘前, 将查询结果缓存到内存当中, 下一次查询直接从内存当中去进行获取,避免回表的操作</li>
+<li>优化查询语句: 尽可能将查询条件放在索引列上, 从而减少回表的次数</li>
+</ol>
+<h1 id="多线程"><a href="#多线程" class="headerlink" title="多线程"></a>多线程</h1><h2 id="锁"><a href="#锁" class="headerlink" title="锁"></a>锁</h2><h3 id="乐观锁、悲观锁"><a href="#乐观锁、悲观锁" class="headerlink" title="乐观锁、悲观锁"></a>乐观锁、悲观锁</h3><ol>
+<li>悲观锁: 假设并发访问冲突会导致数据不一致, 在使用悲观锁的情况下, 线程访问共享资源会事先获得锁, 确保可以独占的进行, 而其他线程则会被阻塞, 悲观锁适用于数据修改比较频繁, 并发冲突比较高的场景下</li>
+<li>乐观锁: 假设并发冲突较少发生, 多个线程可以同时进行读写操作而不去加锁, 乐观锁的实现是通过版本号或者时间戳来判断数据是否被进行了修改, 如果一个线程要更新数据, 会先获取当前版本号, 如果当前版本号发生了变化, 则说明其他线程进行了修改, 如果当前版本号没有发生变化, 说明可以进行修改</li>
+</ol>
+<h4 id="使用场景"><a href="#使用场景" class="headerlink" title="使用场景"></a>使用场景</h4><h5 id="乐观锁"><a href="#乐观锁" class="headerlink" title="乐观锁"></a>乐观锁</h5><p>适用于读操作比较多, 并发冲突比较少的场景</p>
+<h5 id="悲观锁"><a href="#悲观锁" class="headerlink" title="悲观锁"></a>悲观锁</h5><p>适用于写操作操作比较多, 并发冲突比较多的场景</p>
+<h3 id="synchronized、Lock"><a href="#synchronized、Lock" class="headerlink" title="synchronized、Lock"></a>synchronized、Lock</h3><h4 id="AQS"><a href="#AQS" class="headerlink" title="AQS"></a>AQS</h4><h4 id="ReentrantLock"><a href="#ReentrantLock" class="headerlink" title="ReentrantLock"></a>ReentrantLock</h4><h4 id="ReadLock、writeLock"><a href="#ReadLock、writeLock" class="headerlink" title="ReadLock、writeLock"></a>ReadLock、writeLock</h4><h5 id="使用场景-1"><a href="#使用场景-1" class="headerlink" title="使用场景"></a>使用场景</h5><h6 id="ReadLock"><a href="#ReadLock" class="headerlink" title="ReadLock:"></a>ReadLock:</h6><ol>
+<li>并发读取, 当多个现成需要读取共享资源的时候, 多个线程可以同时获取锁资源</li>
+<li>读多写少, 当共享资源的读取次数远远超过写操作的时候, 允许多个读可以提高并发性能</li>
+</ol>
+<h6 id="WriteLock"><a href="#WriteLock" class="headerlink" title="WriteLock:"></a>WriteLock:</h6><ol>
+<li>数据修改, 当一个线程要对共享资源去进行修改的时候, 需要获取WriteLock, 写锁会阻塞其他的读锁和写锁, 确保只有一个线程独占获取锁资源</li>
+<li>数据一致性保护, 当涉及到多个步骤的写锁时, 可以通过WriteLock来保证多个步骤的原子性</li>
+</ol>
+<h2 id="线程池"><a href="#线程池" class="headerlink" title="线程池"></a>线程池</h2><h2 id="Collection-gt-Map、Set、List"><a href="#Collection-gt-Map、Set、List" class="headerlink" title="Collection -&gt; Map、Set、List"></a>Collection -&gt; Map、Set、List</h2><h3 id="Concurren-Collection-gt-ConcurrentHashMap"><a href="#Concurren-Collection-gt-ConcurrentHashMap" class="headerlink" title="Concurren Collection -&gt; ConcurrentHashMap"></a>Concurren Collection -&gt; ConcurrentHashMap</h3><h1 id="JVM"><a href="#JVM" class="headerlink" title="JVM"></a>JVM</h1><h2 id="内存模型"><a href="#内存模型" class="headerlink" title="内存模型"></a>内存模型</h2><h2 id="gc-算法"><a href="#gc-算法" class="headerlink" title="gc 算法"></a>gc 算法</h2><h2 id="FullGc-Yong-GC"><a href="#FullGc-Yong-GC" class="headerlink" title="FullGc Yong GC"></a>FullGc Yong GC</h2><h1 id="Netty"><a href="#Netty" class="headerlink" title="Netty"></a>Netty</h1><h2 id="zero-copy"><a href="#zero-copy" class="headerlink" title="zero copy"></a>zero copy</h2><h2 id="pagecache"><a href="#pagecache" class="headerlink" title="pagecache"></a>pagecache</h2><h2 id="eventLoop"><a href="#eventLoop" class="headerlink" title="eventLoop"></a>eventLoop</h2><h1 id="zk"><a href="#zk" class="headerlink" title="zk"></a>zk</h1>
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E9%9D%A2%E8%AF%95/" class="category-chain-item">面试</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>准备</div>
+      <div>http://localhost:4000/2023/07/14/interview/ready/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>pc-xie</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2023年7月14日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2023/07/16/%E7%AE%97%E6%B3%95/%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92/" title="算法">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">算法</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2023/07/11/game/userModel/" title="">
+                        <span class="hidden-mobile"></span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>
