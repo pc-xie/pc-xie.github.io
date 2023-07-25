@@ -16,15 +16,15 @@
   <meta name="author" content="pc-xie">
   <meta name="keywords" content="">
   
-    <meta name="description" content="用户模型1.1. 用户模型收集哪些数据1.2. 哪些维度去进行收集登陆次数登录信息消费次数  邮箱账号、  google 邮箱  telegram 账号登录  twitter 账号登录  metamask 账号登录  资方能演示(用户自行在alpha上进行操作)    周末:  1.1 先挂单  1.2 展示  1.3 UTXO 获取">
+    <meta name="description" content="job 网关 serverless  重点问网关交叉面问配置中心  有机器不可用怎么解决？？？？单点问题怎么解决 高并发、GC、如何排查GC、 大的请求体 隔离型问题。。。。 流量隔离、资源占用隔离、 插件化 （当前是没做的, 需要准备一下, 插件业务自己去写, 按照网关规范来做的） 业务的独立集群的划分, 实现层 用netty, 后端rpc 用rpc 框架 (http 单独) 配置中心整体架构">
 <meta property="og:type" content="article">
 <meta property="og:title" content="pc-xie">
-<meta property="og:url" content="http://localhost:4000/2023/07/11/game/userModel/index.html">
+<meta property="og:url" content="http://localhost:4000/2023/07/18/interview/mt/index.html">
 <meta property="og:site_name" content="pc-xie">
-<meta property="og:description" content="用户模型1.1. 用户模型收集哪些数据1.2. 哪些维度去进行收集登陆次数登录信息消费次数  邮箱账号、  google 邮箱  telegram 账号登录  twitter 账号登录  metamask 账号登录  资方能演示(用户自行在alpha上进行操作)    周末:  1.1 先挂单  1.2 展示  1.3 UTXO 获取">
+<meta property="og:description" content="job 网关 serverless  重点问网关交叉面问配置中心  有机器不可用怎么解决？？？？单点问题怎么解决 高并发、GC、如何排查GC、 大的请求体 隔离型问题。。。。 流量隔离、资源占用隔离、 插件化 （当前是没做的, 需要准备一下, 插件业务自己去写, 按照网关规范来做的） 业务的独立集群的划分, 实现层 用netty, 后端rpc 用rpc 框架 (http 单独) 配置中心整体架构">
 <meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2023-07-11T13:21:33.403Z">
-<meta property="article:modified_time" content="2023-07-23T08:45:04.976Z">
+<meta property="article:published_time" content="2023-07-18T11:50:07.291Z">
+<meta property="article:modified_time" content="2023-07-24T07:44:12.936Z">
 <meta property="article:author" content="pc-xie">
 <meta name="twitter:card" content="summary_large_image">
   
@@ -206,8 +206,8 @@
     
       <span class="post-meta">
         <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-        <time datetime="2023-07-11 21:21" pubdate>
-          2023年7月11日 晚上
+        <time datetime="2023-07-18 19:50" pubdate>
+          2023年7月18日 晚上
         </time>
       </span>
     
@@ -218,7 +218,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          136 字
+          3.2k 字
         
       </span>
     
@@ -229,7 +229,7 @@
         
         
         
-          2 分钟
+          27 分钟
         
       </span>
     
@@ -273,23 +273,59 @@
               <div class="markdown-body">
                 
                 <ol>
-<li>用户模型<br>1.1. 用户模型收集哪些数据<br>1.2. 哪些维度去进行收集<br>登陆次数<br>登录信息<br>消费次数</li>
+<li>job</li>
+<li>网关</li>
+<li>serverless</li>
 </ol>
-<p>邮箱账号、</p>
+<p>重点问网关<br>交叉面问配置中心</p>
 <ol>
-<li><p>google 邮箱</p>
-</li>
-<li><p>telegram 账号登录</p>
-</li>
-<li><p>twitter 账号登录</p>
-</li>
-<li><p>metamask 账号登录</p>
-</li>
-<li><p>资方能演示(用户自行在alpha上进行操作)</p>
-</li>
-<li></li>
+<li>有机器不可用怎么解决？？？？单点问题怎么解决</li>
+<li>高并发、GC、如何排查GC、</li>
+<li>大的请求体 隔离型问题。。。。 流量隔离、资源占用隔离、</li>
+<li>插件化 （当前是没做的, 需要准备一下, 插件业务自己去写, 按照网关规范来做的）</li>
+<li>业务的独立集群的划分,</li>
+<li>实现层 用netty, 后端rpc 用rpc 框架 (http 单独)</li>
+<li>配置中心整体架构(如何实现配置的秒级别更新)</li>
+<li>大数据量的连接数压力</li>
+<li>单元化 -&gt; MGR  -&gt; 主从</li>
+<li>数组, 字符串. 给一个值 进行开根号</li>
 </ol>
-<p>周末:<br>  1.1 先挂单<br>  1.2 展示<br>  1.3 UTXO 获取</p>
+<p>1.1 BFF+sidecar<br>1.2 增强自身的可扩展性, 没有任何依赖<br>1.3 支持水平扩展</p>
+<p>2.1 估算QPS的大小, 调整GC方式, 是yong gc 还是full GC, 还是被操作系统进行了OOM Killer 导致回收了<br>  2.1.1 CMS、G1、ZGC 三个之间的对比, 分别解决了什么问题, 怎么做到了提升<br>  12G的堆, 然后 5% 默认的话是600M, 调整到1.2G 新生代占比30%</p>
+<p>  长轮训的时候每次带上2K大小的配置文件, 重新请求到服务端的压力为5W个客户端, 100 M &#x2F; 16台的 &#x3D; 6M 一次<br>  其中DB的配置文件5W个 变化3W 个, 每次变更文件差不多100 个 300 个批次, 3秒钟变更完成,</p>
+<p>  长轮训请求时300次 每次请求的大小是 6M 单台, 一秒的话是</p>
+<p>  每次拉去的时候配置文件大小为 10K 左右 缓存 -&gt; 磁盘 -&gt; DB<br>  300 次  -&gt; 单个大小为10K<br>  长轮训的带的信息为2K<br>  每个客户端携带的配置文件的个数为100个. groupId,dataId,profile,version。<br>    每次标记都从根roots出发<br>    CMS: (采用标记清除算法)<br>      初始标记(STW) -&gt; 并发标记 -&gt; 重新标记(STW) -&gt; 并发回收<br>      存在问题: 会产生内存碎片<br>    G1: (采用标记复制算法)<br>      不在将空间按照物理维度严格的划分为yong 区、old区, 将空间分割成多个大小区域相等的region,每个区域可能是属于yong 区, 也有可能是old区<br>      初始标记(STW) -&gt; 并发标记 -&gt; 最终标记(STW) -&gt; 删选回收(STW)<br>        删选回收会将一个region的复制及其移动<br>      存在问题: 删选回收中的STW 耗时和需要回收的对象大小成正比, 原因是GC的信息是存放在对象头中, GC 指针无法获取到对象的GC 信息, 因此该过程会导致G1 的时间很长<br>    ZGC: 初始标记 -&gt; 并发标记 -&gt; 重新标记 -&gt; 并发清理<br>      通过染色指针将GC 信息放到了指针当中, 减少标记时的开销, 同时使用读屏障保证程序正在执行的时候, 可以准确的获取对象的状态</p>
+<p>3.1 流程上杜绝, 自身进行限制, 对占用比较大的进行告警</p>
+<p>4.1 实现了简单的插件化, 例如用户需要自定义配置限流参数, 跨域的配置. 对于一些需要复杂的插件化逻辑,<br>  例如加验签算法, 暂时没有.<br>  实现方式:<br>    做为一个脚本去进行运行,<br>    将自定义插件做为一个插件服务部署出来, 中间走RPC、接口调用,<br>  影响: 怕影响网关自身的性能, 要对占用的资源去进行把控</p>
+<p>5.1 接入流程: 统一申请域名, 申请域名的时候说明场景, 将域名根据不同的类型分到不同的应用上去,<br>  如: 交易有关的,(第二级别) 对接银联的通道(专用集群)</p>
+<p>6.1 机器节约了多少<br>  机器节约了30% 具体的是有一些应用专门哪来跑账务模型<br>8.1 针对请求过来很高的时候怎么去进行处理.<br>可能的瓶颈:<br>  内存(机器内存 + 堆上的内存)<br>  CPU 负载<br>  网络带宽<br>  数据库<br>  下游<br>  网络带宽 -&gt; 磁盘IO -&gt; CPU  -&gt; 数据库</p>
+<p>配置中心<br>1.1 网络带宽怎么解决<br>1.2 磁盘IO  落磁盘的操作有哪些???<br>1.3 CPU 压力过高  是否有很多磁盘IO、GC 是否频繁<br>1.4 数据库 走缓存</p>
+<p>单元化 做了哪些事情<br>8.1.1 请求接口异步化, 防止阻塞tomcat的线程资源<br>8.1.2 拉取数据<br>8.1.3 对于MGR 怎么去解决？？？<br>为什么要引入MGR. 对于配置中心来说, 高可靠、高可用是最重要的, DB 是配置中心的依赖, 为了保证DB 故障的时候配置中心仍然可以堆外可用, 同时公司内部的DB 主从切换是依赖于配置中心, 这个时候如何保证配置中心自身DB 的一个高可用,<br>方案1: 通过MHA 的通知. 具体流程如下:</p>
+<ol>
+<li>MHA 检测到主库异常, 选择新的主库, 通知发给配置中心</li>
+<li>配置中心将DB的新的主库设置为主库, 由我们自身实现主从切换<br>问题: 切换过程是依赖于外部的MHA 事件检测, 主从数据在切换过程当中导致的数据可能会出现不一致,  例如在数据写到了主库上去, 但是发生了切换, 导致从库的数据没有.  配置中心对数据的一致性由更高的要求, 采用的 Paxos 算法, 实现了多主的复制, (在任意一个时刻, 只有一个提案会生效, 针对脑裂的时候, 就是不会有新的提案产生)<br>解决方案: oceanbase、mongoDB、MGR 支持分布式数据库, 主从切换</li>
+<li>之前的数据库用的是mysql, 如果要迁移到mongoDB 的化要考虑做很大的改动, 原来放在mysql 的数据要迁移到mongo 上去。改动太大</li>
+<li>oceanbase, 付费, 不考虑</li>
+<li>使用mysql 的多主。客户端改动比较少, 可以去做到平滑的迁移<br>3.1 MGR<br>主要是利用了MGR 的故障检测和恢复、 自动故障转移能力、MGR的<br>带来的问题: 一致性延迟、复制冲突、部署和节点管理的复杂性<br>怎么解决的:<br>  一致性延迟, 当服务端收到通知后, 先去DB 里面去看一下配置是否存在, 如果不存在的化会定时一个时间轮探测一下, 100ms,300ms,500ms,1s 去DB 里面查找一下配置是否存在, 存在后再去通知客户端过来拉去<br>  复制冲突: 去避免复制冲突, 正常的时候, 只在一个节点上去进行写数据, 故障后才会转移到另外一个节点上去, 转移的顺序也是根据约定好的来的.<br>MGR 和 传统的MS 区别<br>  传统的主从复制是基于异步复制, 主库会把操作落到binlog 上去, binlog dump 线程会去通知从库, 将对应的binlog 内容同步给从库, 从库收到后写入到relay-log, 根据relay-log 在从库上进行响应的操作<br>  主从切换<br>  MHA 主从切换</li>
+</ol>
+<p>单元化:<br>  服务端下发机器列表的时候返回客户端本机房的信息</p>
+<p>网关:</p>
+<ol>
+<li>有机器不可用怎么解决？？？？单点问题怎么解决<br>  去中心化集群，网关的能力下沉到sdk sidecar (阿里怎么去处理)<br> BFF+sidecar<br> 自身的可扩展性. 强依赖属性</li>
+<li>高并发、GC、如何排查GC、</li>
+<li>每个请求的内存占用</li>
+<li>估计实际需要占用的需要多大</li>
+<li>预测每次GC的频率</li>
+<li>full GC 通过MAT 查看大内存的占用情况<br>  yong gc 方式<br>  4.1 调整新生代的比列<br>  4.2 调整 MaxGCPauseMillis</li>
+<li>ZGC 的<br>  堆外内存占用<br>  netty 堆外内存占用情况, 设置堆外内存的大小 MaxDirectMemorySize<br> CMS GC 算法<br> G1 GC 算法<br> ZGC GC 算法<br>  三者对比，改进了什么, 为什么要有新的算法出来</li>
+<li>大的请求体 隔离型问题。。。。 流量隔离、资源占用隔离、<br>  3.1 一个body 较大的, 会有告警处理, 每次拿到所有的body 和 request 的大小, 当超过一定大小的时候会进行告警, 通知业务整改<br>  3.2 集群迁移. 每次申请域名的时候, 用户需要估计该域名的使用场景, 是否会进行占用过多的资源, 从物理上进行对资源的隔离<br>  3.3</li>
+<li>插件化 （当前是没做的, 需要准备一下, 插件业务自己去写, 按照网关规范来做的）<br>4.1 可能遇到问题??? 资源占用的问题, 如何保证业务的资源不会去影响到网关的资源<br> 简单的插件或做了,<br> 但是复杂的插件没有</li>
+</ol>
+<p>业务的独立集群的划分,<br>美团 分组(group )  对应到虚拟域<br>美团网关: 配置放配置中心, DB 做为保底。<br>6. 实现层 用netty, 后端rpc 用rpc 框架 (http 单独)<br>网关节约了多少机器()</p>
+<p>g1 到 zgc 为什么做, 怎么做, 做了效果</p>
+<p>配置中心 推拉结合<br>大数据量 瓶颈  缓存穿透<br>长链接 连接数压力 MGR原理(主从, )  ::对比一下（MGR）<br>大概2100 个链接  </p>
+<p>主体 简历</p>
+<p>  数组 字符串<br>    给一个值 根号</p>
 
                 
               </div>
@@ -308,7 +344,7 @@
   <div class="license-box my-3">
     <div class="license-title">
       <div></div>
-      <div>http://localhost:4000/2023/07/11/game/userModel/</div>
+      <div>http://localhost:4000/2023/07/18/interview/mt/</div>
     </div>
     <div class="license-meta">
       
@@ -320,7 +356,7 @@
       
         <div class="license-meta-item license-meta-date">
           <div>发布于</div>
-          <div>2023年7月11日</div>
+          <div>2023年7月18日</div>
         </div>
       
       
@@ -352,17 +388,11 @@
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2023/07/14/interview/ready/" title="准备">
-                        <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">准备</span>
-                        <span class="visible-mobile">上一篇</span>
-                      </a>
-                    
                   </article>
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2023/07/06/web3/test/" title="">
+                      <a href="/2023/07/17/interview/%E8%AF%A6%E7%BB%86%E6%95%B0%E6%8D%AE/" title="">
                         <span class="hidden-mobile"></span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>

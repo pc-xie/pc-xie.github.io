@@ -16,17 +16,20 @@
   <meta name="author" content="pc-xie">
   <meta name="keywords" content="">
   
-    <meta name="description" content="tcp三次握手为什么需要三次握手:  假设只有两次握手, 第一个发过去的包, 由于网络等原因, 滞后了,然后又重新发送了一个数据包给服务端,此时服务端收到了第二次发过来的数据包, 并进行了建立链接,进行了响应, 后面发送过去的第一个数据包也到了服务端,服务端进行了建立链接, 等到客户端数据传输,此时客户端由于没有数据需要传输会忽略这个请求, 而服务端一直等着数据的传输,造成资源的浪费。 三次握手中">
+    <meta name="description" content="tcp三次握手三次握手（Three-way Handshake）其实就是指建立一个TCP连接时，需要客户端和服务器总共发送3个包。进行三次握手的主要作用就是为了确认双方的接收能力和发送能力是否正常、指定自己的初始化序列号为后面的可靠性传送做准备。实质上其实就是连接服务器指定端口，建立TCP连接，并同步连接双方的序列号和确认号，交换TCP窗口大小信息。刚开始客户端处于 Closed 的状态，服务端处">
 <meta property="og:type" content="article">
 <meta property="og:title" content="准备">
 <meta property="og:url" content="http://localhost:4000/2023/07/14/interview/ready/index.html">
 <meta property="og:site_name" content="pc-xie">
-<meta property="og:description" content="tcp三次握手为什么需要三次握手:  假设只有两次握手, 第一个发过去的包, 由于网络等原因, 滞后了,然后又重新发送了一个数据包给服务端,此时服务端收到了第二次发过来的数据包, 并进行了建立链接,进行了响应, 后面发送过去的第一个数据包也到了服务端,服务端进行了建立链接, 等到客户端数据传输,此时客户端由于没有数据需要传输会忽略这个请求, 而服务端一直等着数据的传输,造成资源的浪费。 三次握手中">
+<meta property="og:description" content="tcp三次握手三次握手（Three-way Handshake）其实就是指建立一个TCP连接时，需要客户端和服务器总共发送3个包。进行三次握手的主要作用就是为了确认双方的接收能力和发送能力是否正常、指定自己的初始化序列号为后面的可靠性传送做准备。实质上其实就是连接服务器指定端口，建立TCP连接，并同步连接双方的序列号和确认号，交换TCP窗口大小信息。刚开始客户端处于 Closed 的状态，服务端处">
 <meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://localhost:4000/img/tcp/tcp_start_connection.png">
+<meta property="og:image" content="http://localhost:4000/img/tcp/tcp_finish_connection.png">
 <meta property="article:published_time" content="2023-07-14T13:35:07.066Z">
-<meta property="article:modified_time" content="2023-07-16T06:49:07.451Z">
+<meta property="article:modified_time" content="2023-07-25T15:11:52.342Z">
 <meta property="article:author" content="pc-xie">
 <meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="http://localhost:4000/img/tcp/tcp_start_connection.png">
   
   
   
@@ -218,7 +221,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          3.9k 字
+          6.7k 字
         
       </span>
     
@@ -229,7 +232,7 @@
         
         
         
-          33 分钟
+          57 分钟
         
       </span>
     
@@ -272,18 +275,23 @@
             
               <div class="markdown-body">
                 
-                <h1 id="tcp"><a href="#tcp" class="headerlink" title="tcp"></a>tcp</h1><h2 id="三次握手"><a href="#三次握手" class="headerlink" title="三次握手"></a>三次握手</h2><h3 id="为什么需要三次握手"><a href="#为什么需要三次握手" class="headerlink" title="为什么需要三次握手:"></a>为什么需要三次握手:</h3><p>  假设只有两次握手, 第一个发过去的包, 由于网络等原因, 滞后了,然后又重新发送了一个数据包给服务端,此时服务端收到了第二次发过来的数据包, 并进行了建立链接,进行了响应, 后面发送过去的第一个数据包也到了服务端,服务端进行了建立链接, 等到客户端数据传输,此时客户端由于没有数据需要传输会忽略这个请求, 而服务端一直等着数据的传输,造成资源的浪费。</p>
+                <h1 id="tcp"><a href="#tcp" class="headerlink" title="tcp"></a>tcp</h1><h2 id="三次握手"><a href="#三次握手" class="headerlink" title="三次握手"></a>三次握手</h2><p>三次握手（Three-way Handshake）其实就是指建立一个TCP连接时，需要客户端和服务器总共发送3个包。进行三次握手的主要作用就是为了确认双方的接收能力和发送能力是否正常、指定自己的初始化序列号为后面的可靠性传送做准备。实质上其实就是连接服务器指定端口，建立TCP连接，并同步连接双方的序列号和确认号，交换TCP窗口大小信息。<br>刚开始客户端处于 Closed 的状态，服务端处于 Listen 状态。<br>进行三次握手：<br>第一次握手：客户端给服务端发一个 SYN 报文，并指明客户端的初始化序列号 ISN(c)。此时客户端处于 SYN_SEND 状态。<br>其中SYN&#x3D;1，初始序号seq&#x3D;x，SYN&#x3D;1的报文段不能携带数据，但要消耗掉一个序号。<br>第二次握手：服务器收到客户端的 SYN 报文之后，会以自己的 SYN 报文作为应答，并且也是指定了自己的初始化序列号 ISN(s)。同时会把客户端的 ISN + 1 作为ACK 的值，表示自己已经收到了客户端的 SYN，此时服务器处于 SYN_RCVD 的状态。<br>在确认报文段中SYN&#x3D;1，ACK&#x3D;1，确认号ack&#x3D;x+1，初始序号seq&#x3D;y。<br>第三次握手：客户端收到 SYN 报文之后，会发送一个 ACK 报文，当然，也是一样把服务器的 ISN + 1 作为 ACK 的值，表示已经收到了服务端的 SYN 报文，此时客户端处于 ESTABLISHED 状态。服务器收到 ACK 报文之后，也处于 ESTABLISHED 状态，此时，双方已建立起了连接。<br>确认报文段ACK&#x3D;1，确认号ack&#x3D;y+1，序号seq&#x3D;x+1（初始为seq&#x3D;x，第二个报文段所以要+1），ACK报文段可以携带数据，不携带数据则不消耗序号。<br>发送第一个SYN的一端将执行主动打开（active open），接收这个SYN并发回下一个SYN的另一端执行被动打开（passive open）。<br>在socket编程中，客户端执行connect()时，将触发三次握手。<br><img src="/../img/tcp/tcp_start_connection.png" srcset="/img/loading.gif" lazyload alt="三次握手"></p>
+<h3 id="为什么需要三次握手"><a href="#为什么需要三次握手" class="headerlink" title="为什么需要三次握手:"></a>为什么需要三次握手:</h3><p>  假设只有两次握手, 第一个发过去的包, 由于网络等原因, 滞后了,然后又重新发送了一个数据包给服务端,此时服务端收到了第二次发过来的数据包, 并进行了建立链接,进行了响应, 后面发送过去的第一个数据包也到了服务端,服务端进行了建立链接, 等到客户端数据传输,此时客户端由于没有数据需要传输会忽略这个请求, 而服务端一直等着数据的传输,造成资源的浪费。</p>
 <h3 id="三次握手中传输数据可以不"><a href="#三次握手中传输数据可以不" class="headerlink" title="三次握手中传输数据可以不:"></a>三次握手中传输数据可以不:</h3><p>  在第三位次握手的时候可以进行发送数据, 在第一次握手的时候是不行的, 防止被恶意攻击,如果第一次就可以进行数据传输的话, 攻击者可以发送大量的SYN 包, 其中携带了大量的数据,由于服务端收到数据后要对数据进行解析处理, 造成服务端资源的浪费</p>
 <h3 id="三次握手的目的"><a href="#三次握手的目的" class="headerlink" title="三次握手的目的:"></a>三次握手的目的:</h3><p>  交换初始化序列号和确认号, 为后面的可靠性传输做保证</p>
-<h2 id="四次挥手"><a href="#四次挥手" class="headerlink" title="四次挥手"></a>四次挥手</h2><h3 id="为什么是四次挥手-三次可以不"><a href="#为什么是四次挥手-三次可以不" class="headerlink" title="为什么是四次挥手, 三次可以不"></a>为什么是四次挥手, 三次可以不</h3><p>  四次挥手是由于TCP 链接中, 发送方在结束他的发送后, 还能继续接受另外一端的数据, 在关闭连接的时候, 服务端收到了客户端发过来的FIN报文, 此时数据传输不一定完成了, 因此不可以直接对客户端响应一个ACK+FIN, 先对客户端进行响应一个ACK, 等需要发送的数据全都发完后, 再去发送一个FIN报文给发送方</p>
+<h2 id="四次挥手"><a href="#四次挥手" class="headerlink" title="四次挥手"></a>四次挥手</h2><p>建立一个连接需要三次握手，而终止一个连接要经过四次挥手（也有将四次挥手叫做四次握手的）。这由TCP的半关闭（half-close）造成的。所谓的半关闭，其实就是TCP提供了连接的一端在结束它的发送后还能接收来自另一端数据的能力。<br>TCP 的连接的拆除需要发送四个包，因此称为四次挥手(Four-way handshake)，客户端或服务器均可主动发起挥手动作。<br>刚开始双方都处于 ESTABLISHED 状态，假如是客户端先发起关闭请求。四次挥手的过程如下：</p>
+<p>第一次挥手：客户端发送一个 FIN 报文，报文中会指定一个序列号。此时客户端处于 FIN_WAIT1 状态。<br>即发出连接释放报文段（FIN&#x3D;1，序号seq&#x3D;u），并停止再发送数据，主动关闭TCP连接，进入FIN_WAIT1（终止等待1）状态，等待服务端的确认。<br>第二次挥手：服务端收到 FIN 之后，会发送 ACK 报文，且把客户端的序列号值 +1 作为 ACK 报文的序列号值，表明已经收到客户端的报文了，此时服务端处于 CLOSE_WAIT 状态。<br>即服务端收到连接释放报文段后即发出确认报文段（ACK&#x3D;1，确认号ack&#x3D;u+1，序号seq&#x3D;v），服务端进入CLOSE_WAIT（关闭等待）状态，此时的TCP处于半关闭状态，客户端到服务端的连接释放。客户端收到服务端的确认后，进入FIN_WAIT2（终止等待2）状态，等待服务端发出的连接释放报文段。<br>第三次挥手：如果服务端也想断开连接了，和客户端的第一次挥手一样，发给 FIN 报文，且指定一个序列号。此时服务端处于 LAST_ACK 的状态。<br>即服务端没有要向客户端发出的数据，服务端发出连接释放报文段（FIN&#x3D;1，ACK&#x3D;1，序号seq&#x3D;w，确认号ack&#x3D;u+1），服务端进入LAST_ACK（最后确认）状态，等待客户端的确认。<br>第四次挥手：客户端收到 FIN 之后，一样发送一个 ACK 报文作为应答，且把服务端的序列号值 +1 作为自己 ACK 报文的序列号值，此时客户端处于 TIME_WAIT 状态。需要过2MSL(2个报文最大生存周期)以确保服务端收到自己的 ACK 报文之后才会进入 CLOSED 状态，服务端收到 ACK 报文之后，就处于关闭连接了，处于 CLOSED 状态。其中2MSL 默认值为4分钟,<br>即客户端收到服务端的连接释放报文段后，对此发出确认报文段（ACK&#x3D;1，seq&#x3D;u+1，ack&#x3D;w+1），客户端进入TIME_WAIT（时间等待）状态。此时TCP未释放掉，需要经过时间等待计时器设置的时间2MSL后，客户端才进入CLOSED状态。</p>
+<p>收到一个FIN只意味着在这一方向上没有数据流动。客户端执行主动关闭并进入TIME_WAIT是正常的，服务端通常执行被动关闭，不会进入TIME_WAIT状态。<br><img src="/../img/tcp/tcp_finish_connection.png" srcset="/img/loading.gif" lazyload alt="四次挥手"></p>
+<h3 id="为什么是四次挥手-三次可以不"><a href="#为什么是四次挥手-三次可以不" class="headerlink" title="为什么是四次挥手, 三次可以不"></a>为什么是四次挥手, 三次可以不</h3><p>  四次挥手是由于TCP 链接中, 发送方在结束他的发送后, 还能继续接受另外一端的数据, 在关闭连接的时候, 服务端收到了客户端发过来的FIN报文, 此时数据传输不一定完成了, 因此不可以直接对客户端响应一个ACK+FIN, 先对客户端进行响应一个ACK, 等需要发送的数据全都发完后, 再去发送一个FIN报文给发送方</p>
 <h3 id="2MSL-作用是什么"><a href="#2MSL-作用是什么" class="headerlink" title="2MSL 作用是什么"></a>2MSL 作用是什么</h3><ol>
 <li>保证客户端发送的最后一个ACK报文段能够到达服务端。<br>假设客户端发送完ACK后不去等待直接进行关闭,如果客户端在发送完ACK后不等待直接进行关闭，那么在网络原因等情况下，最后一个ACK报文段可能会丢失，导致服务器无法收到客户端发送的FIN-ACK的确认报文，从而无法正常进入关闭连接状态。此时，服务器会超时重传FIN-ACK报文，而客户端却已经关闭了连接。此时，服务器会收到客户端发送的RST报文，导致连接异常关闭。另外，如果客户端在2MSL时间内重新发送了一个新的连接请求，而这个连接请求的端口与之前的连接相同，服务器可能会收到之前连接的滞留报文，从而导致混淆。因此，2MSL的等待时间可以避免这种混淆的发生，保证连接的正常关闭。</li>
 <li>防止“已失效的连接请求报文段”出现在本连接中。<br>客户端在发送完最后一个ACK报文段后，再经过2MSL，就可以使本连接持续的时间内所产生的所有报文段都从网络中消失，使下一个新的连接中不会出现这种旧的连接请求报文段。</li>
 </ol>
 <h3 id="四次挥手的目的"><a href="#四次挥手的目的" class="headerlink" title="四次挥手的目的:"></a>四次挥手的目的:</h3><p>  通信双方可以正确的关闭并释放连接资源</p>
-<h1 id="MySQL"><a href="#MySQL" class="headerlink" title="MySQL"></a>MySQL</h1><h2 id="索引"><a href="#索引" class="headerlink" title="索引"></a>索引</h2><h3 id="索引分类"><a href="#索引分类" class="headerlink" title="索引分类"></a>索引分类</h3><ol>
-<li>是否使用的是数据表的主键列:<br>  主键索引: 数据表主键列使用的索引, 每个叶子节点包含了一个或多个数据行, 叶子节点存储了实际记录的数据, 一个表只能又一个主键索引<br>  二级索引: 叶子节点上存储的是数据的主键和索引列的值, 通过二级索引可以定位到主键的位置<br>1.1 二级索引又分类:<br>  唯一索引: 确保索引列唯一的索引, 与主键索引不同, 唯一索引允许空置, 非空值, 索引列必须唯一, 一个表可以创建多个唯一索引<br>  普通索引: 没有唯一性约束的条件, 允许值重复的索引, 通过普通索引, 可以加快对索引列查询的速度<br>  联合索引: 基于多个列组合而成的索引, 包含多个列, 用于按照给定的顺序对这些列排序和搜索</li>
-<li>逻辑结构分类:<br>  聚集索引: 叶子节点存储了实际数据<br>  非聚集索引: 叶子节点存储了索引的值以及指向数据行的引用</li>
+<h1 id="MySQL"><a href="#MySQL" class="headerlink" title="MySQL"></a>MySQL</h1><h2 id="数据库隔离级别"><a href="#数据库隔离级别" class="headerlink" title="数据库隔离级别"></a>数据库隔离级别</h2><h2 id="索引"><a href="#索引" class="headerlink" title="索引"></a>索引</h2><h3 id="索引分类"><a href="#索引分类" class="headerlink" title="索引分类"></a>索引分类</h3><ol>
+<li>逻辑功能分类:<br>1.1 普通索引:没有任何约束条件, 用户提高查询的效率<br>1.2 唯一索引: 在普通索引的基础上增加了唯一性约束的条件, 一张表里面可以有多个唯一索引<br>1.3 主键索引: 在唯一索引的基础上增加了不为空的约束条件, 一张表里面最多有一个主键索引</li>
+<li>物理实现分类<br>2.1 聚集索引: 基于表的主键列的索引, 索引的叶子节点存储了实际的数据行, 一张表只能有一个聚集索引, 通常为主键索引<br>2.2 非聚集索引: 叶子节点存储了索引的值和一个指向数据实际存储位置的指针, 一个表可以有多个非聚集索引</li>
+<li>字段个数<br>3.1 单一索引: 索引列为一个的索引<br>3.2 联合索引: 多个列组合在一起的索引</li>
 </ol>
 <h3 id="什么时候需要创建索引"><a href="#什么时候需要创建索引" class="headerlink" title="什么时候需要创建索引:"></a>什么时候需要创建索引:</h3><ol>
 <li>字段的数值有唯一性的限制，比如用户名</li>
@@ -308,7 +316,7 @@
 <h2 id="索引数据结构"><a href="#索引数据结构" class="headerlink" title="索引数据结构"></a>索引数据结构</h2><h3 id="hash表"><a href="#hash表" class="headerlink" title="hash表"></a>hash表</h3><p>不支持范围查询</p>
 <h3 id="跳表"><a href="#跳表" class="headerlink" title="跳表"></a>跳表</h3><p>当数据量增多的情况下, 索引层数也会变高</p>
 <h3 id="树"><a href="#树" class="headerlink" title="树"></a>树</h3><h4 id="二叉树"><a href="#二叉树" class="headerlink" title="二叉树"></a>二叉树</h4><p>在极端情况下，如果每次插入的数据都是最小或者都是最大的元素，那么树结构会退化成一条链表。查询数据是的时间复杂度就会是O(n)</p>
-<h4 id="平衡二叉查找树（AVL树"><a href="#平衡二叉查找树（AVL树" class="headerlink" title="平衡二叉查找树（AVL树"></a>平衡二叉查找树（AVL树</h4><p>让每个节点的左右子树高度差不能超过 1。： 随着数据量的变多, 导致树的高度变高, 意味着磁盘的IO变, 影响整体的查询销量</p>
+<h4 id="平衡二叉查找树（AVL树"><a href="#平衡二叉查找树（AVL树" class="headerlink" title="平衡二叉查找树（AVL树"></a>平衡二叉查找树（AVL树</h4><p>让每个节点的左右子树高度差不能超过 1。： 随着数据量的变多, 导致树的高度变高, 意味着磁盘的IO变化, 影响整体的查询销量</p>
 <h4 id="B树"><a href="#B树" class="headerlink" title="B树"></a>B树</h4><p>叶子节点没有形成链表, 范围查询的时候需要多次随机IO, 性能较低</p>
 <h4 id="B-树"><a href="#B-树" class="headerlink" title="B+树"></a>B+树</h4><p>B+树中的非叶子节点都不存储数据，而是只作为索引。由叶子节点存放整棵树的所有数据。而叶子节点之间构成一个从小到大有序的链表互相指向相邻的叶子节点，也就是叶子节点之间形成了有序的双向链表</p>
 <h4 id="B树和-B-树对比"><a href="#B树和-B-树对比" class="headerlink" title="B树和 B+树对比"></a>B树和 B+树对比</h4><ol>
@@ -344,7 +352,18 @@
 <li>数据修改, 当一个线程要对共享资源去进行修改的时候, 需要获取WriteLock, 写锁会阻塞其他的读锁和写锁, 确保只有一个线程独占获取锁资源</li>
 <li>数据一致性保护, 当涉及到多个步骤的写锁时, 可以通过WriteLock来保证多个步骤的原子性</li>
 </ol>
-<h2 id="线程池"><a href="#线程池" class="headerlink" title="线程池"></a>线程池</h2><h2 id="Collection-gt-Map、Set、List"><a href="#Collection-gt-Map、Set、List" class="headerlink" title="Collection -&gt; Map、Set、List"></a>Collection -&gt; Map、Set、List</h2><h3 id="Concurren-Collection-gt-ConcurrentHashMap"><a href="#Concurren-Collection-gt-ConcurrentHashMap" class="headerlink" title="Concurren Collection -&gt; ConcurrentHashMap"></a>Concurren Collection -&gt; ConcurrentHashMap</h3><h1 id="JVM"><a href="#JVM" class="headerlink" title="JVM"></a>JVM</h1><h2 id="内存模型"><a href="#内存模型" class="headerlink" title="内存模型"></a>内存模型</h2><h2 id="gc-算法"><a href="#gc-算法" class="headerlink" title="gc 算法"></a>gc 算法</h2><h2 id="FullGc-Yong-GC"><a href="#FullGc-Yong-GC" class="headerlink" title="FullGc Yong GC"></a>FullGc Yong GC</h2><h1 id="Netty"><a href="#Netty" class="headerlink" title="Netty"></a>Netty</h1><h2 id="zero-copy"><a href="#zero-copy" class="headerlink" title="zero copy"></a>zero copy</h2><h2 id="pagecache"><a href="#pagecache" class="headerlink" title="pagecache"></a>pagecache</h2><h2 id="eventLoop"><a href="#eventLoop" class="headerlink" title="eventLoop"></a>eventLoop</h2><h1 id="zk"><a href="#zk" class="headerlink" title="zk"></a>zk</h1>
+<h2 id="线程池"><a href="#线程池" class="headerlink" title="线程池"></a>线程池</h2><h2 id="Collection-gt-Map、Set、List"><a href="#Collection-gt-Map、Set、List" class="headerlink" title="Collection -&gt; Map、Set、List"></a>Collection -&gt; Map、Set、List</h2><h3 id="Concurren-Collection-gt-ConcurrentHashMap"><a href="#Concurren-Collection-gt-ConcurrentHashMap" class="headerlink" title="Concurren Collection -&gt; ConcurrentHashMap"></a>Concurren Collection -&gt; ConcurrentHashMap</h3><h1 id="JVM"><a href="#JVM" class="headerlink" title="JVM"></a>JVM</h1><h2 id="内存模型"><a href="#内存模型" class="headerlink" title="内存模型"></a>内存模型</h2><ol>
+<li>共享的:堆、方法区(metaspace)、直接内存</li>
+<li>私有的: 程序技术器, 虚拟机栈、本地方法栈</li>
+</ol>
+<h2 id="类加载机制"><a href="#类加载机制" class="headerlink" title="类加载机制"></a>类加载机制</h2><h2 id="创建对象的过程"><a href="#创建对象的过程" class="headerlink" title="创建对象的过程"></a>创建对象的过程</h2><h3 id="类加载机制-1"><a href="#类加载机制-1" class="headerlink" title="类加载机制"></a>类加载机制</h3><p>创建对象的过程和类加载的过程是Java程序执行的两个不同阶段。</p>
+<p>创建对象的过程：创建对象是指在程序中通过关键字”new”来实例化一个类，从而在内存中分配一块空间用于存储对象的实例。创建对象的过程包括以下几个步骤：<br>a. 类加载：如果该类还没有被加载，首先需要进行类加载，即将类的字节码加载到内存中。<br>b. 分配内存：在堆内存中分配一块空间，用于存储对象的实例。<br>c. 初始化：对对象的实例进行初始化，设置成员变量的默认值。<br>d. 调用构造方法：执行类的构造方法，对对象进行初始化。</p>
+<p>类加载的过程：类加载是指将类的字节码文件加载到JVM中，并在内存中生成对应的Class对象，从而可以通过这个Class对象获取类的信息和创建类的实例。类加载过程包括以下几个阶段：<br>a. 加载：查找并加载类的字节码文件。<br>b. 验证：验证字节码文件的格式是否正确，是否有安全性问题。<br>c. 准备：为类的静态变量分配内存，并设置默认值。<br>d. 解析：将类的符号引用转换为直接引用。<br>e. 初始化：执行类的静态初始化代码块，对静态变量进行赋值。</p>
+<h3 id="双亲委派"><a href="#双亲委派" class="headerlink" title="双亲委派"></a>双亲委派</h3><p>如，当一个类需要被加载时，首先会由最顶层的启动类加载器（Bootstrap ClassLoader）尝试加载，如果找不到则会依次由扩展类加载器（Extension ClassLoader）和应用程序类加载器（Application ClassLoader）尝试加载。只有当三者都无法加载时，才会由用户自定义的类加载器尝试加载</p>
+<ol>
+<li>双亲委派好处:1. 安全: 防止恶意代码去篡改核心库；2. 类的一致性: 保证层次结构, 相同的类只加载一次<br>1.1 什么情况下要打破双亲委派: 热更新<br>tomcat 要打破的原因是<br>Tomcat打破双亲委派模式是因为在Web应用中，每个Web应用都是一个独立的Java应用，拥有自己的类加载器，且需要加载各自的类和依赖库。<br>tomcat 的父类加载器是StandardClassLoader 会导致类冲突、破坏应用的隔离</li>
+</ol>
+<h2 id="gc-算法"><a href="#gc-算法" class="headerlink" title="gc 算法"></a>gc 算法</h2><h2 id="FullGc-Yong-GC"><a href="#FullGc-Yong-GC" class="headerlink" title="FullGc Yong GC"></a>FullGc Yong GC</h2><h1 id="Netty"><a href="#Netty" class="headerlink" title="Netty"></a>Netty</h1><h2 id="zero-copy"><a href="#zero-copy" class="headerlink" title="zero copy"></a>zero copy</h2><h2 id="pagecache"><a href="#pagecache" class="headerlink" title="pagecache"></a>pagecache</h2><h2 id="eventLoop"><a href="#eventLoop" class="headerlink" title="eventLoop"></a>eventLoop</h2><h1 id="zk"><a href="#zk" class="headerlink" title="zk"></a>zk</h1>
                 
               </div>
             
