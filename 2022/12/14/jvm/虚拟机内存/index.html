@@ -23,24 +23,23 @@
 <meta property="og:site_name" content="pc-xie">
 <meta property="og:description" content="如果没有特殊说明，都是针对的是 HotSpot 虚拟机。 本文基于《深入理解 Java 虚拟机：JVM 高级特性与最佳实践》进行总结补充。 常见面试题 ：  介绍下 Java 内存区域（运行时数据区） Java 对象的创建过程（五步，建议能默写出来并且要知道每一步虚拟机做了什么） 对象的访问定位的两种方式（句柄和直接指针两种方式）   前言对于 Java 程序员来说，在虚拟机自动内存管理机制下，">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://guide-blog-images.oss-cn-shenzhen.aliyuncs.com/github/javaguide/java/jvm/java-runtime-data-areas-jdk1.7.png">
-<meta property="og:image" content="https://guide-blog-images.oss-cn-shenzhen.aliyuncs.com/github/javaguide/java/jvm/java-runtime-data-areas-jdk1.8.png">
-<meta property="og:image" content="https://guide-blog-images.oss-cn-shenzhen.aliyuncs.com/github/javaguide/java/jvm/stack-area.png">
-<meta property="og:image" content="https://guide-blog-images.oss-cn-shenzhen.aliyuncs.com/github/javaguide/java/jvm/local-variables-table.png">
-<meta property="og:image" content="https://guide-blog-images.oss-cn-shenzhen.aliyuncs.com/github/javaguide/jvmimage-20220331175738692.png">
-<meta property="og:image" content="http://localhost:4000/pictures/memory-area/%E3%80%8A%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3%E8%99%9A%E6%8B%9F%E6%9C%BA%E3%80%8B%E7%AC%AC%E4%B8%89%E7%89%88%E7%9A%84%E7%AC%AC2%E7%AB%A0-%E8%99%9A%E6%8B%9F%E6%9C%BA%E6%A0%88.png">
-<meta property="og:image" content="http://localhost:4000/pictures/hotspot-heap-structure.png">
-<meta property="og:image" content="https://guide-blog-images.oss-cn-shenzhen.aliyuncs.com/github/javaguide/java/jvm/method-area-implementation.png">
-<meta property="og:image" content="https://img-blog.csdnimg.cn/20210425134508117.png">
-<meta property="og:image" content="https://guide-blog-images.oss-cn-shenzhen.aliyuncs.com/github/javaguide/java/jvm/method-area-jdk1.6.png">
-<meta property="og:image" content="https://guide-blog-images.oss-cn-shenzhen.aliyuncs.com/github/javaguide/java/jvm/method-area-jdk1.7.png">
-<meta property="og:image" content="https://guide-blog-images.oss-cn-shenzhen.aliyuncs.com/github/javaguide/java/jvm/access-location-of-object-handle.png">
-<meta property="og:image" content="https://guide-blog-images.oss-cn-shenzhen.aliyuncs.com/github/javaguide/java/jvm/access-location-of-object-handle-direct-pointer.png">
+<meta property="og:image" content="http://localhost:4000/img/jdk/jvm/java-runtime-data-areas-jdk1.7.png">
+<meta property="og:image" content="http://localhost:4000/img/jdk/jvm/java-runtime-data-areas-jdk1.8.png">
+<meta property="og:image" content="http://localhost:4000/img/jdk/jvm/stack-area.png">
+<meta property="og:image" content="http://localhost:4000/img/jdk/jvm/local-variables-table.png">
+<meta property="og:image" content="http://localhost:4000/img/jdk/jvm/jvmimage-20220331175738692.png">
+<meta property="og:image" content="http://localhost:4000/img/jdk/jvm/hotspot-heap-structure.png">
+<meta property="og:image" content="http://localhost:4000/img/jdk/jvm/method-area-implementation.png">
+<meta property="og:image" content="http://localhost:4000/img/jdk/jvm/20210425134508117.png">
+<meta property="og:image" content="http://localhost:4000/img/jdk/jvm/method-area-jdk1.6.png">
+<meta property="og:image" content="http://localhost:4000/img/jdk/jvm/method-area-jdk1.7.png">
+<meta property="og:image" content="http://localhost:4000/img/jdk/jvm/access-location-of-object-handle.png">
+<meta property="og:image" content="http://localhost:4000/img/jdk/jvm/access-location-of-object-handle-direct-pointer.png">
 <meta property="article:published_time" content="2022-12-14T09:49:33.601Z">
-<meta property="article:modified_time" content="2022-12-14T09:52:19.008Z">
+<meta property="article:modified_time" content="2024-08-08T14:40:02.316Z">
 <meta property="article:author" content="pc-xie">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="https://guide-blog-images.oss-cn-shenzhen.aliyuncs.com/github/javaguide/java/jvm/java-runtime-data-areas-jdk1.7.png">
+<meta name="twitter:image" content="http://localhost:4000/img/jdk/jvm/java-runtime-data-areas-jdk1.7.png">
   
   
   
@@ -299,9 +298,9 @@
 <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>对于 Java 程序员来说，在虚拟机自动内存管理机制下，不再需要像 C&#x2F;C++程序开发程序员这样为每一个 new 操作去写对应的 delete&#x2F;free 操作，不容易出现内存泄漏和内存溢出问题。正是因为 Java 程序员把内存控制权利交给 Java 虚拟机，一旦出现内存泄漏和溢出方面的问题，如果不了解虚拟机是怎样使用内存的，那么排查错误将会是一个非常艰巨的任务。</p>
 <h2 id="运行时数据区域"><a href="#运行时数据区域" class="headerlink" title="运行时数据区域"></a>运行时数据区域</h2><p>Java 虚拟机在执行 Java 程序的过程中会把它管理的内存划分成若干个不同的数据区域。JDK 1.8 和之前的版本略有不同，下面会介绍到。</p>
 <p><strong>JDK 1.8 之前</strong> ：</p>
-<p><img src="https://guide-blog-images.oss-cn-shenzhen.aliyuncs.com/github/javaguide/java/jvm/java-runtime-data-areas-jdk1.7.png" srcset="/img/loading.gif" lazyload alt="Java 运行时数据区域（JDK1.8 之前）"></p>
+<p><img src="/./img/jdk/jvm/java-runtime-data-areas-jdk1.7.png" srcset="/img/loading.gif" lazyload alt="Java 运行时数据区域（JDK1.8 之前）"></p>
 <p><strong>JDK 1.8 之后</strong> ：</p>
-<p><img src="https://guide-blog-images.oss-cn-shenzhen.aliyuncs.com/github/javaguide/java/jvm/java-runtime-data-areas-jdk1.8.png" srcset="/img/loading.gif" lazyload alt="Java 运行时数据区域（JDK1.8 之后）"></p>
+<p><img src="/./img/jdk/jvm/java-runtime-data-areas-jdk1.8.png" srcset="/img/loading.gif" lazyload alt="Java 运行时数据区域（JDK1.8 之后）"></p>
 <p><strong>线程私有的：</strong></p>
 <ul>
 <li>程序计数器</li>
@@ -327,12 +326,12 @@
 <p>栈绝对算的上是 JVM 运行时数据区域的一个核心，除了一些 Native 方法调用是通过本地方法栈实现的(后面会提到)，其他所有的 Java 方法调用都是通过栈来实现的（也需要和其他运行时数据区域比如程序计数器配合）。</p>
 <p>方法调用的数据需要通过栈进行传递，每一次方法调用都会有一个对应的栈帧被压入栈中，每一个方法调用结束后，都会有一个栈帧被弹出。</p>
 <p>栈由一个个栈帧组成，而每个栈帧中都拥有：局部变量表、操作数栈、动态链接、方法返回地址。和数据结构上的栈类似，两者都是先进后出的数据结构，只支持出栈和入栈两种操作。</p>
-<p><img src="https://guide-blog-images.oss-cn-shenzhen.aliyuncs.com/github/javaguide/java/jvm/stack-area.png" srcset="/img/loading.gif" lazyload alt="Java 虚拟机栈"></p>
+<p><img src="/./img/jdk/jvm/stack-area.png" srcset="/img/loading.gif" lazyload alt="Java 虚拟机栈"></p>
 <p><strong>局部变量表</strong> 主要存放了编译期可知的各种数据类型（boolean、byte、char、short、int、float、long、double）、对象引用（reference 类型，它不同于对象本身，可能是一个指向对象起始地址的引用指针，也可能是指向一个代表对象的句柄或其他与此对象相关的位置）。</p>
-<p><img src="https://guide-blog-images.oss-cn-shenzhen.aliyuncs.com/github/javaguide/java/jvm/local-variables-table.png" srcset="/img/loading.gif" lazyload alt="局部变量表"></p>
+<p><img src="/./img/jdk/jvm/local-variables-table.png" srcset="/img/loading.gif" lazyload alt="局部变量表"></p>
 <p><strong>操作数栈</strong> 主要作为方法调用的中转站使用，用于存放方法执行过程中产生的中间计算结果。另外，计算过程中产生的临时变量也会放在操作数栈中。</p>
 <p><strong>动态链接</strong> 主要服务一个方法需要调用其他方法的场景。在 Java 源文件被编译成字节码文件时，所有的变量和方法引用都作为符号引用（Symbilic Reference）保存在 Class 文件的常量池里。当一个方法要调用其他方法，需要将常量池中指向方法的符号引用转化为其在内存地址中的直接引用。动态链接的作用就是为了将符号引用转换为调用方法的直接引用。</p>
-<p><img src="https://guide-blog-images.oss-cn-shenzhen.aliyuncs.com/github/javaguide/jvmimage-20220331175738692.png" srcset="/img/loading.gif" lazyload></p>
+<p><img src="/./img/jdk/jvm/jvmimage-20220331175738692.png" srcset="/img/loading.gif" lazyload></p>
 <p>栈空间虽然不是无限的，但一般正常调用的情况下是不会出现问题的。不过，如果函数调用陷入无限循环的话，就会导致栈中被压入太多栈帧而占用太多空间，导致栈空间过深。那么当线程请求栈的深度超过当前 Java 虚拟机栈的最大深度的时候，就抛出 <code>StackOverFlowError</code> 错误。</p>
 <p>Java 方法有两种返回方式，一种是 return 语句正常返回，一种是抛出异常。不管哪种返回方式，都会导致栈帧被弹出。也就是说， <strong>栈帧随着方法调用而创建，随着方法结束而销毁。无论方法正常完成还是异常完成都算作方法结束。</strong></p>
 <p>除了 <code>StackOverFlowError</code> 错误之外，栈还可能会出现<code>OutOfMemoryError</code>错误，这是因为如果栈的内存大小可以动态扩展， 如果虚拟机在动态扩展栈时无法申请到足够的内存空间，则抛出<code>OutOfMemoryError</code>异常。</p>
@@ -341,7 +340,6 @@
 <li><strong><code>StackOverFlowError</code>：</strong> 若栈的内存大小不允许动态扩展，那么当线程请求栈的深度超过当前 Java 虚拟机栈的最大深度的时候，就抛出 <code>StackOverFlowError</code> 错误。</li>
 <li><strong><code>OutOfMemoryError</code>：</strong> 如果栈的内存大小可以动态扩展， 如果虚拟机在动态扩展栈时无法申请到足够的内存空间，则抛出<code>OutOfMemoryError</code>异常。</li>
 </ul>
-<p><img src="/./pictures/memory-area/%E3%80%8A%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3%E8%99%9A%E6%8B%9F%E6%9C%BA%E3%80%8B%E7%AC%AC%E4%B8%89%E7%89%88%E7%9A%84%E7%AC%AC2%E7%AB%A0-%E8%99%9A%E6%8B%9F%E6%9C%BA%E6%A0%88.png" srcset="/img/loading.gif" lazyload></p>
 <h3 id="本地方法栈"><a href="#本地方法栈" class="headerlink" title="本地方法栈"></a>本地方法栈</h3><p>和虚拟机栈所发挥的作用非常相似，区别是： <strong>虚拟机栈为虚拟机执行 Java 方法 （也就是字节码）服务，而本地方法栈则为虚拟机使用到的 Native 方法服务。</strong> 在 HotSpot 虚拟机中和 Java 虚拟机栈合二为一。</p>
 <p>本地方法被执行的时候，在本地方法栈也会创建一个栈帧，用于存放该本地方法的局部变量表、操作数栈、动态链接、出口信息。</p>
 <p>方法执行完毕后相应的栈帧也会出栈并释放内存空间，也会出现 <code>StackOverFlowError</code> 和 <code>OutOfMemoryError</code> 两种错误。</p>
@@ -355,7 +353,7 @@
 <li>永久代(Permanent Generation)</li>
 </ol>
 <p>下图所示的 Eden 区、两个 Survivor 区 S0 和 S1 都属于新生代，中间一层属于老年代，最下面一层属于永久代。</p>
-<p><img src="/./pictures/hotspot-heap-structure.png" srcset="/img/loading.gif" lazyload alt="hotspot-heap-structure"></p>
+<p><img src="/./img/jdk/jvm/hotspot-heap-structure.png" srcset="/img/loading.gif" lazyload alt="hotspot-heap-structure"></p>
 <p><strong>JDK 8 版本之后 PermGen(永久) 已被 Metaspace(元空间) 取代，元空间使用的是直接内存</strong> （我会在方法区这部分内容详细介绍到）。</p>
 <p>大部分情况，对象都会首先在 Eden 区域分配，在一次新生代垃圾回收后，如果对象还存活，则会进入 S0 或者 S1，并且对象的年龄还会加 1(Eden 区-&gt;Survivor 区后对象的初始年龄变为 1)，当它的年龄增加到一定程度（默认为 15 岁），就会被晋升到老年代中。对象晋升到老年代的年龄阈值，可以通过参数 <code>-XX:MaxTenuringThreshold</code> 来设置。</p>
 <blockquote>
@@ -367,16 +365,15 @@
 <ol>
 <li><strong><code>java.lang.OutOfMemoryError: GC Overhead Limit Exceeded</code></strong> ： 当 JVM 花太多时间执行垃圾回收并且只能回收很少的堆空间时，就会发生此错误。</li>
 <li><strong><code>java.lang.OutOfMemoryError: Java heap space</code></strong> :假如在创建新的对象时, 堆内存中的空间不足以存放新创建的对象, 就会引发此错误。(和配置的最大堆内存有关，且受制于物理内存大小。最大堆内存可通过<code>-Xmx</code>参数配置，若没有特别配置，将会使用默认值，详见：<a target="_blank" rel="noopener" href="https://stackoverflow.com/questions/28272923/default-xmxsize-in-java-8-max-heap-size">Default Java 8 max heap size</a>)</li>
-<li>……</li>
 </ol>
 <h3 id="方法区"><a href="#方法区" class="headerlink" title="方法区"></a>方法区</h3><p>方法区属于是 JVM 运行时数据区域的一块逻辑区域，是各个线程共享的内存区域。</p>
-<p>《Java 虚拟机规范》只是规定了有方法区这么个概念和它的作用，方法区到底要如何实现那就是虚拟机自己要考虑的事情了。也就是说，在不同的虚拟机实现上，方法区的实现是不同的。</p>
+<p>《Java虚拟机规范》只是规定了有方法区这么个概念和它的作用，方法区到底要如何实现那就是虚拟机自己要考虑的事情了。也就是说，在不同的虚拟机实现上，方法区的实现是不同的。</p>
 <p>当虚拟机要使用一个类时，它需要读取并解析 Class 文件获取相关信息，再将信息存入到方法区。方法区会存储已被虚拟机加载的 <strong>类信息、字段信息、方法信息、常量、静态变量、即时编译器编译后的代码缓存等数据</strong>。</p>
 <p><strong>方法区和永久代以及元空间是什么关系呢？</strong> 方法区和永久代以及元空间的关系很像 Java 中接口和类的关系，类实现了接口，这里的类就可以看作是永久代和元空间，接口可以看作是方法区，也就是说永久代以及元空间是 HotSpot 虚拟机对虚拟机规范中方法区的两种实现方式。并且，永久代是 JDK 1.8 之前的方法区实现，JDK 1.8 及以后方法区的实现变成了元空间。</p>
-<p><img src="https://guide-blog-images.oss-cn-shenzhen.aliyuncs.com/github/javaguide/java/jvm/method-area-implementation.png" srcset="/img/loading.gif" lazyload alt="HotSpot 虚拟机方法区的两种实现"></p>
+<p><img src="/./img/jdk/jvm/method-area-implementation.png" srcset="/img/loading.gif" lazyload alt="HotSpot 虚拟机方法区的两种实现"></p>
 <p><strong>为什么要将永久代 (PermGen) 替换为元空间 (MetaSpace) 呢?</strong></p>
 <p>下图来自《深入理解 Java 虚拟机》第 3 版 2.2.5</p>
-<p><img src="https://img-blog.csdnimg.cn/20210425134508117.png" srcset="/img/loading.gif" lazyload></p>
+<p><img src="/./img/jdk/jvm/20210425134508117.png" srcset="/img/loading.gif" lazyload></p>
 <p>1、整个永久代有一个 JVM 本身设置的固定大小上限，无法进行调整，而元空间使用的是直接内存，受本机可用内存的限制，虽然元空间仍旧可能溢出，但是比原来出现的几率会更小。</p>
 <blockquote>
 <p>当元空间溢出时会得到如下错误： <code>java.lang.OutOfMemoryError: MetaSpace</code></p>
@@ -404,8 +401,8 @@
 <p>HotSpot 虚拟机中字符串常量池的实现是 <code>src/hotspot/share/classfile/stringTable.cpp</code> ,<code>StringTable</code> 本质上就是一个<code>HashSet&lt;String&gt;</code> ,容量为 <code>StringTableSize</code>（可以通过 <code>-XX:StringTableSize</code> 参数来设置）。</p>
 <p><strong><code>StringTable</code> 中保存的是字符串对象的引用，字符串对象的引用指向堆中的字符串对象。</strong></p>
 <p>JDK1.7 之前，字符串常量池存放在永久代。JDK1.7 字符串常量池和静态变量从永久代移动了 Java 堆中。</p>
-<p><img src="https://guide-blog-images.oss-cn-shenzhen.aliyuncs.com/github/javaguide/java/jvm/method-area-jdk1.6.png" srcset="/img/loading.gif" lazyload alt="method-area-jdk1.6"></p>
-<p><img src="https://guide-blog-images.oss-cn-shenzhen.aliyuncs.com/github/javaguide/java/jvm/method-area-jdk1.7.png" srcset="/img/loading.gif" lazyload alt="method-area-jdk1.7"></p>
+<p><img src="/./img/jdk/jvm/method-area-jdk1.6.png" srcset="/img/loading.gif" lazyload alt="method-area-jdk1.6"></p>
+<p><img src="/./img/jdk/jvm/method-area-jdk1.7.png" srcset="/img/loading.gif" lazyload alt="method-area-jdk1.7"></p>
 <p><strong>JDK 1.7 为什么要将字符串常量池移动到堆中？</strong></p>
 <p>主要是因为永久代（方法区实现）的 GC 回收效率太低，只有在整堆收集 (Full GC)的时候才会被执行 GC。Java 程序中通常会有大量的被创建的字符串等待回收，将字符串常量池放到堆中，能够更高效及时地回收字符串内存。</p>
 <p>相关问题：<a target="_blank" rel="noopener" href="https://www.zhihu.com/question/57109429/answer/151717241">JVM 常量池中存储的是对象还是引用呢？ - RednaxelaFX - 知乎</a></p>
@@ -451,9 +448,9 @@
 <p><strong>对齐填充部分不是必然存在的，也没有什么特别的含义，仅仅起占位作用。</strong> 因为 Hotspot 虚拟机的自动内存管理系统要求对象起始地址必须是 8 字节的整数倍，换句话说就是对象的大小必须是 8 字节的整数倍。而对象头部分正好是 8 字节的倍数（1 倍或 2 倍），因此，当对象实例数据部分没有对齐时，就需要通过对齐填充来补全。</p>
 <h3 id="对象的访问定位"><a href="#对象的访问定位" class="headerlink" title="对象的访问定位"></a>对象的访问定位</h3><p>建立对象就是为了使用对象，我们的 Java 程序通过栈上的 reference 数据来操作堆上的具体对象。对象的访问方式由虚拟机实现而定，目前主流的访问方式有：<strong>使用句柄</strong>、<strong>直接指针</strong>。</p>
 <h4 id="句柄"><a href="#句柄" class="headerlink" title="句柄"></a>句柄</h4><p>如果使用句柄的话，那么 Java 堆中将会划分出一块内存来作为句柄池，reference 中存储的就是对象的句柄地址，而句柄中包含了对象实例数据与对象类型数据各自的具体地址信息。</p>
-<p><img src="https://guide-blog-images.oss-cn-shenzhen.aliyuncs.com/github/javaguide/java/jvm/access-location-of-object-handle.png" srcset="/img/loading.gif" lazyload alt="对象的访问定位-使用句柄"></p>
+<p><img src="/./img/jdk/jvm/access-location-of-object-handle.png" srcset="/img/loading.gif" lazyload alt="对象的访问定位-使用句柄"></p>
 <h4 id="直接指针"><a href="#直接指针" class="headerlink" title="直接指针"></a>直接指针</h4><p>如果使用直接指针访问，reference 中存储的直接就是对象的地址。</p>
-<p><img src="https://guide-blog-images.oss-cn-shenzhen.aliyuncs.com/github/javaguide/java/jvm/access-location-of-object-handle-direct-pointer.png" srcset="/img/loading.gif" lazyload alt="对象的访问定位-直接指针"></p>
+<p><img src="/./img/jdk/jvm/access-location-of-object-handle-direct-pointer.png" srcset="/img/loading.gif" lazyload alt="对象的访问定位-直接指针"></p>
 <p>这两种对象访问方式各有优势。使用句柄来访问的最大好处是 reference 中存储的是稳定的句柄地址，在对象被移动时只会改变句柄中的实例数据指针，而 reference 本身不需要修改。使用直接指针访问方式最大的好处就是速度快，它节省了一次指针定位的时间开销。</p>
 <p>HotSpot 虚拟机主要使用的就是这种方式来进行对象访问。</p>
 <h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ul>

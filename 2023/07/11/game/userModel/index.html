@@ -16,15 +16,15 @@
   <meta name="author" content="pc-xie">
   <meta name="keywords" content="">
   
-    <meta name="description" content="用户模型1.1. 用户模型收集哪些数据1.2. 哪些维度去进行收集登陆次数登录信息消费次数  邮箱账号、  google 邮箱  telegram 账号登录  twitter 账号登录  metamask 账号登录  资方能演示(用户自行在alpha上进行操作)    周末:  1.1 先挂单  1.2 展示  1.3 UTXO 获取">
+    <meta name="description" content="用户模型1.1. 用户模型收集哪些数据1.2. 哪些维度去进行收集登陆次数登录信息消费次数  邮箱账号、  google 邮箱  telegram 账号登录  twitter 账号登录  metamask 账号登录  资方能演示(用户自行在alpha上进行操作)    周末:  1.1 先挂单  1.2 展示  1.3 UTXO 获取   8.25 平台开发完成   9.15 产品内侧    最">
 <meta property="og:type" content="article">
 <meta property="og:title" content="pc-xie">
 <meta property="og:url" content="http://localhost:4000/2023/07/11/game/userModel/index.html">
 <meta property="og:site_name" content="pc-xie">
-<meta property="og:description" content="用户模型1.1. 用户模型收集哪些数据1.2. 哪些维度去进行收集登陆次数登录信息消费次数  邮箱账号、  google 邮箱  telegram 账号登录  twitter 账号登录  metamask 账号登录  资方能演示(用户自行在alpha上进行操作)    周末:  1.1 先挂单  1.2 展示  1.3 UTXO 获取">
+<meta property="og:description" content="用户模型1.1. 用户模型收集哪些数据1.2. 哪些维度去进行收集登陆次数登录信息消费次数  邮箱账号、  google 邮箱  telegram 账号登录  twitter 账号登录  metamask 账号登录  资方能演示(用户自行在alpha上进行操作)    周末:  1.1 先挂单  1.2 展示  1.3 UTXO 获取   8.25 平台开发完成   9.15 产品内侧    最">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2023-07-11T13:21:33.403Z">
-<meta property="article:modified_time" content="2023-07-23T08:45:04.976Z">
+<meta property="article:modified_time" content="2023-08-04T01:05:14.948Z">
 <meta property="article:author" content="pc-xie">
 <meta name="twitter:card" content="summary_large_image">
   
@@ -218,7 +218,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          136 字
+          973 字
         
       </span>
     
@@ -229,7 +229,7 @@
         
         
         
-          2 分钟
+          9 分钟
         
       </span>
     
@@ -290,6 +290,21 @@
 <li></li>
 </ol>
 <p>周末:<br>  1.1 先挂单<br>  1.2 展示<br>  1.3 UTXO 获取</p>
+<p>  8.25 平台开发完成</p>
+<p>  9.15 产品内侧<br>    最晚的时间点</p>
+<p>  后端管理</p>
+<p>  ken:<br>    异常登</p>
+<p>  相当于第三方登录后的地址, 做为一个唯一属性, 每次有过期时间<br>  eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJhdWQiOiJEZW1vIFNwcmluZyBTZWN1cml0eSAwYXV0aCAtIEp3dCIsInN1YiI6ImRkYWVkZGIyLTQzMmQtNGM0Yy05YTI1LWFmNjBlYTk3ZDM2MCIsImlzcyI6Ik5hbm8gZGV2LCBMTEMiLCJleHAiOjE2OTE0NzQyNDIsImlhdCI6MTY5MDg2OTQ0Mn0.Of3dCGfPOOjvHuX7VNi5eqgP1c7iHVKkX-Gt86uHsP2LAHvt1qET1yLEvAO_PjItB6TrOJiJDHrYvzCVpUrJNA</p>
+<ol>
+<li>房间逻辑:<br>1.1 对于刚开始进入房间玩游戏的用户, DOGG 和 usdc的初始值怎么获取<br>1.2 房间邀请的逻辑, 房主邀请用户1, 用户1 邀请用户2, 用户2邀请房主, 此时房主在和用户1玩结束了一局后, 再由用户2 邀请进房间, 怎么算？<br>1.3 用户在房间里面玩游戏, 是否需要等所有玩家准备好了, 才开始进行玩<br>1.4 玩家等待的话是否由超时机制存在<br>1.5 邀请玩游戏的逻辑是通过输入房间号来进入同一个房间<br>1.6 游戏平均一直需要重新开始游戏? 如果此时中间有人退出怎么处理, 例如4个人玩, 用户1 和 用户2 并列第一, 重新开始玩的时候用户2 退出了, 重新开始怎么计算</li>
+<li>游戏数据确认<br>2.1 在线游戏时长如何计算, 假设用户1 在房间1 玩游戏, 玩到一半退出了, 非正常结束, 时间怎么统计<br>2.2 不同游戏之间通过关卡怎么统计<br>2.3 游戏的分数怎么确认? 不同游戏的分数是否需要统一<br>2.4 游戏消耗货币, 货币种类是什么<br>2.5 游戏排行榜, 怎么计算. 不同的游戏, 以什么为标准去做</li>
+<li>运维数据是否需要管理控台</li>
+</ol>
+<p>房间要做的事情</p>
+<ol>
+<li>游戏的唯一属性 -&gt; 房间 -&gt; 用户 积分</li>
+<li>货币消耗怎么计算？？？？</li>
+</ol>
 
                 
               </div>

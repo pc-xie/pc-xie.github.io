@@ -23,28 +23,28 @@
 <meta property="og:site_name" content="pc-xie">
 <meta property="og:description" content="如果没有特殊说明，都是针对的是 HotSpot 虚拟机。 本文基于《深入理解 Java 虚拟机：JVM 高级特性与最佳实践》进行总结补充。 常见面试题 ：  如何判断对象是否死亡（两种方法）。 简单的介绍一下强引用、软引用、弱引用、虚引用（虚引用与软引用和弱引用的区别、使用软引用能带来的好处）。 如何判断一个常量是废弃常量 如何判断一个类是无用的类 垃圾收集有哪些算法，各自的特点？ HotSpo">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="http://localhost:4000/pictures/hotspot-heap-structure.png">
-<meta property="og:image" content="http://localhost:4000/pictures/jvm%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6/25178350.png">
-<meta property="og:image" content="http://localhost:4000/pictures/jvm%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6/run-with-PrintGCDetails.png">
+<meta property="og:image" content="http://localhost:4000/img/jdk/jvm/hotspot-heap-structure.png">
+<meta property="og:image" content="http://localhost:4000/img/jdk/jvm/25178350.png">
+<meta property="og:image" content="http://localhost:4000/img/jdk/jvm/run-with-PrintGCDetails.png">
 <meta property="og:image" content="https://my-blog-to-use.oss-cn-beijing.aliyuncs.com/18-8-26/28954286.jpg">
 <meta property="og:image" content="https://my-blog-to-use.oss-cn-beijing.aliyuncs.com/18-8-26/28128785.jpg">
 <meta property="og:image" content="https://guide-blog-images.oss-cn-shenzhen.aliyuncs.com/java-guide-blog/image-20210523201742303.png">
-<meta property="og:image" content="http://localhost:4000/pictures/jvm%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6/rf-hotspot-vm-gc.png">
-<meta property="og:image" content="http://localhost:4000/pictures/jvm%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6/jvm-gc-roots.png">
-<meta property="og:image" content="http://localhost:4000/pictures/jvm%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6/%E6%A0%87%E8%AE%B0-%E6%B8%85%E9%99%A4%E7%AE%97%E6%B3%95.jpeg">
-<meta property="og:image" content="http://localhost:4000/pictures/jvm%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6/90984624.png">
-<meta property="og:image" content="http://localhost:4000/pictures/jvm%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6/94057049.png">
-<meta property="og:image" content="http://localhost:4000/pictures/jvm%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6/46873026.png">
-<meta property="og:image" content="http://localhost:4000/pictures/jvm%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6/22018368.png">
-<meta property="og:image" content="http://localhost:4000/pictures/jvm%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6/parllel-scavenge%E6%94%B6%E9%9B%86%E5%99%A8.png">
-<meta property="og:image" content="http://localhost:4000/pictures/jvm%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6/CMS%E6%94%B6%E9%9B%86%E5%99%A8.png">
-<meta property="og:image" content="http://localhost:4000/img/jdk/g1.png">
-<meta property="og:image" content="http://localhost:4000/img/jdk/zgc.png">
+<meta property="og:image" content="http://localhost:4000/img/jdk/jvm/rf-hotspot-vm-gc.png">
+<meta property="og:image" content="http://localhost:4000/img/jdk/jvm/jvm-gc-roots.png">
+<meta property="og:image" content="http://localhost:4000/img/jdk/jvm/mark-and-sweep-garbage-collection-algorithm.png">
+<meta property="og:image" content="http://localhost:4000/img/jdk/jvm/copying-garbage-collection-algorithm.png">
+<meta property="og:image" content="http://localhost:4000/img/jdk/jvm/mark-and-compact-garbage-collection-algorithm.png">
+<meta property="og:image" content="http://localhost:4000/img/jdk/jvm/serial-garbage-collector.png">
+<meta property="og:image" content="http://localhost:4000/img/jdk/jvm/parnew-garbage-collector.png">
+<meta property="og:image" content="http://localhost:4000/img/jdk/jvm/parallel-scavenge-garbage-collector.png">
+<meta property="og:image" content="http://localhost:4000/img/jdk/jvm/cms-garbage-collector.png">
+<meta property="og:image" content="http://localhost:4000/img/jdk/jvm/g1-garbage-collector.png">
+<meta property="og:image" content="http://localhost:4000/img/jdk/jvm/zgc.png">
 <meta property="article:published_time" content="2022-12-14T09:51:00.109Z">
-<meta property="article:modified_time" content="2023-04-07T09:13:24.787Z">
+<meta property="article:modified_time" content="2024-08-18T17:01:39.925Z">
 <meta property="article:author" content="pc-xie">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="http://localhost:4000/pictures/hotspot-heap-structure.png">
+<meta name="twitter:image" content="http://localhost:4000/img/jdk/jvm/hotspot-heap-structure.png">
   
   
   
@@ -236,7 +236,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          13k 字
+          14k 字
         
       </span>
     
@@ -247,7 +247,7 @@
         
         
         
-          109 分钟
+          114 分钟
         
       </span>
     
@@ -317,15 +317,15 @@
 <li>永久代(Permanent Generation)</li>
 </ol>
 <p>下图所示的 Eden 区、两个 Survivor 区 S0 和 S1 都属于新生代，中间一层属于老年代，最下面一层属于永久代。</p>
-<p><img src="/./pictures/hotspot-heap-structure.png" srcset="/img/loading.gif" lazyload alt="hotspot-heap-structure"></p>
+<p><img src="/./img/jdk/jvm/hotspot-heap-structure.png" srcset="/img/loading.gif" lazyload alt="hotspot-heap-structure"></p>
 <p><strong>JDK 8 版本之后 PermGen(永久) 已被 Metaspace(元空间) 取代，元空间使用的是直接内存</strong> 。</p>
 <p>关于堆空间结构更详细的介绍，可以回过头看看 <a href="./memory-area.md">Java 内存区域详解</a> 这篇文章。</p>
 <h2 id="内存分配和回收原则"><a href="#内存分配和回收原则" class="headerlink" title="内存分配和回收原则"></a>内存分配和回收原则</h2><h3 id="对象优先在-Eden-区分配"><a href="#对象优先在-Eden-区分配" class="headerlink" title="对象优先在 Eden 区分配"></a>对象优先在 Eden 区分配</h3><p>大多数情况下，对象在新生代中 Eden 区分配。当 Eden 区没有足够空间进行分配时，虚拟机将发起一次 Minor GC。下面我们来进行实际测试以下。</p>
 <p>测试代码：</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">GCTest</span> &#123;<br>	<span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">main</span><span class="hljs-params">(String[] args)</span> &#123;<br>		<span class="hljs-type">byte</span>[] allocation1, allocation2;<br>		allocation1 = <span class="hljs-keyword">new</span> <span class="hljs-title class_">byte</span>[<span class="hljs-number">30900</span>*<span class="hljs-number">1024</span>];<br>	&#125;<br>&#125;<br></code></pre></td></tr></table></figure>
 
-<p>通过以下方式运行：<br><img src="/./pictures/jvm%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6/25178350.png" srcset="/img/loading.gif" lazyload></p>
-<p>添加的参数：<code>-XX:+PrintGCDetails</code><br><img src="/./pictures/jvm%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6/run-with-PrintGCDetails.png" srcset="/img/loading.gif" lazyload></p>
+<p>通过以下方式运行：<br><img src="/./img/jdk/jvm/25178350.png" srcset="/img/loading.gif" lazyload></p>
+<p>添加的参数：<code>-XX:+PrintGCDetails</code><br><img src="/./img/jdk/jvm/run-with-PrintGCDetails.png" srcset="/img/loading.gif" lazyload></p>
 <p>运行结果 (红色字体描述有误，应该是对应于 JDK1.7 的永久代)：</p>
 <p><img src="https://my-blog-to-use.oss-cn-beijing.aliyuncs.com/18-8-26/28954286.jpg" srcset="/img/loading.gif" lazyload></p>
 <p>从上图我们可以看出 Eden 区内存几乎已经被分配完全（即使程序什么也不做，新生代也会使用 2000 多 k 内存）。</p>
@@ -357,7 +357,7 @@
 <p><del><em>“老年代 GC（Major GC&#x2F;Full GC），指发生在老年代的 GC……”</em></del></p>
 </blockquote>
 <p>上面的说法已经在《深入理解 Java 虚拟机》第三版中被改正过来了。感谢 R 大的回答：</p>
-<p><img src="/./pictures/jvm%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6/rf-hotspot-vm-gc.png" srcset="/img/loading.gif" lazyload></p>
+<p><img src="/./img/jdk/jvm/rf-hotspot-vm-gc.png" srcset="/img/loading.gif" lazyload></p>
 <p><strong>总结：</strong></p>
 <p>针对 HotSpot VM 的实现，它里面的 GC 其实准确分类只有两大种：</p>
 <p>部分收集 (Partial GC)：</p>
@@ -386,7 +386,7 @@
 
 <h3 id="可达性分析算法"><a href="#可达性分析算法" class="headerlink" title="可达性分析算法"></a>可达性分析算法</h3><p>这个算法的基本思想就是通过一系列的称为 <strong>“GC Roots”</strong> 的对象作为起点，从这些节点开始向下搜索，节点所走过的路径称为引用链，当一个对象到 GC Roots 没有任何引用链相连的话，则证明此对象是不可用的，需要被回收。</p>
 <p>下图中的 <code>Object 6 ~ Object 10</code> 之间虽有引用关系，但它们到 GC Roots 不可达，因此为需要被回收的对象。</p>
-<p><img src="/./pictures/jvm%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6/jvm-gc-roots.png" srcset="/img/loading.gif" lazyload alt="可达性分析算法"></p>
+<p><img src="/./img/jdk/jvm/jvm-gc-roots.png" srcset="/img/loading.gif" lazyload alt="可达性分析算法"></p>
 <p><strong>哪些对象可以作为 GC Roots 呢？</strong></p>
 <ul>
 <li>虚拟机栈(栈帧中的本地变量表)中引用的对象</li>
@@ -446,11 +446,11 @@
 <li><strong>效率问题</strong></li>
 <li><strong>空间问题（标记清除后会产生大量不连续的碎片）</strong></li>
 </ol>
-<p><img src="/./pictures/jvm%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6/%E6%A0%87%E8%AE%B0-%E6%B8%85%E9%99%A4%E7%AE%97%E6%B3%95.jpeg" srcset="/img/loading.gif" lazyload></p>
+<p><img src="/./img/jdk/jvm/mark-and-sweep-garbage-collection-algorithm.png" srcset="/img/loading.gif" lazyload></p>
 <h3 id="标记-复制算法"><a href="#标记-复制算法" class="headerlink" title="标记-复制算法"></a>标记-复制算法</h3><p>为了解决效率问题，“标记-复制”收集算法出现了。它可以将内存分为大小相同的两块，每次使用其中的一块。当这一块的内存使用完后，就将还存活的对象复制到另一块去，然后再把使用的空间一次清理掉。这样就使每次的内存回收都是对内存区间的一半进行回收。</p>
-<p><img src="/./pictures/jvm%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6/90984624.png" srcset="/img/loading.gif" lazyload alt="复制算法"></p>
+<p><img src="/./img/jdk/jvm/copying-garbage-collection-algorithm.png" srcset="/img/loading.gif" lazyload alt="复制算法"></p>
 <h3 id="标记-整理算法"><a href="#标记-整理算法" class="headerlink" title="标记-整理算法"></a>标记-整理算法</h3><p>根据老年代的特点提出的一种标记算法，标记过程仍然与“标记-清除”算法一样，但后续步骤不是直接对可回收对象回收，而是让所有存活的对象向一端移动，然后直接清理掉端边界以外的内存。</p>
-<p><img src="/./pictures/jvm%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6/94057049.png" srcset="/img/loading.gif" lazyload alt="标记-整理算法 "></p>
+<p><img src="/./img/jdk/jvm/mark-and-compact-garbage-collection-algorithm.png" srcset="/img/loading.gif" lazyload alt="标记-整理算法 "></p>
 <h3 id="分代收集算法"><a href="#分代收集算法" class="headerlink" title="分代收集算法"></a>分代收集算法</h3><p>当前虚拟机的垃圾收集都采用分代收集算法，这种算法没有什么新的思想，只是根据对象存活周期的不同将内存分为几块。一般将 java 堆分为新生代和老年代，这样我们就可以根据各个年代的特点选择合适的垃圾收集算法。</p>
 <p><strong>比如在新生代中，每次收集都会有大量对象死去，所以可以选择”标记-复制“算法，只需要付出少量对象的复制成本就可以完成每次垃圾收集。而老年代的对象存活几率是比较高的，而且没有额外的空间对它进行分配担保，所以我们必须选择“标记-清除”或“标记-整理”算法进行垃圾收集。</strong></p>
 <p><strong>延伸面试问题：</strong> HotSpot 为什么要分为新生代和老年代？</p>
@@ -459,12 +459,12 @@
 <p>虽然我们对各个收集器进行比较，但并非要挑选出一个最好的收集器。因为直到现在为止还没有最好的垃圾收集器出现，更加没有万能的垃圾收集器，<strong>我们能做的就是根据具体应用场景选择适合自己的垃圾收集器</strong>。试想一下：如果有一种四海之内、任何场景下都适用的完美收集器存在，那么我们的 HotSpot 虚拟机就不会实现那么多不同的垃圾收集器了。</p>
 <h3 id="Serial-收集器"><a href="#Serial-收集器" class="headerlink" title="Serial 收集器"></a>Serial 收集器</h3><p>Serial（串行）收集器是最基本、历史最悠久的垃圾收集器了。大家看名字就知道这个收集器是一个单线程收集器了。它的 <strong>“单线程”</strong> 的意义不仅仅意味着它只会使用一条垃圾收集线程去完成垃圾收集工作，更重要的是它在进行垃圾收集工作的时候必须暂停其他所有的工作线程（ <strong>“Stop The World”</strong> ），直到它收集结束。</p>
 <p><strong>新生代采用标记-复制算法，老年代采用标记-整理算法。</strong></p>
-<p><img src="/./pictures/jvm%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6/46873026.png" srcset="/img/loading.gif" lazyload alt=" Serial 收集器 "></p>
+<p><img src="/./img/jdk/jvm/serial-garbage-collector.png" srcset="/img/loading.gif" lazyload alt=" Serial 收集器 "></p>
 <p>虚拟机的设计者们当然知道 Stop The World 带来的不良用户体验，所以在后续的垃圾收集器设计中停顿时间在不断缩短（仍然还有停顿，寻找最优秀的垃圾收集器的过程仍然在继续）。</p>
 <p>但是 Serial 收集器有没有优于其他垃圾收集器的地方呢？当然有，它<strong>简单而高效（与其他收集器的单线程相比）</strong>。Serial 收集器由于没有线程交互的开销，自然可以获得很高的单线程收集效率。Serial 收集器对于运行在 Client 模式下的虚拟机来说是个不错的选择。</p>
 <h3 id="ParNew-收集器"><a href="#ParNew-收集器" class="headerlink" title="ParNew 收集器"></a>ParNew 收集器</h3><p><strong>ParNew 收集器其实就是 Serial 收集器的多线程版本，除了使用多线程进行垃圾收集外，其余行为（控制参数、收集算法、回收策略等等）和 Serial 收集器完全一样。</strong></p>
 <p><strong>新生代采用标记-复制算法，老年代采用标记-整理算法。</strong></p>
-<p><img src="/./pictures/jvm%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6/22018368.png" srcset="/img/loading.gif" lazyload alt="ParNew 收集器 "></p>
+<p><img src="/./img/jdk/jvm/parnew-garbage-collector.png" srcset="/img/loading.gif" lazyload alt="ParNew 收集器 "></p>
 <p>它是许多运行在 Server 模式下的虚拟机的首要选择，除了 Serial 收集器外，只有它能与 CMS 收集器（真正意义上的并发收集器，后面会介绍到）配合工作。</p>
 <p><strong>并行和并发概念补充：</strong></p>
 <ul>
@@ -478,7 +478,7 @@
 
 <p><strong>Parallel Scavenge 收集器关注点是吞吐量（高效率的利用 CPU）。CMS 等垃圾收集器的关注点更多的是用户线程的停顿时间（提高用户体验）。所谓吞吐量就是 CPU 中用于运行用户代码的时间与 CPU 总消耗时间的比值。</strong> Parallel Scavenge 收集器提供了很多参数供用户找到最合适的停顿时间或最大吞吐量，如果对于收集器运作不太了解，手工优化存在困难的时候，使用 Parallel Scavenge 收集器配合自适应调节策略，把内存管理优化交给虚拟机去完成也是一个不错的选择。</p>
 <p><strong>新生代采用标记-复制算法，老年代采用标记-整理算法。</strong></p>
-<p><img src="/./pictures/jvm%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6/parllel-scavenge%E6%94%B6%E9%9B%86%E5%99%A8.png" srcset="/img/loading.gif" lazyload alt="Parallel Scavenge 收集器 "></p>
+<p><img src="/./img/jdk/jvm/parallel-scavenge-garbage-collector.png" srcset="/img/loading.gif" lazyload alt="Parallel Scavenge 收集器 "></p>
 <p><strong>这是 JDK1.8 默认收集器</strong></p>
 <p>使用 <code>java -XX:+PrintCommandLineFlags -version</code> 命令查看</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs bash">-XX:InitialHeapSize=262921408 -XX:MaxHeapSize=4206742528 -XX:+PrintCommandLineFlags -XX:+UseCompressedClassPointers -XX:+UseCompressedOops -XX:+UseParallelGC<br>java version <span class="hljs-string">&quot;1.8.0_211&quot;</span><br>Java(TM) SE Runtime Environment (build 1.8.0_211-b12)<br>Java HotSpot(TM) 64-Bit Server VM (build 25.211-b12, mixed mode)<br></code></pre></td></tr></table></figure>
@@ -492,15 +492,16 @@
 <ul>
 <li><strong>初始标记：</strong> 暂停所有的其他线程，并记录下直接与 root 相连的对象，速度很快 ；</li>
 <li><strong>并发标记：</strong> 同时开启 GC 和用户线程，用一个闭包结构去记录可达对象。但在这个阶段结束，这个闭包结构并不能保证包含当前所有的可达对象。因为用户线程可能会不断的更新引用域，所以 GC 线程无法保证可达性分析的实时性。所以这个算法里会跟踪记录这些发生引用更新的地方。</li>
-<li><strong>重新标记：</strong> 重新标记阶段就是为了修正并发标记期间因为用户程序继续运行而导致标记产生变动的那一部分对象的标记记录，这个阶段的停顿时间一般会比初始标记阶段的时间稍长，远远比并发标记阶段时间短</li>
+<li><strong>重新标记：</strong> 重新标记阶段就是为了修正并发标记期间因为用户程序继续运行而导致标记产生变动的那一部分对象的标记记录，这个阶段的停顿时间一般会比初始标记阶段的时间稍长，远远比并发标记阶段时间短, 重新标记的目的是补充标记遗漏的准确性, 主要标记在并发标记后, 重新标记前, 变为可达的对象, 其中在并发标记中产生的不可达对象是在下一个回收周期中被处理</li>
 <li><strong>并发清除：</strong> 开启用户线程，同时 GC 线程开始对未标记的区域做清扫。</li>
 </ul>
-<p><img src="/../pictures/jvm%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6/CMS%E6%94%B6%E9%9B%86%E5%99%A8.png" srcset="/img/loading.gif" lazyload alt="CMS 垃圾收集器 "></p>
+<p>浮动垃圾的影响:<br>    导致内存利用率降低<br>    浮动垃圾变多, 老年代碎片化严重, 从而导致更多的Minor GC, 最终导致full GC<br>    原因是因为GC 回收算法是标记清除的, 产生碎片化严重, 影响大对象的分配</p>
+<p><img src="/./img/jdk/jvm/cms-garbage-collector.png" srcset="/img/loading.gif" lazyload alt="CMS 垃圾收集器 "></p>
 <p>从它的名字就可以看出它是一款优秀的垃圾收集器，主要优点：<strong>并发收集、低停顿</strong>。但是它有下面三个明显的缺点：</p>
 <ul>
-<li><strong>对 CPU 资源敏感；</strong></li>
-<li><strong>无法处理浮动垃圾；</strong></li>
-<li><strong>它使用的回收算法-“标记-清除”算法会导致收集结束时会有大量空间碎片产生。</strong></li>
+<li><strong>对 CPU 资源敏感；</strong><br>  并发标记和并发清除的时候需要额外的CPU资源</li>
+<li><strong>无法处理浮动垃圾；</strong><br>  在并发标记的过程中, GC线程和用户线程同时工作, 应用线程可能会在标记以后, 继续分配出来的对象为不可达对象, 但是新产生的不可达对象不会在当前的GC周期中被回收</li>
+<li><strong>它使用的回收算法-“标记-清除”算法会导致收集结束时会有大量空间碎片产生。</strong><br>  可能导致老年代碎片化</li>
 </ul>
 <h3 id="G1-收集器"><a href="#G1-收集器" class="headerlink" title="G1 收集器"></a>G1 收集器</h3><p><strong>G1 (Garbage-First) 是一款面向服务器的垃圾收集器,主要针对配备多颗处理器及大容量内存的机器. 以极高概率满足 GC 停顿时间要求的同时,还具备高吞吐量性能特征.</strong></p>
 <p>被视为 JDK1.7 中 HotSpot 虚拟机的一个重要进化特征。它具备以下特点：</p>
@@ -512,11 +513,13 @@
 </ul>
 <p>G1 收集器的运作大致分为以下几个步骤：</p>
 <ul>
-<li><strong>初始标记</strong></li>
-<li><strong>并发标记</strong></li>
-<li><strong>最终标记</strong></li>
-<li><strong>筛选回收</strong></li>
+<li><strong>初始标记</strong><br>标记从GC Roots 出发的可达对象 需要进行STW</li>
+<li><strong>并发标记</strong><br>标记整个堆中的存活对象, 不会进行STW</li>
+<li><strong>最终标记</strong><br>完成并发标记, 并且处理在并发标记期间导致应用对象的变化, 需要进行STW</li>
+<li><strong>筛选回收</strong><br>确定进行回收, 并根据收集的数据区域进行回收</li>
+<li><strong>拷贝回收</strong><br>将存活的对象从回收区拷贝到新的区块, 方便进行回收</li>
 </ul>
+<p>特点:<br>    region 管理, 每个区域可能是Eden 区, 也可能是Survivor区, 也可能是old区<br>    并发标记和整理, 支持并发标记, 降低了STW<br>    可预测的停顿时间<br>    优先回收: 维护一个优先队列, 根据各个区域回收的价值(回收成本和收益) 决定哪些要优先回收<br>G1 怎么解决浮动垃圾:<br>    将对分割成多个region, 更加灵活的去管理和回收内存, 降低浮动垃圾的影响<br>    垃圾回收的时候, 可以进行并发标记和整理, 最大限度的降低程序的停顿</p>
 <p><strong>G1 收集器在后台维护了一个优先列表，每次根据允许的收集时间，优先选择回收价值最大的 Region(这也就是它的名字 Garbage-First 的由来)</strong> 。这种使用 Region 划分内存空间以及有优先级的区域回收方式，保证了 G1 收集器在有限时间内可以尽可能高的收集效率（把内存化整为零）。</p>
 <h3 id="ZGC-收集器"><a href="#ZGC-收集器" class="headerlink" title="ZGC 收集器"></a>ZGC 收集器</h3><p>与 CMS 中的 ParNew 和 G1 类似，ZGC 也采用标记-复制算法，不过 ZGC 对该算法做了重大改进。</p>
 <p>在 ZGC 中出现 Stop The World 的情况会更少！</p>
@@ -525,10 +528,10 @@
 <ol>
 <li>标记阶段，即从GC Roots集合开始，标记活跃对象；</li>
 <li>转移阶段，即把活跃对象复制到新的内存地址上；</li>
-<li>重定位阶段，因为<strong>转移导致对象的地址发生了变化，在重定位阶段，所有指向对象旧地址的指针都要调整到对象新的地址上</strong> 需要复制。<br>下面以G1为例，通过G1中标记-复制算法过程（G1的Young GC和Mixed GC均采用该算法），分析G1停顿耗时的主要瓶颈。G1垃圾回收周期如下图所示：<br><img src="/../img/jdk/g1.png" srcset="/img/loading.gif" lazyload alt="g1"><br>G1的混合回收过程可以分为标记阶段、清理阶段和复制阶段。<br>1.1. 标记阶段停顿分析<br>1.1.1. 初始标记阶段：初始标记阶段是指从GC Roots出发标记全部直接子节点的过程，该阶段是STW的。由于GC Roots数量不多，通常该阶段耗时非常短。<br>1.1.2. 并发标记阶段：并发标记阶段是指从GC Roots开始对堆中对象进行可达性分析，找出存活对象。该阶段是并发的，即应用线程和GC线程可以同时活动。并发标记耗时相对长很多，但因为不是STW，所以我们不太关心该阶段耗时的长短。<br>1.1.3. 再标记阶段：重新标记那些在并发标记阶段发生变化的对象。该阶段是STW的。<br>清理阶段停顿分析<br>1.1.4. 清理阶段清点出有存活对象的分区和没有存活对象的分区，该阶段不会清理垃圾对象，也不会执行存活对象的复制。该阶段是STW的。<br>复制阶段停顿分析</li>
+<li>重定位阶段，因为<strong>转移导致对象的地址发生了变化，在重定位阶段，所有指向对象旧地址的指针都要调整到对象新的地址上</strong> 需要复制。<br>下面以G1为例，通过G1中标记-复制算法过程（G1的Young GC和Mixed GC均采用该算法），分析G1停顿耗时的主要瓶颈。G1垃圾回收周期如下图所示：<br><img src="/./img/jdk/jvm/g1-garbage-collector.png" srcset="/img/loading.gif" lazyload alt="g1"><br>G1的混合回收过程可以分为标记阶段、清理阶段和复制阶段。<br>1.1. 标记阶段停顿分析<br>1.1.1. 初始标记阶段：初始标记阶段是指从GC Roots出发标记全部直接子节点的过程，该阶段是STW的。由于GC Roots数量不多，通常该阶段耗时非常短。<br>1.1.2. 并发标记阶段：并发标记阶段是指从GC Roots开始对堆中对象进行可达性分析，找出存活对象。该阶段是并发的，即应用线程和GC线程可以同时活动。并发标记耗时相对长很多，但因为不是STW，所以我们不太关心该阶段耗时的长短。<br>1.1.3. 再标记阶段：重新标记那些在并发标记阶段发生变化的对象。该阶段是STW的。<br>清理阶段停顿分析<br>1.1.4. 清理阶段清点出有存活对象的分区和没有存活对象的分区，该阶段不会清理垃圾对象，也不会执行存活对象的复制。该阶段是STW的。<br>复制阶段停顿分析</li>
 </ol>
 <h5 id="g1-耗时长原因"><a href="#g1-耗时长原因" class="headerlink" title="g1 耗时长原因"></a>g1 耗时长原因</h5><p>复制算法中的转移阶段需要分配新内存和复制对象的成员变量。转移阶段是STW的，其中内存分配通常耗时非常短，但对象成员变量的复制耗时有可能较长，这是因为复制耗时与存活对象数量与对象复杂度成正比。对象越复杂，复制耗时越长。<br>四个STW过程中，初始标记因为只标记GC Roots，耗时较短。再标记因为对象数少，耗时也较短。清理阶段因为内存分区数量少，耗时也较短。<strong>转移阶段要处理所有存活的对象，耗时会较长。因此，G1停顿时间的瓶颈主要是标记-复制中的转移阶段STW。为什么转移阶段不能和标记阶段一样并发执行呢？主要是G1未能解决转移过程中准确定位对象地址的问题</strong>。</p>
-<h4 id="ZGC"><a href="#ZGC" class="headerlink" title="ZGC"></a>ZGC</h4><p>与CMS中的ParNew和G1类似，ZGC也采用标记-复制算法，不过ZGC对该算法做了重大改进：ZGC在标记、转移和重定位阶段几乎都是并发的，这是ZGC实现停顿时间小于10ms目标的最关键原因。<br>ZGC只有三个STW阶段：初始标记，再标记，初始转移。其中，初始标记和初始转移分别都只需要扫描所有GC Roots，其处理时间和GC Roots的数量成正比，一般情况耗时非常短；再标记阶段STW时间很短，最多1ms，超过1ms则再次进入并发标记阶段。即，ZGC几乎所有暂停都只依赖于GC Roots集合大小，停顿时间不会随着堆的大小或者活跃对象的大小而增加。与ZGC对比，G1的转移阶段完全STW的，且停顿时间随存活对象的大小增加而增加。<br><img src="/../img/jdk/zgc.png" srcset="/img/loading.gif" lazyload alt="zgc"></p>
+<h4 id="ZGC"><a href="#ZGC" class="headerlink" title="ZGC"></a>ZGC</h4><p>与CMS中的ParNew和G1类似，ZGC也采用标记-复制算法，不过ZGC对该算法做了重大改进：ZGC在标记、转移和重定位阶段几乎都是并发的，这是ZGC实现停顿时间小于10ms目标的最关键原因。<br>ZGC只有三个STW阶段：初始标记，再标记，初始转移。其中，初始标记和初始转移分别都只需要扫描所有GC Roots，其处理时间和GC Roots的数量成正比，一般情况耗时非常短；再标记阶段STW时间很短，最多1ms，超过1ms则再次进入并发标记阶段。即，ZGC几乎所有暂停都只依赖于GC Roots集合大小，停顿时间不会随着堆的大小或者活跃对象的大小而增加。与ZGC对比，G1的转移阶段完全STW的，且停顿时间随存活对象的大小增加而增加。<br><img src="/./img/jdk/jvm/zgc.png" srcset="/img/loading.gif" lazyload alt="zgc"></p>
 <h2 id="zgc-如何实现并发转移的复制"><a href="#zgc-如何实现并发转移的复制" class="headerlink" title="zgc 如何实现并发转移的复制"></a>zgc 如何实现并发转移的复制</h2><p>ZGC通过着色指针和读屏障技术，解决了转移过程中准确访问对象的问题，实现了并发转移。大致原理描述如下：并发转移中“并发”意味着GC线程在转移对象的过程中，应用线程也在不停地访问对象。假设对象发生转移，但对象地址未及时更新，那么应用线程可能访问到旧地址，从而造成错误。<code>而在ZGC中，应用线程访问对象将触发“读屏障”，如果发现对象被移动了，那么“读屏障”会把读出来的指针更新到对象的新地址上，这样应用线程始终访问的都是对象的新地址。那么，JVM是如何判断对象被移动过呢？就是利用对象引用的地址，即着色指针&#39;</code>。下面介绍着色指针和读屏障技术细节。</p>
 <h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ul>
 <li>《深入理解 Java 虚拟机：JVM 高级特性与最佳实践（第二版》</li>

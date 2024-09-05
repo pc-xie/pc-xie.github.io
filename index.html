@@ -223,15 +223,15 @@
     <article class="col-12 col-md-12 mx-auto index-info">
       <h1 class="index-header">
         
-        <a href="/2023/07/18/interview/mt/" target="_self">
-          
+        <a href="/2024/08/17/interview/%E9%9D%A2%E7%BB%8F/" target="_self">
+          面经
         </a>
       </h1>
 
       
-      <a class="index-excerpt index-excerpt__noimg" href="/2023/07/18/interview/mt/" target="_self">
+      <a class="index-excerpt index-excerpt__noimg" href="/2024/08/17/interview/%E9%9D%A2%E7%BB%8F/" target="_self">
         <div>
-          job 网关 serverless  重点问网关交叉面问配置中心  有机器不可用怎么解决？？？？单点问题怎么解决 高并发、GC、如何排查GC、 大的请求体 隔离型问题。。。。 流量隔离、资源占用隔离、 插件化 （当前是没做的, 需要准备一下, 插件业务自己去写, 按照网关规范来做的） 业务的独立集群的划分, 实现层 用netty, 后端rpc 用rpc 框架 (http 单独) 配置中心整体架构
+          项目问题1. FullGc消除, young gc 从2秒到10ms 怎么做到的背景: 每次演练后, 通过CAT 的老年代明显的上涨, 再过1-2周, 会导致应用发生OOM1.1 FullGC 怎么消除1.1.1 增加jvm 的OOM 文件dump, -XX:+HeapDumpOnOutOfMemoryError -XX:HeapDumpPath&#x3D;${DUMP_LOG_DIR}1.1.2
         </div>
       </a>
 
@@ -239,128 +239,8 @@
         
           <div class="post-meta mr-3">
             <i class="iconfont icon-date"></i>
-            <time datetime="2023-07-18 19:50" pubdate>
-              2023-07-18
-            </time>
-          </div>
-        
-        
-        
-      </div>
-    </article>
-  </div>
-
-  <div class="row mx-auto index-card">
-    
-    
-    <article class="col-12 col-md-12 mx-auto index-info">
-      <h1 class="index-header">
-        
-        <a href="/2023/07/17/interview/%E8%AF%A6%E7%BB%86%E6%95%B0%E6%8D%AE/" target="_self">
-          
-        </a>
-      </h1>
-
-      
-      <a class="index-excerpt index-excerpt__noimg" href="/2023/07/17/interview/%E8%AF%A6%E7%BB%86%E6%95%B0%E6%8D%AE/" target="_self">
-        <div>
-          FullGc消除, young gc 从2秒到10ms 怎么做到的背景: 每次演练后, 通过CAT 的老年代明显的上涨, 再过1-2周, 会导致应用发生OOM1.1 FullGC 怎么消除1.1.1 增加jvm 的OOM 文件dump, -XX:+HeapDumpOnOutOfMemoryError -XX:HeapDumpPath&#x3D;${DUMP_LOG_DIR}1.1.2 主动去du
-        </div>
-      </a>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>
-            <time datetime="2023-07-17 15:13" pubdate>
-              2023-07-17
-            </time>
-          </div>
-        
-        
-        
-      </div>
-    </article>
-  </div>
-
-  <div class="row mx-auto index-card">
-    
-    
-    <article class="col-12 col-md-12 mx-auto index-info">
-      <h1 class="index-header">
-        
-        <a href="/2023/07/16/%E7%AE%97%E6%B3%95/%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92/" target="_self">
-          算法
-        </a>
-      </h1>
-
-      
-      <a class="index-excerpt index-excerpt__noimg" href="/2023/07/16/%E7%AE%97%E6%B3%95/%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92/" target="_self">
-        <div>
-          动态规划 确定组成部分1.1 确定最后一步, 转化成子问题 转移方程根据子问题定义直接得到f(x) &#x3D; Min(f(x-2) + 1, f(x-5) + 1, f(x-7) + 1); 初始条件、和边界情况 计算顺序f(0), f(1), f(2)  二分法 start + 1 &lt; end mid &#x3D; start + (end - start) &#x2F; 2 A[mi
-        </div>
-      </a>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>
-            <time datetime="2023-07-16 14:54" pubdate>
-              2023-07-16
-            </time>
-          </div>
-        
-        
-          <div class="post-meta mr-3 d-flex align-items-center">
-            <i class="iconfont icon-category"></i>
-            
-
-<span class="category-chains">
-  
-  
-    
-      <span class="category-chain">
-        
-  <a href="/categories/%E7%AE%97%E6%B3%95/" class="category-chain-item">算法</a>
-  
-  
-
-      </span>
-    
-  
-</span>
-
-          </div>
-        
-        
-      </div>
-    </article>
-  </div>
-
-  <div class="row mx-auto index-card">
-    
-    
-    <article class="col-12 col-md-12 mx-auto index-info">
-      <h1 class="index-header">
-        
-        <a href="/2023/07/14/interview/ready/" target="_self">
-          准备
-        </a>
-      </h1>
-
-      
-      <a class="index-excerpt index-excerpt__noimg" href="/2023/07/14/interview/ready/" target="_self">
-        <div>
-          tcp三次握手三次握手（Three-way Handshake）其实就是指建立一个TCP连接时，需要客户端和服务器总共发送3个包。进行三次握手的主要作用就是为了确认双方的接收能力和发送能力是否正常、指定自己的初始化序列号为后面的可靠性传送做准备。实质上其实就是连接服务器指定端口，建立TCP连接，并同步连接双方的序列号和确认号，交换TCP窗口大小信息。刚开始客户端处于 Closed 的状态，服务端处
-        </div>
-      </a>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>
-            <time datetime="2023-07-14 21:35" pubdate>
-              2023-07-14
+            <time datetime="2024-08-17 13:20" pubdate>
+              2024-08-17
             </time>
           </div>
         
@@ -397,15 +277,15 @@
     <article class="col-12 col-md-12 mx-auto index-info">
       <h1 class="index-header">
         
-        <a href="/2023/07/11/game/userModel/" target="_self">
-          
+        <a href="/2024/08/11/jvm/jvm%20%E6%95%B4%E7%90%86/" target="_self">
+          jvm 整理
         </a>
       </h1>
 
       
-      <a class="index-excerpt index-excerpt__noimg" href="/2023/07/11/game/userModel/" target="_self">
+      <a class="index-excerpt index-excerpt__noimg" href="/2024/08/11/jvm/jvm%20%E6%95%B4%E7%90%86/" target="_self">
         <div>
-          用户模型1.1. 用户模型收集哪些数据1.2. 哪些维度去进行收集登陆次数登录信息消费次数  邮箱账号、  google 邮箱  telegram 账号登录  twitter 账号登录  metamask 账号登录  资方能演示(用户自行在alpha上进行操作)    周末:  1.1 先挂单  1.2 展示  1.3 UTXO 获取
+          内存的区域:1. 共享     1.1 堆(GC 回收的区域)、字符串常量 2. 私有的     2.1 虚拟机栈(方法调用需要通过栈来实现, 每一次方法的调用都是需要入栈, 每次方法调用的结束都是对应到出栈)、本地方法栈(一些native 方法的)、程序计数器(当前线程执行到哪里的一个字节码指使器) 3. 本地内存     3.1 metaspace、直接内存  堆新生代 Eden + S0 +
         </div>
       </a>
 
@@ -413,236 +293,8 @@
         
           <div class="post-meta mr-3">
             <i class="iconfont icon-date"></i>
-            <time datetime="2023-07-11 21:21" pubdate>
-              2023-07-11
-            </time>
-          </div>
-        
-        
-        
-      </div>
-    </article>
-  </div>
-
-  <div class="row mx-auto index-card">
-    
-    
-    <article class="col-12 col-md-12 mx-auto index-info">
-      <h1 class="index-header">
-        
-        <a href="/2023/07/06/web3/test/" target="_self">
-          
-        </a>
-      </h1>
-
-      
-      <a class="index-excerpt index-excerpt__noimg" href="/2023/07/06/web3/test/" target="_self">
-        <div>
-          通过钱包给中间地址转账  获取中间地址 通过订单号进行维护关系 构造UTXO  sell:    -&gt; 生成psbt, 前端签名  {    address: 卖方地址    inscription_num: 铭文数量    location: tx_hash:tx_index    price_in_sats: 价格  }  生成的psbt 什么样子 怎么生成出来  psbt 做了什么事情
-        </div>
-      </a>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>
-            <time datetime="2023-07-06 19:40" pubdate>
-              2023-07-06
-            </time>
-          </div>
-        
-        
-        
-      </div>
-    </article>
-  </div>
-
-  <div class="row mx-auto index-card">
-    
-    
-    <article class="col-12 col-md-12 mx-auto index-info">
-      <h1 class="index-header">
-        
-        <a href="/2023/06/29/web3/btc%E6%A6%82%E5%BF%B5/" target="_self">
-          基础概念
-        </a>
-      </h1>
-
-      
-      <a class="index-excerpt index-excerpt__noimg" href="/2023/06/29/web3/btc%E6%A6%82%E5%BF%B5/" target="_self">
-        <div>
-          UTXO:Unspent Transaction (TX) Output（未花费交易输出） P2SH:Pay To Script Hash P2PKH:Pay-To-PubKey Hash  UTXO  1234567891011121314151617181920212223242526272829303132333435363738394041&#123;  &quot;version&qu
-        </div>
-      </a>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>
-            <time datetime="2023-06-29 23:43" pubdate>
-              2023-06-29
-            </time>
-          </div>
-        
-        
-          <div class="post-meta mr-3 d-flex align-items-center">
-            <i class="iconfont icon-category"></i>
-            
-
-<span class="category-chains">
-  
-  
-    
-      <span class="category-chain">
-        
-  <a href="/categories/btc/" class="category-chain-item">btc</a>
-  
-  
-
-      </span>
-    
-  
-</span>
-
-          </div>
-        
-        
-      </div>
-    </article>
-  </div>
-
-  <div class="row mx-auto index-card">
-    
-    
-    <article class="col-12 col-md-12 mx-auto index-info">
-      <h1 class="index-header">
-        
-        <a href="/2023/06/14/jdk/threadLocal/" target="_self">
-          ThreadLocal
-        </a>
-      </h1>
-
-      
-      <a class="index-excerpt index-excerpt__noimg" href="/2023/06/14/jdk/threadLocal/" target="_self">
-        <div>
-          介绍提供了一个线程的局部变量, 通过get(), set() 方法访问线程自己的值, 实现线程之间的隔离 原理Thread 类有一个ThreadLocal.ThreadLocalMap 类型的变量threadLocals, 相当于每个线程都有自己的一个threadLocalMap, 其中threadLocalMap 是ThreadLocal的静态内部类, 通过自身内部的entry 来实现数据值的存
-        </div>
-      </a>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>
-            <time datetime="2023-06-14 17:06" pubdate>
-              2023-06-14
-            </time>
-          </div>
-        
-        
-          <div class="post-meta mr-3 d-flex align-items-center">
-            <i class="iconfont icon-category"></i>
-            
-
-<span class="category-chains">
-  
-  
-    
-      <span class="category-chain">
-        
-  <a href="/categories/jdk/" class="category-chain-item">jdk</a>
-  
-  
-
-      </span>
-    
-  
-</span>
-
-          </div>
-        
-        
-      </div>
-    </article>
-  </div>
-
-  <div class="row mx-auto index-card">
-    
-    
-    <article class="col-12 col-md-12 mx-auto index-info">
-      <h1 class="index-header">
-        
-        <a href="/2023/04/07/interview/%E5%8F%AF%E8%83%BD%E7%9A%84%E9%97%AE%E9%A2%98/" target="_self">
-          可能问题
-        </a>
-      </h1>
-
-      
-      <a class="index-excerpt index-excerpt__noimg" href="/2023/04/07/interview/%E5%8F%AF%E8%83%BD%E7%9A%84%E9%97%AE%E9%A2%98/" target="_self">
-        <div>
-          请求连接池的参数设置有什么经验, 举一些例子Netty 常用参数介绍:  ChannelOption.SO_BACKLOG：设置服务器端 TCP 连接的请求队列大小，用于控制 TCP 连接的并发数。使用场景：在高并发的场景中，可以适当增大 SO_BACKLOG 参数来处理大量的连接请求。 ChannelOption.SO_REUSEADDR：设置是否允许地址复用，即允许多个 Channel 绑定到
-        </div>
-      </a>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>
-            <time datetime="2023-04-07 14:38" pubdate>
-              2023-04-07
-            </time>
-          </div>
-        
-        
-          <div class="post-meta mr-3 d-flex align-items-center">
-            <i class="iconfont icon-category"></i>
-            
-
-<span class="category-chains">
-  
-  
-    
-      <span class="category-chain">
-        
-  <a href="/categories/%E9%9D%A2%E8%AF%95/" class="category-chain-item">面试</a>
-  
-  
-
-      </span>
-    
-  
-</span>
-
-          </div>
-        
-        
-      </div>
-    </article>
-  </div>
-
-  <div class="row mx-auto index-card">
-    
-    
-    <article class="col-12 col-md-12 mx-auto index-info">
-      <h1 class="index-header">
-        
-        <a href="/2023/04/06/jvm/zgc/" target="_self">
-          zgc
-        </a>
-      </h1>
-
-      
-      <a class="index-excerpt index-excerpt__noimg" href="/2023/04/06/jvm/zgc/" target="_self">
-        <div>
-          G1标记-复制算法应用在CMS新生代（ParNew是CMS默认的新生代垃圾回收器）和G1垃圾回收器中。标记-复制算法可以分为三个阶段：标记阶段，即从GC Roots集合开始，标记活跃对象；转移阶段，即把活跃对象复制到新的内存地址上；重定位阶段，因为转移导致对象的地址发生了变化，在重定位阶段，所有指向对象旧地址的指针都要调整到对象新的地址上。下面以G1为例，通过G1中标记-复制算法过程（G1的You
-        </div>
-      </a>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>
-            <time datetime="2023-04-06 18:25" pubdate>
-              2023-04-06
+            <time datetime="2024-08-11 14:14" pubdate>
+              2024-08-11
             </time>
           </div>
         
@@ -673,11 +325,275 @@
     </article>
   </div>
 
+  <div class="row mx-auto index-card">
+    
+    
+    <article class="col-12 col-md-12 mx-auto index-info">
+      <h1 class="index-header">
+        
+        <a href="/2024/04/23/game/tg/%E6%9C%BA%E5%99%A8/" target="_self">
+          
+        </a>
+      </h1>
+
+      
+      <a class="index-excerpt index-excerpt__noimg" href="/2024/04/23/game/tg/%E6%9C%BA%E5%99%A8/" target="_self">
+        <div>
+          后端域名:    bot.catton.xyz    13.60.61.64:8090        ssh -i “sparkXspark.pem” &#101;&#99;&#x32;&#x2d;&#117;&#115;&#101;&#x72;&#64;&#x65;&#99;&#x32;&#x2d;&#x31;&#x33;&#x2d;&#x36;&#48;&#45;&#x36;&#49;&#x2
+        </div>
+      </a>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2024-04-23 13:45" pubdate>
+              2024-04-23
+            </time>
+          </div>
+        
+        
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+    <article class="col-12 col-md-12 mx-auto index-info">
+      <h1 class="index-header">
+        
+        <a href="/2024/01/18/game/gem/initGem/" target="_self">
+          
+        </a>
+      </h1>
+
+      
+      <a class="index-excerpt index-excerpt__noimg" href="/2024/01/18/game/gem/initGem/" target="_self">
+        <div>
+          npm run cli store-file ..&#x2F;..&#x2F;..&#x2F;Desktop&#x2F;web&#x2F;init&#x2F;gem_3.png image.png –satsbyte&#x3D;10 yarn cli init-dft testGems 1000 21000 0 “&#x2F;Users&#x2F;pcxie&#x2F;IdeaProjects&#
+        </div>
+      </a>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2024-01-18 17:45" pubdate>
+              2024-01-18
+            </time>
+          </div>
+        
+        
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+    <article class="col-12 col-md-12 mx-auto index-info">
+      <h1 class="index-header">
+        
+        <a href="/2023/12/06/game/sui_dev/" target="_self">
+          
+        </a>
+      </h1>
+
+      
+      <a class="index-excerpt index-excerpt__noimg" href="/2023/12/06/game/sui_dev/" target="_self">
+        <div>
+          玩家2#╭───────────────────────────────────────────────────────────────────────────────────────────────╮#│ Created new keypair and saved it to keystore.                                                 │#
+        </div>
+      </a>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2023-12-06 21:02" pubdate>
+              2023-12-06
+            </time>
+          </div>
+        
+        
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+    <article class="col-12 col-md-12 mx-auto index-info">
+      <h1 class="index-header">
+        
+        <a href="/2023/11/28/game/atomic/" target="_self">
+          
+        </a>
+      </h1>
+
+      
+      <a class="index-excerpt index-excerpt__noimg" href="/2023/11/28/game/atomic/" target="_self">
+        <div>
+          测试地址:Generated mnemonic phrase:phrase: rebel venture sick faith rare oval mushroom barrel imitate opinion credit clapPrimary address (P2TR): tb1ps6w44wn8nv5dy4upuejmsx0txmvuq9n6kzcqjwhldkn7szlpnzws9t0
+        </div>
+      </a>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2023-11-28 10:54" pubdate>
+              2023-11-28
+            </time>
+          </div>
+        
+        
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+    <article class="col-12 col-md-12 mx-auto index-info">
+      <h1 class="index-header">
+        
+        <a href="/2023/11/14/game/sui/" target="_self">
+          
+        </a>
+      </h1>
+
+      
+      <a class="index-excerpt index-excerpt__noimg" href="/2023/11/14/game/sui/" target="_self">
+        <div>
+          PACKAGE_ID&#x3D;0x007277236d2c8c9dde127db62634a0446e1a8bc104f313a2033976fa76d5f300ADMIN_CAP_ID&#x3D;0xe29fb33533097f5cc052afe680995b70193d25c27e17f976dc2e44b61aa9db17GAMES_ID&#x3D;0xb842602e28c5f7d0b4
+        </div>
+      </a>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2023-11-14 23:49" pubdate>
+              2023-11-14
+            </time>
+          </div>
+        
+        
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+    <article class="col-12 col-md-12 mx-auto index-info">
+      <h1 class="index-header">
+        
+        <a href="/2023/09/20/game/machine/" target="_self">
+          
+        </a>
+      </h1>
+
+      
+      <a class="index-excerpt index-excerpt__noimg" href="/2023/09/20/game/machine/" target="_self">
+        <div>
+          mysql: Pcxie!!61755185 redis: Pcxie!!13981861424 test ssh -i “sparkXspark.pem” &#101;&#x63;&#x32;&#x2d;&#x75;&#x73;&#101;&#x72;&#64;&#101;&#x63;&#x32;&#45;&#x35;&#x31;&#45;&#x32;&#x30;&#x2d;&#48;&#45;
+        </div>
+      </a>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2023-09-20 12:20" pubdate>
+              2023-09-20
+            </time>
+          </div>
+        
+        
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+    <article class="col-12 col-md-12 mx-auto index-info">
+      <h1 class="index-header">
+        
+        <a href="/2023/08/22/web3/btc-market/" target="_self">
+          
+        </a>
+      </h1>
+
+      
+      <a class="index-excerpt index-excerpt__noimg" href="/2023/08/22/web3/btc-market/" target="_self">
+        <div>
+          token  1.1 作用:  1.2 过多 少? 后续激励, 分配
+        </div>
+      </a>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2023-08-22 16:54" pubdate>
+              2023-08-22
+            </time>
+          </div>
+        
+        
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+    <article class="col-12 col-md-12 mx-auto index-info">
+      <h1 class="index-header">
+        
+        <a href="/2023/08/04/game/room/" target="_self">
+          
+        </a>
+      </h1>
+
+      
+      <a class="index-excerpt index-excerpt__noimg" href="/2023/08/04/game/room/" target="_self">
+        <div>
+          接入游戏  1.1 游戏有哪些唯一属性  获取余额  2.1 通过钱包地址获取(保留一位小数，超过1000用K&#x2F;M&#x2F;B显示)  2.2 ??? 是否要保存这个余额  2.3 质押了dogue 币后, 是否需要打通转账的逻辑??? 输了的自动转账????  2.4 还有游戏币的发放逻辑????  创建房间  3.1 每个房间关联到游戏上, 游戏和房间在某个时间段内是唯一的, 不
+        </div>
+      </a>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2023-08-04 09:07" pubdate>
+              2023-08-04
+            </time>
+          </div>
+        
+        
+        
+      </div>
+    </article>
+  </div>
+
 
 
   <nav aria-label="navigation">
     <span class="pagination" id="pagination">
-      <span class="page-number current">1</span><a class="page-number" href="/page/2/#board">2</a><a class="page-number" href="/page/3/#board">3</a><a class="extend next" rel="next" href="/page/2/#board"><i class="iconfont icon-arrowright"></i></a>
+      <span class="page-number current">1</span><a class="page-number" href="/page/2/#board">2</a><a class="page-number" href="/page/3/#board">3</a><a class="page-number" href="/page/4/#board">4</a><a class="extend next" rel="next" href="/page/2/#board"><i class="iconfont icon-arrowright"></i></a>
     </span>
   </nav>
 
