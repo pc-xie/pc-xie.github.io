@@ -1,0 +1,664 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
+  <link rel="icon" href="/img/fluid.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="pc-xie">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="请求连接池的参数设置有什么经验, 举一些例子Netty 常用参数介绍:  ChannelOption.SO_BACKLOG：设置服务器端 TCP 连接的请求队列大小，用于控制 TCP 连接的并发数。使用场景：在高并发的场景中，可以适当增大 SO_BACKLOG 参数来处理大量的连接请求。 ChannelOption.SO_REUSEADDR：设置是否允许地址复用，即允许多个 Channel 绑定到">
+<meta property="og:type" content="article">
+<meta property="og:title" content="pc-xie">
+<meta property="og:url" content="http://localhost:4000/2023/04/07/interview/%E5%8F%AF%E8%83%BD%E7%9A%84%E9%97%AE%E9%A2%98/index.html">
+<meta property="og:site_name" content="pc-xie">
+<meta property="og:description" content="请求连接池的参数设置有什么经验, 举一些例子Netty 常用参数介绍:  ChannelOption.SO_BACKLOG：设置服务器端 TCP 连接的请求队列大小，用于控制 TCP 连接的并发数。使用场景：在高并发的场景中，可以适当增大 SO_BACKLOG 参数来处理大量的连接请求。 ChannelOption.SO_REUSEADDR：设置是否允许地址复用，即允许多个 Channel 绑定到">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2023-04-07T06:38:53.517Z">
+<meta property="article:modified_time" content="2024-09-08T06:56:13.694Z">
+<meta property="article:author" content="pc-xie">
+<meta name="twitter:card" content="summary_large_image">
+  
+  
+  
+  <title>pc-xie</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"localhost","root":"/","version":"1.9.3","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Fluid</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text=""></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2023-04-07 14:38" pubdate>
+          2023年4月7日 下午
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          4.5k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          38 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none"></h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h1 id="请求连接池的参数设置有什么经验-举一些例子"><a href="#请求连接池的参数设置有什么经验-举一些例子" class="headerlink" title="请求连接池的参数设置有什么经验, 举一些例子"></a>请求连接池的参数设置有什么经验, 举一些例子</h1><p>Netty 常用参数介绍:</p>
+<ol>
+<li>ChannelOption.SO_BACKLOG：设置服务器端 TCP 连接的请求队列大小，用于控制 TCP 连接的并发数。使用场景：在高并发的场景中，可以适当增大 SO_BACKLOG 参数来处理大量的连接请求。</li>
+<li>ChannelOption.SO_REUSEADDR：设置是否允许地址复用，即允许多个 Channel 绑定到同一个本地地址和端口。使用场景：在服务器重启后，允许快速重新绑定到之前使用的地址和端口，减少连接失败的概率。</li>
+<li>ChannelOption.SO_KEEPALIVE：设置是否开启 TCP KeepAlive 功能，用于探测连接是否还存活。使用场景：在长连接场景中，可以通过开启 SO_KEEPALIVE 参数来检测长时间没有活动的连接并进行相应处理，如断开连接或重新连接。</li>
+<li>ChannelOption.TCP_NODELAY：设置是否开启 Nagle 算法，用于控制 TCP 发送数据的延迟。使用场景：在需要实时性较高的场景中，可以通过关闭 Nagle 算法来减少数据发送的延迟，提高数据传输的实时性。</li>
+<li>ChannelOption.SO_LINGER：设置 TCP 关闭时的行为，包括等待关闭的时间和关闭时是否立即发送未发送完的数据。使用场景：在关闭连接时，可以通过设置 SO_LINGER 参数来控制关闭的行为，如等待关闭的时间或是否立即发送未发送完的数据。</li>
+<li>ChannelOption.CONNECT_TIMEOUT_MILLIS：设置连接超时时间，用于控制连接建立的超时时间。使用场景：在连接建立时，可以通过设置 CONNECT_TIMEOUT_MILLIS 参数来控制连接的超时时间，防止长时间等待连接建立而导致的性能问题。</li>
+<li>ChannelOption.ALLOCATOR：设置 ByteBufAllocator，用于配置分配 ByteBuf 内存的方式和策略。使用场景：可以通过设置不同的 ByteBufAllocator 来优化内存分配和管理的性能和内存占用。</li>
+</ol>
+<h1 id="为什么要拆分集群-集群之间的区别仅仅是资源配置的不同"><a href="#为什么要拆分集群-集群之间的区别仅仅是资源配置的不同" class="headerlink" title="为什么要拆分集群, 集群之间的区别仅仅是资源配置的不同?"></a>为什么要拆分集群, 集群之间的区别仅仅是资源配置的不同?</h1><p>拆分集群是为了防止一些异常的后端应用影响到其他的应用，例如有个应用A 的后端处理时间很长, 然后此时A的请求量会很高, 此时会导致A应用占用系统的资源过多, 或者A 要去拉取一些比较大的文件, 同时A的请求量比较高</p>
+<h1 id="如果请求链路中有很多异步处理逻辑-CAT的TrasactionId是怎么传递的"><a href="#如果请求链路中有很多异步处理逻辑-CAT的TrasactionId是怎么传递的" class="headerlink" title="如果请求链路中有很多异步处理逻辑, CAT的TrasactionId是怎么传递的"></a>如果请求链路中有很多异步处理逻辑, CAT的TrasactionId是怎么传递的</h1><p>threadLocal 中上下文去传递对象</p>
+<h1 id="K8s动态扩缩容-现在业界有哪些产品-定时上报QPS-在流量突然变大的情况下会不会有延迟"><a href="#K8s动态扩缩容-现在业界有哪些产品-定时上报QPS-在流量突然变大的情况下会不会有延迟" class="headerlink" title="K8s动态扩缩容, 现在业界有哪些产品? 定时上报QPS, 在流量突然变大的情况下会不会有延迟?"></a>K8s动态扩缩容, 现在业界有哪些产品? 定时上报QPS, 在流量突然变大的情况下会不会有延迟?</h1><p>  会有延迟的,</p>
+<h1 id="不同集群和业务类别的swagger是怎么统一管理的-在开源方案上的基础上有做什么开发"><a href="#不同集群和业务类别的swagger是怎么统一管理的-在开源方案上的基础上有做什么开发" class="headerlink" title="不同集群和业务类别的swagger是怎么统一管理的, 在开源方案上的基础上有做什么开发?"></a>不同集群和业务类别的swagger是怎么统一管理的, 在开源方案上的基础上有做什么开发?</h1><h1 id="不同机房的数据怎么同步的"><a href="#不同机房的数据怎么同步的" class="headerlink" title="不同机房的数据怎么同步的?"></a>不同机房的数据怎么同步的?</h1><p>  通过数据库来做的, 以及每台机器的一个定时同步机制</p>
+<h1 id="配置文件的批量变更-如果失败了怎么回滚-怎么做到原子操作的"><a href="#配置文件的批量变更-如果失败了怎么回滚-怎么做到原子操作的" class="headerlink" title="配置文件的批量变更, 如果失败了怎么回滚? 怎么做到原子操作的"></a>配置文件的批量变更, 如果失败了怎么回滚? 怎么做到原子操作的</h1><ol>
+<li>每条数据通过版本号去做原子保证, 用户在批量变更的时候, 需要带上对当前应配置文件的一个版本号, 然后基于该版本号再去做变更, 如果此时发生了发, 通过应用、配置文件、版本号组成的唯一性索引, 去保证配置变更的原子性, 如果批量变更的时候, 有一个失败了, 则会导致所有的数据操作都进行回滚. 用的是spring的一个事务机制<br>  在 Spring 中，默认情况下，当更新 MySQL 数据时抛出唯一性异常（如 DuplicateKeyException），Spring 的事务管理器会将当前的事务标记为失败，并触发事务回滚。这意味着在更新过程中发生唯一性异常时，之前在同一事务中执行的所有数据库操作将会被回滚，包括之前的插入、更新、删除等操作。</li>
+</ol>
+<p>Spring 的事务管理器使用了声明式事务的方式，可以通过在方法上添加 @Transactional 注解来实现事务的控制。在默认的配置下，当抛出 RuntimeException 及其子类异常时，事务会被回滚。而 DuplicateKeyException 是 Spring 的 DataAccessException 的子类，而 DataAccessException 又是 RuntimeException 的子类，因此当发生唯一性异常时，事务会被回滚。</p>
+<h2 id="事务失效场景"><a href="#事务失效场景" class="headerlink" title="事务失效场景:"></a>事务失效场景:</h2><ol>
+<li>方法未被公开调用：只有通过代理对象调用被 @Transactional 注解标注的方法，事务才会生效。如果在同一个类内部调用该方法，而不是通过代理对象调用，事务将会失效。</li>
+<li>异常未被捕获：事务默认只会在捕获到 RuntimeException 及其子类异常时才会回滚。如果方法抛出了非运行时异常（如 Checked Exception），或者异常被捕获并处理了，事务将会继续提交，不会回滚。</li>
+<li>类或方法未被 Spring 管理：只有被 Spring 管理的类或方法上添加了 @Transactional 注解，事务才会生效。如果类或方法没有被 Spring 管理（例如没有被注解标记或者没有在配置文件中进行了配置），事务将不会生效。</li>
+<li>方法被 final 修饰：如果被 @Transactional 注解标记的方法被 final 修饰，事务也会失效，因为 Spring 使用动态代理生成代理对象来管理事务，而 final 方法无法被代理。</li>
+<li>事务传播级别不匹配：如果调用了另一个事务传播级别不兼容的方法（例如一个事务传播级别为 REQUIRED 的方法调用了一个事务传播级别为 NOT_SUPPORTED 的方法），事务可能会失效。</li>
+<li>方法没有抛出异常：事务默认只在方法抛出异常时才会回滚，如果方法没有抛出异常，事务将会继续提交。</li>
+</ol>
+<h3 id="事务的传播级别"><a href="#事务的传播级别" class="headerlink" title="事务的传播级别:"></a>事务的传播级别:</h3><ol>
+<li>REQUIRED（默认）：如果当前存在事务，则加入当前事务，如果当前不存在事务，则创建一个新事务。这是最常用的传播级别，表示事务方法需要在一个事务中执行，如果当前不存在事务则创建一个新的事务，如果当前已存在事务则加入该事务。</li>
+<li>SUPPORTS：如果当前存在事务，则加入当前事务，如果当前不存在事务，则以非事务方式执行。这种传播级别表示事务方法不强制要求在一个事务中执行，如果当前不存在事务则以非事务方式执行。</li>
+<li>MANDATORY：如果当前存在事务，则加入当前事务，如果当前不存在事务，则抛出异常。这种传播级别表示事务方法必须在一个事务中执行，如果当前不存在事务则抛出异常。</li>
+<li>REQUIRES_NEW：无论当前是否存在事务，都创建一个新事务并在新事务中执行。这种传播级别表示事务方法需要创建一个新的事务，并在该新事务中执行，如果当前存在事务则将当前事务挂起。</li>
+<li>NOT_SUPPORTED：以非事务方式执行，如果当前存在事务，则将当前事务挂起。这种传播级别表示事务方法需要在非事务方式下执行，如果当前存在事务则将当前事务挂起。</li>
+<li>NEVER：以非事务方式执行，如果当前存在事务，则抛出异常。这种传播级别表示事务方法必须在非事务方式下执行，如果当前存在事务则抛出异常。</li>
+<li>NESTED：如果当前存在事务，则在嵌套事务中执行，如果当前不存在事务，则创建一个新事务。这种传播级别表示事务方法需要在一个嵌套事务中执行，嵌套事务是当前事务的子事务，可以独立提交或回滚。</li>
+</ol>
+<h1 id="JVM的有什么调优的经验-Young-GC为什么之前会有5秒-5秒到10毫秒是因为什么优化"><a href="#JVM的有什么调优的经验-Young-GC为什么之前会有5秒-5秒到10毫秒是因为什么优化" class="headerlink" title="JVM的有什么调优的经验? Young GC为什么之前会有5秒? 5秒到10毫秒是因为什么优化?"></a>JVM的有什么调优的经验? Young GC为什么之前会有5秒? 5秒到10毫秒是因为什么优化?</h1><p>  1: 检查是否有重复对象的创建, 发现为了进行数据预热, 读取数据量过多<br>  2: 默认的g1 的yong区的比列配置是5%, 为了防止频繁的yong gc, 将比列调整到了30, 此时yong gc 的频率有下降了,<br>  3: g1 的垃圾回收方式，相比较于zgc，从而引入了zgc<br>    3.1:<br>    标记阶段，即从GC Roots集合开始，标记活跃对象；<br>    转移阶段，即把活跃对象复制到新的内存地址上；<br>    重定位阶段，因为转移导致对象的地址发生了变化，在重定位阶段，所有指向对象旧地址的指针都要调整到对象新的地址上。</p>
+<p>下面以G1为例，通过G1中标记-复制算法过程（G1的Young GC和Mixed GC均采用该算法），分析G1停顿耗时的主要瓶颈。<br>G1的混合回收过程可以分为标记阶段、清理阶段和复制阶段。<br>标记阶段停顿分析<br>初始标记阶段：初始标记阶段是指从GC Roots出发标记全部直接子节点的过程，该阶段是STW的。由于GC Roots数量不多，通常该阶段耗时非常短。<br>并发标记阶段：并发标记阶段是指从GC Roots开始对堆中对象进行可达性分析，找出存活对象。该阶段是并发的，即应用线程和GC线程可以同时活动。并发标记耗时相对长很多，但因为不是STW，所以我们不太关心该阶段耗时的长短。<br>再标记阶段：重新标记那些在并发标记阶段发生变化的对象。该阶段是STW的。<br>清理阶段停顿分析<br>清理阶段清点出有存活对象的分区和没有存活对象的分区，该阶段不会清理垃圾对象，也不会执行存活对象的复制。该阶段是STW的。<br>复制阶段停顿分析<br><strong>复制算法中的转移阶段需要分配新内存和复制对象的成员变量。转移阶段是STW的，其中内存分配通常耗时非常短，但对象成员变量的复制耗时有可能较长，这是因为复制耗时与存活对象数量与对象复杂度成正比。对象越复杂，复制耗时越长</strong> 。<br>四个STW过程中，初始标记因为只标记GC Roots，耗时较短。再标记因为对象数少，耗时也较短。清理阶段因为内存分区数量少，耗时也较短。转移阶段要处理所有存活的对象，耗时会较长。因此，G1停顿时间的瓶颈主要是标记-复制中的转移阶段STW。为什么转移阶段不能和标记阶段一样并发执行呢？主要是G1未能解决转移过程中准确定位对象地址的问题**。<br>相比较于zgc，全程采用并发回收, 因此我们引入了zgc 去进行优化<br>ZGC通过着色指针和读屏障技术，解决了转移过程中准确访问对象的问题，实现了并发转移。大致原理描述如下：并发转移中“并发”意味着GC线程在转移对象的过程中，应用线程也在不停地访问对象。假设对象发生转移，但对象地址未及时更新，那么应用线程可能访问到旧地址，从而造成错误。而在ZGC中，应用线程访问对象将触发“读屏障”，如果发现对象被移动了，那么“读屏障”会把读出来的指针更新到对象的新地址上，这样应用线程始终访问的都是对象的新地址。那么，JVM是如何判断对象被移动过呢？就是利用对象引用的地址，即着色指针’</p>
+<h1 id="配置中心的集成测试怎么实现的-有simulation环境吗"><a href="#配置中心的集成测试怎么实现的-有simulation环境吗" class="headerlink" title="配置中心的集成测试怎么实现的? 有simulation环境吗?"></a>配置中心的集成测试怎么实现的? 有simulation环境吗?</h1><p>是模拟用户的配置变更行为, 在生产上搭建了一套环境, 自己创建不同场景的配置读取, 变更, 对比是否收到推送的通知。</p>
+<p>单例中 volatile 中保证可见性和防止重排序, 但是没办法保证原子性, 加上sychronzied 可以保证原子性<br>原子性体现在对象的创建是一个原子性的, 包含了对象的属性的初始化</p>
+<p>volatile 可以防止对象创建重排序导致拿到的对象中属性没有完全初始化好。</p>
+<ol>
+<li>分配内存空间</li>
+<li>将各个属性初始话0值</li>
+<li>将对象的引用赋值给变量.<br>如果不加volatile的话, 在分配好内存空间后, 由于重排序, 将3放到了2 之前, 导致 另外一个线程拿到的对象是属性还未完全初始化的, 禁止重排序</li>
+</ol>
+<p>线程安全体现在:</p>
+<ol>
+<li>可见性</li>
+<li>原子性</li>
+<li>禁止重排序<br>volailte 相比较于synchronzed 没有保证原子性和互斥性<br>final 保证可见性</li>
+</ol>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div></div>
+      <div>http://localhost:4000/2023/04/07/interview/可能的问题/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>pc-xie</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2023年4月7日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2023/06/14/jdk/threadLocal/" title="ThreadLocal">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">ThreadLocal</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2023/04/06/jvm/zgc/" title="zgc">
+                        <span class="hidden-mobile">zgc</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>
