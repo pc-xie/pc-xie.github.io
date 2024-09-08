@@ -16,17 +16,17 @@
   <meta name="author" content="pc-xie">
   <meta name="keywords" content="">
   
-    <meta name="description" content="项目问题1. FullGc消除, young gc 从2秒到10ms 怎么做到的背景: 每次演练后, 通过CAT 的老年代明显的上涨, 再过1-2周, 会导致应用发生OOM1.1 FullGC 怎么消除1.1.1 增加jvm 的OOM 文件dump, -XX:+HeapDumpOnOutOfMemoryError -XX:HeapDumpPath&#x3D;${DUMP_LOG_DIR}1.1.2">
+    <meta name="description" content="网络协议TCP 三次握手、四次挥手TCP 粘包     TCP 面向连接的流式传输, 他将应用层的数据看成是一个连续的数据流, 不关心数据的边界, 因此在发送数据的时候, 可能将多个小的数据块合并成一个大的数据块, 从而导致发生了粘包  三次握手三次握手（Three-way Handshake）其实就是指建立一个TCP连接时，需要客户端和服务器总共发送3个包。进行三次握手的主要作用就是为了确认双方">
 <meta property="og:type" content="article">
 <meta property="og:title" content="面经">
 <meta property="og:url" content="http://localhost:4000/2024/08/17/interview/%E9%9D%A2%E7%BB%8F/index.html">
 <meta property="og:site_name" content="pc-xie">
-<meta property="og:description" content="项目问题1. FullGc消除, young gc 从2秒到10ms 怎么做到的背景: 每次演练后, 通过CAT 的老年代明显的上涨, 再过1-2周, 会导致应用发生OOM1.1 FullGC 怎么消除1.1.1 增加jvm 的OOM 文件dump, -XX:+HeapDumpOnOutOfMemoryError -XX:HeapDumpPath&#x3D;${DUMP_LOG_DIR}1.1.2">
+<meta property="og:description" content="网络协议TCP 三次握手、四次挥手TCP 粘包     TCP 面向连接的流式传输, 他将应用层的数据看成是一个连续的数据流, 不关心数据的边界, 因此在发送数据的时候, 可能将多个小的数据块合并成一个大的数据块, 从而导致发生了粘包  三次握手三次握手（Three-way Handshake）其实就是指建立一个TCP连接时，需要客户端和服务器总共发送3个包。进行三次握手的主要作用就是为了确认双方">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="http://localhost:4000/img/tcp/tcp_start_connection.png">
 <meta property="og:image" content="http://localhost:4000/img/tcp/tcp_finish_connection.png">
 <meta property="article:published_time" content="2024-08-17T05:20:30.839Z">
-<meta property="article:modified_time" content="2024-09-05T08:50:37.462Z">
+<meta property="article:modified_time" content="2024-09-07T16:02:18.137Z">
 <meta property="article:author" content="pc-xie">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:image" content="http://localhost:4000/img/tcp/tcp_start_connection.png">
@@ -221,7 +221,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          50k 字
+          54k 字
         
       </span>
     
@@ -232,7 +232,7 @@
         
         
         
-          420 分钟
+          454 分钟
         
       </span>
     
@@ -275,32 +275,7 @@
             
               <div class="markdown-body">
                 
-                <h1 id="项目问题"><a href="#项目问题" class="headerlink" title="项目问题"></a>项目问题</h1><h2 id="1-FullGc消除-young-gc-从2秒到10ms-怎么做到的"><a href="#1-FullGc消除-young-gc-从2秒到10ms-怎么做到的" class="headerlink" title="1. FullGc消除, young gc 从2秒到10ms 怎么做到的"></a>1. FullGc消除, young gc 从2秒到10ms 怎么做到的</h2><p>背景: 每次演练后, 通过CAT 的老年代明显的上涨, 再过1-2周, 会导致应用发生OOM<br>1.1 FullGC 怎么消除<br>1.1.1 增加jvm 的OOM 文件dump, -XX:+HeapDumpOnOutOfMemoryError -XX:HeapDumpPath&#x3D;${DUMP_LOG_DIR}<br>1.1.2 主动去dump 文件 jmap -dump:live,format&#x3D;b,file&#x3D;test.hprof pid<br>1.1.3 将dump 下来的文件导入到MAT上<br>1.1.4 查看堆上的内存占用<br>1.1.5 发现有个对象占用特别高, 但是该对象也是需要常驻内存的, 该内存具体使用的是哪些客户端正在监听该配置文件, 每次配置推送的时候需要通过该对内存找到有哪些客户端正在使用该配置文件,从而将最新的版本好内容推送给客户端。<br>具体流程如下:</p>
-<ol>
-<li>根据变更配置文件去找到对应的监听机器, 其中数据结构如下</li>
-<li>行是ip, 列是ConfigMeta, value 是Cache&lt;Listener, Listener&gt;&gt;,<br>3.1 出发点是有哪些IP 用了这个配置文件, 因此key 是IP, value 是configMeta, 然后每个缓存用的是Listener<br>3.2 从机器出发, 机器的Ip 是固定,  当机器重启后, IP 出现了漂移, ip1在应用A 读取的配置是a,b,c 经过漂移后, ip1在应用B 下面读取的配置是e，f,g. 其中a,b,c 的数据不会被删除掉, 从而导致内存越用越多<br>3.3 更改数据结构, 将监听列表从table 换成了一个map, 换成从配置文件的角度出发, k 是configMeta, value 是cache<Listener>。 每个配置文件有哪些客户端正在使用,</li>
-</ol>
-<h2 id="2-如果解决yong-gc-比较耗时比较高的问题"><a href="#2-如果解决yong-gc-比较耗时比较高的问题" class="headerlink" title="2. 如果解决yong gc 比较耗时比较高的问题"></a>2. 如果解决yong gc 比较耗时比较高的问题</h2><p>2.1 其中yong 区的比例是5<br>2.1.1  设置 MaxGCPauseMillis 到100ms<br>2.1.2 jdk1.8 默认的是新生代比列是5%, 调整G1NewSizePercent 的比列到30,<br>2.1.3 结果: 对上面设置了以后yong gc 时间还是在1秒左右<br>yong gc 的频率从原来的7几次降低到了3次, 然后此时yong gc 的频率下来了, 但是每次的时间从原来的 300 ms 变成了450ms左右<br>3. 其中总的耗时仍然为1分钟1.5 秒左右<br>4. 最后将g1 替换成了zgc<br>根据g1 的算法<br>G1 里面的yong gc采用标记-复制的算法<br>复制的时候用户线程和GC线程无法并行处理</p>
-<ol>
-<li><p>并发标记:在用户线程运行的同时, GC 线程 从root 对象出发, 标记会并发的标记存活对象, 这个过程是和用户同时进行的</p>
-</li>
-<li><p>初始标记:<br>2.1 初始标记: 从root 对象出发, 标记所有root 对象(需要STW), 时间比较短, 由于root 对象比较少<br>2.2 并发标记: 再从root 对象到可直接到达的对象 有哪些对象可达, 其中应用线程和GC线程可以同时去处理<br>2.3 再标记: 在并发2.2 中过程中发生变化的对象, 需要STW</p>
-</li>
-<li><p>确定回收集<br>进行最后的一次标记, 标记哪些对象需要回收, 需要STW</p>
-</li>
-<li><p>删选回收<br>采用复制算法, 会进行存活对象的移动<br>在次过程是需要STW的, 这个过程中为什么耗时比较高?????? 复制过程的耗时与对象的存活数量以及对象的复杂度成正比, 并且是没办法和用户线程去并行处理的，这个过程如果进行和用户线程进行并行处理, 会导致指针无法确认对象的问题<br>1.1 并发标记在初始标记之前的目的: 并发标记是用户线程和GC线程可以同时进行的, 但是在并发标记的时候可能会有新的对象被分配和标记, 因此在并发标记完成后, 再进行准确的初始标记, 用来获得准确的对象, 目的是可以准确的利用并发标记的优势, 将第GC 对程序的影响, 提高回收的准确率<br>G1 是将整个堆的空间分成多个大小的内存区域, 每个内存区域即可以是yong 区的一部分, 也有可能是old 区的一部分,其中我们指定的是4M<br>2.5 最终考虑升级到 zgc<br> zgc 相比较于g1 的gc 方式, 有了完全的提升<br>2.6 带来影响CPU 负载会有上升<br>GC 算法</p>
-</li>
-<li><p>不过 G1 为了解决 CMS 并发清理导致内存碎片化的问题，使用了复制算法转移对象，这样如果在转移过程中 GC 线程和用户线程并行，会导致指针无法准确定位对象的问题</p>
-</li>
-<li><p>zgc: 采用内存分区，使用染色指针和读屏障解决了复制算法并发转移对象导致的指针无法准确定位对象的问题<br>染色指针: 每个对象的指针在存储时都包含了附加的信息，用于表示对象的状态，比如是否是可达对象、是否需要被回收等<br>读屏障: 在 ZGC 中，读屏障用于捕获并记录正在被并发标记的对象引用，以便在后续的并发标记阶段中正确地标记这些对象。读屏障能够保证并发标记的准确性，防止对象在标记过程中被移动或修改引用关系导致的错误标记。</p>
-</li>
-</ol>
-<p>原来是把GC 的标记放在了对象头上去, zgc 是将GC 的标记放在了指针中<br>M0,M1, Remapped<br>mmap 地址映射<br>读屏障<br>对象引用指针<br>  : 之前: GC 的标记信息放在对象头上去<br>  : 之后: GC 的标记信息直接放在引用指针上去<br>ZGC 过程:<br>  标记 -&gt; 转移<br>  完全做到了和用户进程的并发去处理<br>    并发标记: 使用读屏障的并发标记, 访问对象时插入特殊的屏障来跟踪对象的引用关系<br>    并发整理:<br>    并发引用重定位: 使用并发引用重定位去更新引用对象, 对象移动的时候, 可以正确更新对象的引用</p>
-<p>  具体实现: 通过着色指针和读屏障技术<br>    读屏障技术: 解决对象发生转移, 对象地址未及时更新的情况, 读屏障在对象发生转移后, 会将读出来的指针更新到对象地址上去<br>      怎么判断是否发生移动, 通过着色指针<br>    空间换时间<br>      M0 , M1, Remapped</p>
-<ol start="3">
-<li>升级了zgc, 大概每次过1 个月左右, 应用发生了OOM, 在内部的监控上面发现应用机器的RSS内存从12G 慢慢上涨到15G, 导致应用被操作系统kill了, 这个是在使用g1 的时候没有发生过的<br>3.1 如何解决zgc 导致应用发生了OOM<br>通过pmap 去查看堆外内存的占用</li>
-</ol>
-<h1 id="TCP"><a href="#TCP" class="headerlink" title="TCP"></a>TCP</h1><h2 id="TCP-三次握手、四次挥手"><a href="#TCP-三次握手、四次挥手" class="headerlink" title="TCP 三次握手、四次挥手"></a>TCP 三次握手、四次挥手</h2><pre><code class="hljs">TCP 粘包
+                <h1 id="网络协议"><a href="#网络协议" class="headerlink" title="网络协议"></a>网络协议</h1><h2 id="TCP-三次握手、四次挥手"><a href="#TCP-三次握手、四次挥手" class="headerlink" title="TCP 三次握手、四次挥手"></a>TCP 三次握手、四次挥手</h2><pre><code class="hljs">TCP 粘包
     TCP 面向连接的流式传输, 他将应用层的数据看成是一个连续的数据流, 不关心数据的边界, 因此在发送数据的时候, 可能将多个小的数据块合并成一个大的数据块, 从而导致发生了粘包
 </code></pre>
 <h2 id="三次握手"><a href="#三次握手" class="headerlink" title="三次握手"></a>三次握手</h2><p>三次握手（Three-way Handshake）其实就是指建立一个TCP连接时，需要客户端和服务器总共发送3个包。进行三次握手的主要作用就是为了确认双方的接收能力和发送能力是否正常、指定自己的初始化序列号为后面的可靠性传送做准备。实质上其实就是连接服务器指定端口，建立TCP连接，并同步连接双方的序列号和确认号，交换TCP窗口大小信息。<br>刚开始客户端处于 Closed 的状态，服务端处于 Listen 状态。<br>进行三次握手：<br>第一次握手：客户端给服务端发一个 SYN 报文，并指明客户端的初始化序列号 ISN(c)。此时客户端处于 SYN_SEND 状态。<br>其中SYN&#x3D;1，初始序号seq&#x3D;x，SYN&#x3D;1的报文段不能携带数据，但要消耗掉一个序号。<br>第二次握手：服务器收到客户端的 SYN 报文之后，会以自己的 SYN 报文作为应答，并且也是指定了自己的初始化序列号 ISN(s)。同时会把客户端的 ISN + 1 作为ACK 的值，表示自己已经收到了客户端的 SYN，此时服务器处于 SYN_RCVD 的状态。<br>在确认报文段中SYN&#x3D;1，ACK&#x3D;1，确认号ack&#x3D;x+1，初始序号seq&#x3D;y。<br>第三次握手：客户端收到 SYN 报文之后，会发送一个 ACK 报文，当然，也是一样把服务器的 ISN + 1 作为 ACK 的值，表示已经收到了服务端的 SYN 报文，此时客户端处于 ESTABLISHED 状态。服务器收到 ACK 报文之后，也处于 ESTABLISHED 状态，此时，双方已建立起了连接。<br>确认报文段ACK&#x3D;1，确认号ack&#x3D;y+1，序号seq&#x3D;x+1（初始为seq&#x3D;x，第二个报文段所以要+1），ACK报文段可以携带数据，不携带数据则不消耗序号。<br>发送第一个SYN的一端将执行主动打开（active open），接收这个SYN并发回下一个SYN的另一端执行被动打开（passive open）。<br>在socket编程中，客户端执行connect()时，将触发三次握手。<br><img src="/../img/tcp/tcp_start_connection.png" srcset="/img/loading.gif" lazyload alt="三次握手"></p>
@@ -316,6 +291,83 @@
 <li>防止“已失效的连接请求报文段”出现在本连接中。<br>客户端在发送完最后一个ACK报文段后，再经过2MSL，就可以使本连接持续的时间内所产生的所有报文段都从网络中消失，使下一个新的连接中不会出现这种旧的连接请求报文段。</li>
 </ol>
 <h3 id="四次挥手的目的"><a href="#四次挥手的目的" class="headerlink" title="四次挥手的目的:"></a>四次挥手的目的:</h3><p>  通信双方可以正确的关闭并释放连接资源</p>
+<h2 id="dubbo、http-各个版本协议对比"><a href="#dubbo、http-各个版本协议对比" class="headerlink" title="dubbo、http 各个版本协议对比"></a>dubbo、http 各个版本协议对比</h2><h3 id="dubbo-失败重试的策略"><a href="#dubbo-失败重试的策略" class="headerlink" title="dubbo 失败重试的策略"></a>dubbo 失败重试的策略</h3><pre><code class="hljs">失败重试的策略
+    1.1 快速失败策略: 请求失败, 直接把异常跑出去
+    1.2 失败安全策略: 
+    1.3 失败自动恢复策略: 后台记录失败请求, 通过定时任务对失败请求进行充实
+    1.4 并行调用多个服务: 把消息广播给服务提供者集群, 只需要一个返回成功即可
+    1.5 广播调用策略: 逐个调用服务提供者的集群, 只要集群中任何一个节点返回异常, 表示本次请求失败
+</code></pre>
+<h3 id="dubbo-核心组建"><a href="#dubbo-核心组建" class="headerlink" title="dubbo 核心组建"></a>dubbo 核心组建</h3><pre><code class="hljs">服务的提供方
+服务的消费者
+注册中心
+</code></pre>
+<h3 id="dubbo-请求过程"><a href="#dubbo-请求过程" class="headerlink" title="dubbo 请求过程"></a>dubbo 请求过程</h3><pre><code class="hljs">服务注册:
+    服务的提供方在启动的时候将请求接口、方法、版本协议等信息注册到注册中心上
+    服务的消费者从注册中心订阅所依赖服务的信息, 注册中心会返回服务提供者地址的列表
+服务发现
+    服务发现的过程, 服务的消费者会从注册中心拉取到服务提供者的列表并保存到本地缓存中, 当有新的服务的提供方或者老的服务提供方需要下线的时候, 注册中心会通知消费者, 消费者动态更新服务的提供者列表
+服务准备调用
+    proxy 生成: 服务的消费者使用动态代理机制, 生成服务接口的代理对象, 当消费者调用接口方法时, 实际上是调用这个接口对象的方法
+    Cluster &amp; LoadBalance
+网络通信准备
+    编码和序列化: 代理对象将方法调用, 参数信息封装成一个RPC请求, 通过编解码器对请求进行序列化和反序列化
+    Netty 通道管理: 使用Netty 作为底层通信框架, 消费者和提供方之间的通信依赖Netty 去进行传输数据
+发送请求
+    consumer: 消费者通过Netty 客户端将序列化后的RPC 请求发送到指定的服务提供方
+    provider: 提供方的Netty server 会去接收请求, 并将其传递给指定的服务处理线程池去进行处理
+请求处理
+    服务的提供方接收到请求并对接收到的数据进行反序列化, 恢复出原始请求对象
+    调用服务: 服务的提供方根据请求对象的服务名、方法名、通过反射的方式执行实际的业务逻辑
+    返回结果: 提供方将执行结果返回给响应对象, 并序列化后, 返回给发送方
+接收响应
+    consumer: 消费者的Netty 客户端接收到响应后, 并将其反序列化成对象
+    结果处理: 将拿到的结果反序列化成对象返回给上层调用者
+服务调用完成
+    上层的程序获得结果, 整个RPC 请求结束
+</code></pre>
+<h3 id="grpc-和-dubbo-的对比"><a href="#grpc-和-dubbo-的对比" class="headerlink" title="grpc 和 dubbo 的对比"></a>grpc 和 dubbo 的对比</h3><pre><code class="hljs">grpc 直接基于http2.0 的, 默认使用 protobuf 来进行序列化和反序列化
+dubbo 可以使用 Hessian、Kryo、Java 序列化 等
+dubbo 反序列化
+    Protobuf：适合需要高效、跨语言通信和数据存储的场景，特别是在需要数据结构化的分布式系统和微服务架构中非常有用。
+    Kryo：专注于Java生态系统，提供高效的二进制序列化，适用于高性能计算和需要优化网络传输的应用。
+    FastJson：适合Web开发，特别是需要与前端进行数据交换的场景，尽管在性能上不如二进制序列化框架，但其易用性和广泛的语言支持使其非常流行。
+    Hessian2：用于分布式系统中的跨语言通信，适合需要轻量级二进制传输协议的场景，但在Java内部应用中，Kryo可能会有更好的性能表现。   
+</code></pre>
+<h3 id="http1-1-2-0-QUIC-协议对比"><a href="#http1-1-2-0-QUIC-协议对比" class="headerlink" title="http1.1 2.0 QUIC 协议对比"></a>http1.1 2.0 QUIC 协议对比</h3><pre><code class="hljs">HTTP 1.X 存在的问题  
+    单向请求: 只能单向请求, 不可以服务端主动给客户端发送响应
+    协议开销大: header里携带的内容过大，且不能压缩，增加了传输的成本。
+    队头阻塞: 下个请求必须要等待前面请求返回后, 才可以发出。导致带宽无法被利用
+HTTP2.0 怎么针对上述问题解决的
+    多路复用:  通过使用二进制帧来对数据进行传输, 不再是Http 1.x 的纯文本协议, 所有的请求都被分割成了更小的数据帧, 这些帧可以在网络中按照任意顺序发送, 接收方再根据帧的标识符进行重组, 提高了带宽的利用率
+    消除对头阻塞: 通过多路复用来允许多个请求和响应再同一个TCP 连接上进行传输, 从而消除了对头阻塞问题
+    减少了延迟: 多路复用可以使得数据流并行传输, 每个数据流有唯一的标示, 并且可以是无序的, 降低了延迟
+    减少连接开销: 可以共用链接
+HTTP2.0的问题
+    TCP 层面的队头堵塞问题: 
+        TCP的顺序性:  发送方的某个数据包在传输过程中丢失了, 接收段需要等待重传的丢失包才可以处理后续的数据包, 导致了TCP 的队头堵塞
+        TCP 传输时某个数据流的数据包丢失了, 会导致后续的数据流堵塞, 因为TCP 需要等待丢失的数据包和重传
+    对比Http1.x 的话: 使得TCP的队头堵塞影响整个链接上的请求和响应, HTTP1.x 的话只影响对应链接的请求和响应
+可以通过QUIC 和 http3.0 去进行解决
+    基于UDP 去实现的
+    QUIC 实现了TCP + HTTPS + HTTP/2的功能，目的是保证可靠性的同时降低网络延迟
+    安全性: 
+        1. 对于首次建立链接的: 需要交换密钥 消耗一次RTT, 再发送业务数据
+        2. 对于非首次的, 通过diff-Hellman 来进行密钥交换, 
+    链接的唯一性基于64位的connection id
+    如何解决队头堵塞问题:
+        1. 基于UDP
+        2. 数据包级别的确认, 如何确定数据包是否一致 : 通过Stream ID 来标识当前数据流属于哪个资源请求, 同时增加stream offset 确认在数据流中的位置, 两个确定数据包重传 
+</code></pre>
+<h3 id="HTTPS-的过程"><a href="#HTTPS-的过程" class="headerlink" title="HTTPS 的过程"></a>HTTPS 的过程</h3><pre><code class="hljs">    1. 客户端发起请求
+    2. 服务器收到请求后, 向客户端发送数字证书(SSL/TLS 证书), 证书包含服务器的公钥和CA 签名的信息
+    3. 客户端验证证书
+    3.1 客户端检验证书、查看证书的有效期、证书链接、证书的域名是否和服务器匹配       防止中间人攻击
+    3.2 如果证书不可信, 客户端会警告用户并提示
+    4. 客户端使用生成会话密钥, 信息通过公钥进行加密, 服务器使用私钥进行解密。        确保只有对应私钥的才可以进行揭秘
+    5. 客户端和服务端双方拥有会话密钥后, 通过会话密钥进行对数据传输
+    6. 数据传输
+</code></pre>
 <h1 id="Mysql"><a href="#Mysql" class="headerlink" title="Mysql"></a>Mysql</h1><h2 id="索引"><a href="#索引" class="headerlink" title="索引"></a>索引</h2><h3 id="索引分类"><a href="#索引分类" class="headerlink" title="索引分类"></a>索引分类</h3><ol>
 <li>逻辑功能分类:<br>1.1 普通索引:没有任何约束条件, 用户提高查询的效率<br>1.2 唯一索引: 在普通索引的基础上增加了唯一性约束的条件, 一张表里面可以有多个唯一索引<br>1.3 主键索引: 在唯一索引的基础上增加了不为空的约束条件, 一张表里面最多有一个主键索引</li>
 <li>物理实现分类<br>2.1 聚集索引: 基于表的主键列的索引, 索引的叶子节点存储了实际的数据行, 一张表只能有一个聚集索引, 通常为主键索引<br>2.2 非聚集索引: 叶子节点存储了索引的值和一个指向数据实际存储位置的指针, 一个表可以有多个非聚集索引</li>
@@ -414,6 +466,8 @@
 key: 查询使用到的索引, 如果为null 则说明没有用到索引
 rows: 扫描需要的行数, 越大 说明执行时间越长
 filtered: where 条件过滤的百分比, 百分比越小 性能越高
+possible_keys: 可能的索引
+key: 索引
 Extra: 查询的额外信息
 </code></pre>
 <h3 id="慢sql"><a href="#慢sql" class="headerlink" title="慢sql"></a>慢sql</h3><pre><code class="hljs">慢sql 怎么定位  怎么优化sql 
@@ -448,6 +502,89 @@ bin log: server 生成的日志, 用于数据备份和主从复制
 relay log 用于主从的数据同步
 
 undolog 记录旧版本数据, redolog 记录新数据, 事物提交时, redo log会先标记事物为prepare状态, 再写入binlog, 最后将事物标记为commit 再进行提交
+</code></pre>
+<h3 id="redo-log-和-bin-log"><a href="#redo-log-和-bin-log" class="headerlink" title="redo log 和 bin log"></a>redo log 和 bin log</h3><pre><code class="hljs">redo log 中WAL 技术(先写日志, 再去更新内存, 最后更新磁盘的技术)
+1. 为什么redo log 写数据要不buffer pool 或者binlog 数据库做持久化要快, 损失性能要小
+1.1 buffer pool 落数据是随机的, 每次修改数据的位置是随机的, redo log 是属于追加的, 是顺序IO
+1.2 刷脏是需要等待数据收集到一定的数据量后, 例如默认是16KB, redo log 	中只包含小量数据, 无效IO比较少
+
+binlog 数据库的逻辑日志
+需要通过redo log 来进行crash safe 的功能
+
+两阶段提交:
+    redo log 的prepare 和 commit 阶段
+    保证redo log 和 bin log 的数据一致性
+
+bin log 日志格式
+1. row: 数据量大而全
+2. statement: 选择默认的语句模式
+3. mixed
+bin log 和redo log 区别:
+1. 存储内容上
+    1. bin log 修改的数据逻辑变化
+    2. redo log 修改的是物理变化
+2. 功能上
+    1. redo log 是为了做持久化。        redo log 	
+    2. bin log 是为了做复制和数据恢复
+需要bin log 和 redo log 数据一致才可以保证事物的成功
+</code></pre>
+<h3 id="relay-log"><a href="#relay-log" class="headerlink" title="relay log"></a>relay log</h3><pre><code class="hljs">relay log: 用于slave 进行数据同步的
+undo log: 回滚和多版本mvcc
+事物commit 后清除undo log 信息
+mvcc 读的时候只需要返回前面一个版本的数据即可
+</code></pre>
+<h3 id="mvcc-原理"><a href="#mvcc-原理" class="headerlink" title="mvcc 原理"></a>mvcc 原理</h3><pre><code class="hljs">mvcc 原理
+隐藏列:trx_id
+通过readView 去解决读已提交和可重复读两个隔离级别中的问题
+    readView 包含内容:
+        1. m_ids: 在生成read view 时当前系统中活跃的读写事物的事物id 列表
+        2. min_trx_id:  生成read view 时当前系统中活跃读写事物中最小的事物id
+        3. max_trx_id: 生成read view 时系统中应该分配给下一个事物的id
+        4. create_trx_id: 生成该readView 的事物id
+    如何判断该版本是否可见
+        1. 对比需要访问trx_id 和create_trx_id, 如果是一样的, 说明是在访问自己修改过的事物, 则该版本可见
+        2. 如果访问的trx_id 小于 min_trx_id, 说明访问的版本是在当前事物生成之前提交的, 可以被访问
+        3. 如果访问的trx_id 大于 max_trx_id, 说明访问的版本是在当前事物后开启的, 则不可以被访问
+        4. 如果访问的trx_id 在 min_trx_id 和 max_trx_id 之间的, 则需要判断trx_id 是否属于 m_ids , 如果属于的话说明还是活跃的, 不可以被访问, 否则可以访问
+    读已提交和 可重复读就是在生成read view 的时间点不一样
+        读已提交每次执行的时候都会会生成一个read view
+        可重复度是在事物的第一次查询的时候创建一个, 并在整个事物期间不变
+</code></pre>
+<h3 id="主从复制"><a href="#主从复制" class="headerlink" title="主从复制"></a>主从复制</h3><pre><code class="hljs">mysql 并行复制
+writeset
+GTID: 全局事物id
+主从复制的时候发生了延迟
+    1. 硬件层面怎么处理
+        1.1 网络带宽是不是被打满了
+        1.2 CPU load
+        1.3 磁盘层面是不是可以升级
+    2. 软件
+        2.1 IO线程
+        2.2 SQL 线程
+    3. 监控 告警
+部分写失效了怎么处理
+    场景: 发起一个update 的过程, 更改的数据落了redo log, 在需要刷盘的时候, 写了4K数据, 写了一部分数据, 但是没有写完, 不完整的数据页无法通过redo log 恢复
+    解决办法: 通过double write 的方式: 给这个page 做一个备份, 重启的时候先恢复对应的页, 再去恢复数据
+    将数据同步到double writer buffer 上去, 如果double write buffer 不完整则直接丢弃
+</code></pre>
+<h3 id="两阶段提交的过程-update-x-set-a-x3D-1-where-b-x3D-2"><a href="#两阶段提交的过程-update-x-set-a-x3D-1-where-b-x3D-2" class="headerlink" title="两阶段提交的过程 update x set a &#x3D; 1 where b &#x3D; 2;"></a>两阶段提交的过程 update x set a &#x3D; 1 where b &#x3D; 2;</h3><pre><code class="hljs">1. 客户端发起操作
+2. 将b 为2 的这一行的数据中的a 列的值改为1
+3. 将修改数据更新到内存中
+4. 记录a 在数据页x 的地方进行了y 操作, 并将记录设置为prepare的状态
+5. 修改好redo log 后, 可以对事物进行提交
+6. 写入bin log
+7. commit 提交事物
+8. 将redo log 这个事物相关的状态设置为commit
+</code></pre>
+<h3 id="索引的开销"><a href="#索引的开销" class="headerlink" title="索引的开销"></a>索引的开销</h3><pre><code class="hljs">1. 空间上的开销: 建立索引需要创建一颗B+树, 每棵B+树都是一个数据页, 	一个页会默认占用16KB的空间
+2. 时间上的开销: 每次数据的增加、删除、修改, 需要对索引进行维护修改
+</code></pre>
+<h3 id="行锁"><a href="#行锁" class="headerlink" title="行锁"></a>行锁</h3><pre><code class="hljs">对数据表中的行记录进行加锁, 比如事物A更新了一行, 事物B也要更新一行数据, 则必须要等事物A操作完成后才可以去进行更新
+间隙锁可以用来解决幻读:
+    幻读的原因: 行锁只能锁住行, 但是新插入记录这个动作, 是要更新的记录之间的 间隙 , 因此通过间隙锁去解决幻读这个问题
+间隙锁, 导致锁的影响范围变大
+行锁命令分析
+show status like &#39;innodb_row_lock%&#39;; 
 </code></pre>
 <h4 id="一条事物update-的时候各个日志在什么时候会用到"><a href="#一条事物update-的时候各个日志在什么时候会用到" class="headerlink" title="一条事物update 的时候各个日志在什么时候会用到"></a>一条事物update 的时候各个日志在什么时候会用到</h4><pre><code class="hljs"> 3. 开启事物, 先将记录记录到undo log 中, 将更新的旧数据记录到undo log中
  4. innodb 开始更新记录, 先更新内存, 同时标记为脏页, 将记录写入redolog 中, 为了减少磁盘的IO, 由后台线程将脏页数据写入到磁盘中
@@ -484,7 +621,7 @@ undolog 记录旧版本数据, redolog 记录新数据, 事物提交时, redo lo
     幻读: 在同一个事物中, 对于一个范围内的数据进行多次多去, 发现返回的数据结果行数不一致					
 </code></pre>
 <h3 id="可重复读为什么不能解决幻读"><a href="#可重复读为什么不能解决幻读" class="headerlink" title="可重复读为什么不能解决幻读"></a>可重复读为什么不能解决幻读</h3><pre><code class="hljs">    读已提交: 事物中只能读取到其他已提交的数据
-        通过在语句语句执行之前生成一个read view, 因此可以保证每次读取的时候可以读取到其他事物提交后的数据
+        通过在每次语句执行之前生成一个read view, 因此可以保证每次读取的时候可以读取到其他事物提交后的数据
     可重复读 是通过在启动事物时生成一个read view, 整个事物期间都在用这个read view, 因此没办法防止幻读, 因为整个事物期间基于的视图时一样的
 </code></pre>
 <h1 id="java-基础"><a href="#java-基础" class="headerlink" title="java 基础"></a>java 基础</h1><h2 id="多线程"><a href="#多线程" class="headerlink" title="多线程"></a>多线程</h2><h3 id="java-创建线程的方式"><a href="#java-创建线程的方式" class="headerlink" title="java 创建线程的方式"></a>java 创建线程的方式</h3><pre><code class="hljs">    Thread
@@ -520,7 +657,7 @@ undolog 记录旧版本数据, redolog 记录新数据, 事物提交时, redo lo
 <li>悲观锁: 假设并发访问冲突会导致数据不一致, 在使用悲观锁的情况下, 线程访问共享资源会事先获得锁, 确保可以独占的进行, 而其他线程则会被阻塞, 悲观锁适用于数据修改比较频繁, 并发冲突比较高的场景下</li>
 <li>乐观锁: 假设并发冲突较少发生, 多个线程可以同时进行读写操作而不去加锁, 乐观锁的实现是通过版本号或者时间戳来判断数据是否被进行了修改, 如果一个线程要更新数据, 会先获取当前版本号, 如果当前版本号发生了变化, 则说明其他线程进行了修改, 如果当前版本号没有发生变化, 说明可以进行修改</li>
 </ol>
-<h2 id="6-ReentrantReadWriteLock-使用场景"><a href="#6-ReentrantReadWriteLock-使用场景" class="headerlink" title="6 ReentrantReadWriteLock 使用场景"></a>6 ReentrantReadWriteLock 使用场景</h2><p>读多, 写少的情况下<br>读操作的并发性:<br>    只有没有写操作, 多个线程同时进行读取数据, 在读多写少的场景下面可以显著提高读取的性能<br>写操作的独占性:<br>    写操作是独占的, 当一个线程在运行的时候, 其他所有的读取和写都会被阻塞, 直到写操作完成。这样可以保证数据的一致性, 防止读线程读取到错误不完整的数据。<br>使用场景:<br>    读多写少的场景, 例如: 缓存, 配置读取<br>读锁为共享锁，写锁为排他锁<br>如何保证安全性:<br>    读锁: 在进行更新数据的时候, 只有所有读锁都释放了以后, 写锁才可以被获取到<br>    写锁: 写锁获取时, 会检查是否有读锁的存在, 如果有读锁的存在, 写锁会被阻塞, 直到所有的读锁都被释放, 一旦有线程拿到写锁, 会阻止任何新的读锁和其他写锁的获取</p>
+<h2 id="ReentrantReadWriteLock-使用场景"><a href="#ReentrantReadWriteLock-使用场景" class="headerlink" title="ReentrantReadWriteLock 使用场景"></a>ReentrantReadWriteLock 使用场景</h2><p>读多, 写少的情况下<br>读操作的并发性:<br>    只有没有写操作, 多个线程同时进行读取数据, 在读多写少的场景下面可以显著提高读取的性能<br>写操作的独占性:<br>    写操作是独占的, 当一个线程在运行的时候, 其他所有的读取和写都会被阻塞, 直到写操作完成。这样可以保证数据的一致性, 防止读线程读取到错误不完整的数据。<br>使用场景:<br>    读多写少的场景, 例如: 缓存, 配置读取<br>读锁为共享锁，写锁为排他锁<br>如何保证安全性:<br>    读锁: 在进行更新数据的时候, 只有所有读锁都释放了以后, 写锁才可以被获取到<br>    写锁: 写锁获取时, 会检查是否有读锁的存在, 如果有读锁的存在, 写锁会被阻塞, 直到所有的读锁都被释放, 一旦有线程拿到写锁, 会阻止任何新的读锁和其他写锁的获取</p>
 <p>锁的使用场景:<br>    读写锁:<br>        读多写少的, 高并发的情况下可以提高读取的效率<br>    客观锁:<br>        通过版本号机制, 适用于冲突较少, 并发较低的情况下<br>    synchronized:<br>        简单的并发控制, 例如在方法上或者对象上控制并发<br>    ReentrantLock:<br>        可以手动的管理锁的粒度, 可中断锁, 可对锁进行超时处理</p>
 <h4 id="使用场景"><a href="#使用场景" class="headerlink" title="使用场景"></a>使用场景</h4><h5 id="乐观锁"><a href="#乐观锁" class="headerlink" title="乐观锁"></a>乐观锁</h5><p>适用于读操作比较多, 并发冲突比较少的场景</p>
 <h5 id="悲观锁"><a href="#悲观锁" class="headerlink" title="悲观锁"></a>悲观锁</h5><p>适用于写操作操作比较多, 并发冲突比较多的场景</p>
@@ -1761,11 +1898,6 @@ mmap
             雪花算法的64位组成如下
             符号(1)_时间戳(41)_数据中心(5)_机器id(5)_序列号(12)
 
-
-        
-
-
-
         磁盘 堆外读取
 
         mysql 中 Event 怎么理解????
@@ -1797,6 +1929,49 @@ mmap
         大数据怎么处理??
         分布式id 生成器 算法
 </code></pre>
+<h3 id="一面问题"><a href="#一面问题" class="headerlink" title="一面问题"></a>一面问题</h3><pre><code class="hljs">1. qconfig 服务端 CAP 怎么选择, 为什么这样去选
+2. qconfig 元数据是否放在ZK 中
+3. 单元化的理解
+3.1 单元化如何实现的, 就是从整个公司的角度, 以及从配置中心角度=====
+3.2 单元化的时候数据怎么落到正确的存储上去
+    3.2.1 单元化的目的:
+4. 数据批量变换和数据预热怎么处理, 为什么要这样去做
+5. 批量变更在什么情况下有问题
+    5.1 批量变更不是delay 去做, 是从请求方开始就聚集去做处理
+6. jmap 查看堆上的内存, 查看内存占用的过程是什么样的
+7. pmap 查看堆外内存的场景,为什么会怀疑和malloc 分配内存有关联
+    7.1. ptmalloc 申请内存 和 jemlloc 为什么 ptmalloc
+    7.2 	ptmalloc 中用户释放掉的内存, 为了下次快速使用, 会存到自己的空闲列表中, 因此导致了很多的64M 内存占用的问题
+8. 线程资源占用 应该调整哪个参数 或者jvm 应该怎么调整					=======
+    1. 需要调整线程栈的大小 和 堆上的大小
+9. 稳定性有什么总结性的
+    9.1 幂等服务
+    =======
+    事物管理
+    限流熔断
+    重试机制
+10. 网关 为什么要从tomcat 换成netty
+11. 为什么netty 可以用更少的线程来做同样的事情
+12. netty 怎么去管理堆外内存
+    12.1 mmap + bytebuf
+    12.1 每个bytebuf 有个引用计数器, 当bytebuf 被使用的时候, 计数器+1, 不再需要使用的时候, 计数器-1, 当byteBuf关联的计数器降为0的时候。
+    通过PooledByteBufAllocator 和 ByteBuf 来实现的, 在需要使用堆外内存的时候, 分配一个新chunk 或者直接向操作系统申请一个, 然后通过ByteBuf 的API 对堆外内存去进行读写. 内存释放的时候通过引用计数机制的减少
+ResourceLeakDetector 可以用来检测
+-XX:MaxDirectMemorySize=1G 限制堆外内存的使用
+13. 网关上降本增效 怎么去做这个事情
+14. 读已提交 和 可重复读 怎么保证的
+15. mvcc 是利用什么机制实现的
+16. undo log 在什么时候会去删除掉
+17. undo log 在多版本比较的时候会在什么时候可以删除 ===============
+    17.1 当所有以来undo log 的事物都不再使用的时候就可以删除了
+18. 内存写了, 磁盘还没有落的时候, crash 了.  怎么去保证
+19. synchronized 的锁升级的过程
+20. cas 会有什么问题
+</code></pre>
+<h3 id="单元化理解"><a href="#单元化理解" class="headerlink" title="单元化理解:"></a>单元化理解:</h3><pre><code class="hljs">单元化定义: 一个能完成所有业务操作的自包含集合, 包含了这个业务所需要的所有服务和数据, 每一个单元部署了系统所需要的所有应用, 数据则是按照某种数据维度划分后的一部分
+核心在于水平模式, 每个机房都有完成全站所有业务的能力
+数据分区: 
+</code></pre>
 <h4 id="netty-组建介绍"><a href="#netty-组建介绍" class="headerlink" title="netty 组建介绍"></a>netty 组建介绍</h4><h5 id="Channel-的作用-1"><a href="#Channel-的作用-1" class="headerlink" title="Channel 的作用"></a>Channel 的作用</h5><pre><code class="hljs">负责网络IO操作相关的
     1.1 管理IO 操作
         对数据读取、发送、和连接的管理
@@ -1826,16 +2001,32 @@ mmap
     serverlet 3.0异步依赖容器的线程管理, 在并发增加的情况下可能会导致线程的耗尽; netty 中使用少量的worker 线程来处理事件, 减少了上下文的切换, 避免了传统线程池模型的问题.
 3. IO 模型
     serverlet 3.0 虽然支持异步处理, 但是底层依赖于阻塞IO模型; netty 使用java NIO 的非阻塞式, 从底层上确保了高并发表现的性能
-4. 并发高的情况下 tomcat 由于采用的是BIO 加上异步线程的方式去处理的, 会有大量的线程产生, CPU 内存 文件描述符都会发生资源竞争，netty 是通过NIO 方式去做的，使用少量的worker 线程就可以去处理
+4. 并发高的情况下 tomcat 由于采用的是BIO 加上异步线程的方式去处理的, 会有大量的线程产生, CPU 内存 文件描述符都会发生资源竞争，netty 是通过NIO 方式去做的，使用少量的 worker 线程就可以去处理
 </code></pre>
 <h2 id="为什么要用netty-1"><a href="#为什么要用netty-1" class="headerlink" title="为什么要用netty"></a>为什么要用netty</h2><pre><code class="hljs">事件驱动模型:
     基于reactor模式去做的, 通过EventLoop来管理IO 操作事件, 并将这些事件派发给相关的channelHandler, 实现高效的网络通信, 可以处理大量的并发连接
     核心组建:
         eventLoop
+            1.每一个EventLoop 维护着一个 Selector 和 线程
+            2.处理IO 事件和任务
+                监视和处理IO事件, 基于Java NIO 的selector 事件
+            3. 任务的调度
+                还可以管理定时任务和普通任务, 可以提交任务到eventLoop上, 按照顺序和指定周期执行
+            4. 线程管理
+                一个eventLoop通常和一个线程绑定, 每个 eventLoop 可以维护多个channel, 但一个channel 始终绑定在一个eventLoop 上, 确保了同一个channel 上的事件处理是线程安全的
+            5. 事件的派发与处理
+                负责从IO操作中获取事件, 将这些事件派发到对应的ChannelHandler中, 每个channel 代表一个连接或者IO操作, 在其pipeline中的一系列处理
         channel
+            负责网络IO操作相关的
+            1.1 管理IO 操作
+                对数据读取、发送、和连接的管理
+            1.2 处理事件
+                从网络传输到channelPipeline, 将channelPipeline 处理后的数据返回到网络中去
+            1.3 支持异步IO
+                即将数据异步写入到网络中,不会阻塞当前线程
         channelPipeline: 是一个处理链, 每个IO 事件都会按照顺序通过channelPipeline, 将多个channelHandler连接起来, 形成一条链, 每个channelHandler只负责处理特定的事件
         channelHandler: 用于处理特定类型事件的处理器, 不同的channelHandler 实现不同的功能, 有的可以用来编解码, 有的可以用来处理连接事件
-        Selector: 用于监听多个Channel 上的IO 事件, 当selector 发现某个Channel 上有事件发生的时候, 会通过EvenetLoop 来进行处理
+        Selector: 用于监听多个 Channel 上的IO 事件, 当selector 发现某个Channel 上有事件发生的时候, 会通过EvenetLoop 来进行处理
     工作流程:
         boosGroup 和 workerGroup
             bossGroup 负责监听客户端的连接请求事件, 将接收请求并将连接交给workerGroup进行处理
@@ -1847,56 +2038,80 @@ mmap
             入站事件有inbounder 处理, 出站事件由outbounder 处理
             每个channelHandler 可以对事件进行处理, 处理完成后让下一个处理器进行处理
     线程模型
-        EventLoop 绑定一个线程, 因此EventLoop管理的channel 也是在同一个线程上去运行的, 确保每个channel 上的事件处理是安全的, 从而减少了上下文切换的开销		
+        EventLoop 绑定一个线程, 因此EventLoop管理的channel 也是在同一个线程上去运行的, 确保每个channel 上的事件处理是安全的, 从而减少了上下文切换的开销	
+零拷贝 
+    1. 零拷贝指的是在IO时减少或者消除数据内存拷贝的次数以及CPU的参与, 使得数据在IO的时候可以更加高效
+    主要实现手段:
+    1. sendfile() 系统调用: 是linux 提供的一种系统调用, 可以直接将数据从文件描述符传输到网络套接字上, 不需要将数据复制到用户空间, 内核直接通过mmap 和 DMA 进行数据传输
+    2. mmap 系统调用: 可以将文件映射到进程的地址空间, 这样进程可以直接在自己的地址空间访问文件内容, 不需要显示的读写
+    3. DMA 技术, 通过DMA 允许设备直接访问内存, 无需经过CPU, 通过DMA,
+    优点:
+        1. 减少CPU的开销, 避免了不必要的内存拷贝
+        2. 提高数据传输效率. 减少了数据的传输效率
+        3. 减少上下文的切换. 减少用户态和内核态的上下文切换
+page cache
+    是磁盘上的数据缓存到内存中的操作, 加速读写
+    读操作:
+        如果读取的时候数据已经在page cache 中, 则说明命中了直接返回, 避免了磁盘的IO
+        如果读取的时候数据没有在page cache 中, 则从磁盘中获取并缓存到page cache中
+    写操作
+        预先将数据写入到page cache 中, 操作系统会在后台将page cache 数据写入到磁盘上去
+    优点:
+        提高读取速度: 加速磁盘的读取, 降低磁盘IO
+        减少写入次数: 集中写的机制
+        提高内存利用率: 操作系统会动态调整大小
+    缺点:
+        内存占用
+        写入延迟	
 支持零拷贝
-    零拷贝指的是全程不需要CPU 进行参与, 所有数据都是通过DMA来进行传输的
+    零拷贝指的是全程不需要 CPU 进行参与, 所有数据都是通过DMA来进行传输的
     全程只需要2次上下文切换, 2次DMA数据copy
 ByteBuf 好处:
     1. 容量可以动态的调整
     2. 支持零拷贝, 减少数据在不同内存区域之间的复制, 
     3. polling 机制 从而进行重复利用
 </code></pre>
-<h5 id="Netty-的一次网络请求过程是什么-1"><a href="#Netty-的一次网络请求过程是什么-1" class="headerlink" title="Netty 的一次网络请求过程是什么"></a>Netty 的一次网络请求过程是什么</h5><pre><code class="hljs">        客户端
-            初始化:
-                EventLoopGroup 的创建, 用于管理和服务之间网络链接和IO 操作, Bootstrap 配置客户端的各种参数, 包括线程模型, NioSocketChannel, 远端服务器的地址, 以及客户端的handler
-            建立链接
-                连接服务器: 通过Bootstrap.connect() 方法启动连接过程, 链接成功后会将channel 注册到event loop 上
-                等待建立连接完成:  connect() 返回一个ChannelFuture, 可以通过sync() 或者是addListener 进行完成
-            发送请求
-                构造数据进行请求, 连接成功后, 通过channel 向服务器发送数据, 通常是将请求封装成 ByteBuf 
-                对数据进行writeAndFlush 写数据, 数据会通过ChannelPipeline 的outbounder 进行处理, 通过底层的socket 发送到服务器
-            接收响应
-                pipeline 处理, 当服务器响应数据到的时候, 数据会到channelHander 的inbounder,
-                处理响应数据: 业务逻辑进行处理, 处理完后返回给应用层
-            关闭连接
-                主动关闭连接: channel.close 关闭连接, 释放资源
-                监听关闭操作: close 返回的future 进行监听, 进行监听关闭是否成功。
-            资源清理
-                group.shutDownGracefully() 进行清理
-        服务端
-            初始化阶段
-                创建EventLoopGroup, bossGroup 和 workerGroup, bossGroup 负责接受请求, workerGroup 负责处理 BossGroup 分配过来的IO 操作
-                配置 serverBootstrap : 使用 ServerBootstrap 来配置 Netty 服务, 包括 channel 的类型, 指定 EventLoopGroup, 配置 channelPipeline , 以及设置服务器的监听端口
-            绑定端口
-                serverBootStrap.bind() 方法绑定服务器的监听端口, 会启动一个异步操作过程, bossGroup 中的线程会监听这个连接请求
-                bind() 返回一个future, 可以通过sync()  或者是addListener 来等待响应
-            接受客户端请求
-                bossGroup 中的线程会去监听端口的连接请求, 当有新的请求进来的时候, Netty会为这个连接创建一个channel, 并将其分配给worker 的EventLoop上,
-                注册channel: 新的channel 会被注册在worker Group 中的eventLoop 上, 接下来和这个连接的相关读写操作都是在这个EventLoop 上
-            处理客户端请求
-                每个channel 关联的channelpipeline, 包含了一系列的handler
-                当客户数据到达的时候, 数据会通过channelPipeline 中的inbounder 来进行处理, 负责数据的读取, 解码，业务逻辑处理等
-            响应客户端
-                当业务逻辑处理完后, 通过会通过ChannelHandlerContext.writeAndFlush() 将数据响应回给客户端
-                数据会通过channelpipeline 中的outbounder，然后通过底层的socket 发送给客户端
-            关闭连接
-                客户端关闭连接, 或者是服务端主动关闭连接的时候, Netty 会处发ChannelInbounderHandler 的channelInactive 或者是channelUnregistered, 可以进行资源清理
-                在关闭服务器的时候, 需要调用bossGroup 和worker Group 的shutdownGracefully 进行线程资源的释放
+<h5 id="Netty-的一次网络请求过程是什么-1"><a href="#Netty-的一次网络请求过程是什么-1" class="headerlink" title="Netty 的一次网络请求过程是什么"></a>Netty 的一次网络请求过程是什么</h5><pre><code class="hljs">客户端
+    初始化:
+        EventLoopGroup 的创建, 用于管理和服务之间网络链接和IO 操作, Bootstrap 配置客户端的各种参数, 包括线程模型, NioSocketChannel, 远端服务器的地址, 以及客户端的handler
+    建立链接
+        连接服务器: 通过Bootstrap.connect() 方法启动连接过程, 链接成功后会将channel 注册到event loop 上
+        等待建立连接完成:  connect() 返回一个ChannelFuture, 可以通过sync() 或者是addListener 进行完成
+    发送请求
+        构造数据进行请求, 连接成功后, 通过channel 向服务器发送数据, 通常是将请求封装成 ByteBuf 
+        对数据进行writeAndFlush 写数据, 数据会通过ChannelPipeline 的outbounder 进行处理, 通过底层的socket 发送到服务器
+    接收响应
+        pipeline 处理, 当服务器响应数据到的时候, 数据会到channelHander 的inbounder,
+        处理响应数据: 业务逻辑进行处理, 处理完后返回给应用层
+    关闭连接
+        主动关闭连接: channel.close 关闭连接, 释放资源
+        监听关闭操作: close 返回的future 进行监听, 进行监听关闭是否成功。
+    资源清理
+        group.shutDownGracefully() 进行清理
+服务端
+    初始化阶段
+        创建EventLoopGroup, bossGroup 和 workerGroup, bossGroup 负责接受请求, workerGroup 负责处理; BossGroup 分配过来的IO 操作
+        配置 serverBootstrap : 使用 ServerBootstrap 来配置 Netty 服务, 包括 channel 的类型, 指定 EventLoopGroup, 配置 channelPipeline , 以及设置服务器的监听端口
+    绑定端口
+        serverBootStrap.bind() 方法绑定服务器的监听端口, 会启动一个异步操作过程, bossGroup 中的线程会监听这个连接请求
+        bind() 返回一个future, 可以通过sync()  或者是addListener 来等待响应
+    接受客户端请求
+        bossGroup 中的线程会去监听端口的连接请求, 当有新的请求进来的时候,bossGroup 中的某个eventLoop 会调用 NIO 的 selector 来监听OP_ACCEPT 事件, 一旦有新的连接时间发生, Boss Group 会接受这个连接并为这个连接创建一个channel, 并将连接对应的 channel 分配给worker 的EventLoop上,
+        注册channel: 新的channel 会被注册在worker Group 中的eventLoop 上, 接下来和这个连接的相关读写操作都是在这个EventLoop 上
+    处理客户端请求
+        每个channel 关联的channelpipeline, 包含了一系列的handler
+        当客户数据到达的时候, 数据会通过channelPipeline 中的inbounder 来进行处理, 负责数据的读取, 解码，业务逻辑处理等
+    响应客户端
+        当业务逻辑处理完后, 通过会通过ChannelHandlerContext.writeAndFlush() 将数据响应回给客户端
+        数据会通过channelpipeline 中的outbounder，然后通过底层的socket 发送给客户端
+    关闭连接
+        客户端关闭连接, 或者是服务端主动关闭连接的时候, Netty 会处发ChannelInbounderHandler 的channelInactive 或者是channelUnregistered, 可以进行资源清理
+        在关闭服务器的时候, 需要调用bossGroup 和worker Group 的shutdownGracefully 进行线程资源的释放
 </code></pre>
 <h3 id="项目准备"><a href="#项目准备" class="headerlink" title="项目准备"></a>项目准备</h3><pre><code class="hljs">1. yong gc 和full GC 如何优化的
     1.1 full gc 找到大的文件
     1.2 yong gc 在配置的快速变更期间, 导致客户端全都重新建立长轮训请求, 导致服务端的压力比较大, 服务端为了保证配置检测到配置文件的快速变更下发, 需要解析所有的配置文件版本号,以及和本地对比, 这部分数据都是瞬时压力比较大的, 因为客户端的数量比较多, 每次变更都是需要重新连上来, 因此一开始怀疑是不是Yong 区太小了, 导致yong 区GC 比较频繁, 因此将yong 区的大小调大 G1NewSizePercent, 观察效果. 同时由于我们采用的是G1 的算法, 他在yong gc 的时候会有STW, 导致处理耗时变长, 并且此时由于yong 区的对象比较多, 因此我们决定将G1 换成zgc, 第一步就是需要jdk 从1.8 升级到jdk11
-    升级jdk 的时候有一些依赖 包的调整,  因为jdk11 引入了一些模块化, 一些类都废弃掉了. 升级完后再去将gc 方式换成zgc
+    升级jdk 的时候有一些依赖 包的调整,  因为jdk11 引入了一些模块化, 一些类都废弃掉了. 升级完后再去将gc 方式换成zgc,
 </code></pre>
 <ol>
 <li>网关如何提高性能<br> 4C 8G<br> 请求方式就是一个healthCheck 响应ok 这种的<br> 1.1 一开始压测<br> 如何解决压不上去的问题<br> 1.2 发现CPU 一下子就上去了<br> 1.3 更换网络框架<br> 1.4 更换IO 模型</li>
@@ -1986,6 +2201,12 @@ ByteBuf 好处:
                 <div class="post-prevnext my-3">
                   <article class="post-prev col-6">
                     
+                    
+                      <a href="/2024/09/06/interview/%E9%A1%B9%E7%9B%AE%E4%BB%8B%E7%BB%8D/" title="项目介绍">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">项目介绍</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
                     
                   </article>
                   <article class="post-next col-6">

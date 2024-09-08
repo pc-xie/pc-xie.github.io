@@ -1,0 +1,984 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
+  <link rel="icon" href="/img/fluid.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="pc-xie">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="项目问题项目介绍面试官, 您好, 我叫谢鹏程, 我是18年毕业于电子科技大学的, 我的工作经历都是和基础架构相关, 我的第一份工作是在携程的框架架构部门从事的是配置中心的相关工作, 第二份工作是在汇付天下做的api 网关相关的工作. 配置中心是公司各个系统用来对配置的管理、变更、以及维护的系统, 用户在界面上或者是通过restAPI 对配置文件进行变更, 可以在一秒以内推送到用户的机器上去, 其中">
+<meta property="og:type" content="article">
+<meta property="og:title" content="项目介绍">
+<meta property="og:url" content="http://localhost:4000/2024/09/06/interview/%E9%A1%B9%E7%9B%AE%E4%BB%8B%E7%BB%8D/index.html">
+<meta property="og:site_name" content="pc-xie">
+<meta property="og:description" content="项目问题项目介绍面试官, 您好, 我叫谢鹏程, 我是18年毕业于电子科技大学的, 我的工作经历都是和基础架构相关, 我的第一份工作是在携程的框架架构部门从事的是配置中心的相关工作, 第二份工作是在汇付天下做的api 网关相关的工作. 配置中心是公司各个系统用来对配置的管理、变更、以及维护的系统, 用户在界面上或者是通过restAPI 对配置文件进行变更, 可以在一秒以内推送到用户的机器上去, 其中">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2024-09-06T06:57:55.854Z">
+<meta property="article:modified_time" content="2024-09-07T15:47:35.854Z">
+<meta property="article:author" content="pc-xie">
+<meta name="twitter:card" content="summary_large_image">
+  
+  
+  
+  <title>项目介绍 - pc-xie</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"localhost","root":"/","version":"1.9.3","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Fluid</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="项目介绍"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2024-09-06 14:57" pubdate>
+          2024年9月6日 下午
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          13k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          109 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">项目介绍</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h1 id="项目问题"><a href="#项目问题" class="headerlink" title="项目问题"></a>项目问题</h1><h2 id="项目介绍"><a href="#项目介绍" class="headerlink" title="项目介绍"></a>项目介绍</h2><p>面试官, 您好, 我叫谢鹏程, 我是18年毕业于电子科技大学的, 我的工作经历都是和基础架构相关, 我的第一份工作是在携程的框架架构部门从事的是配置中心的相关工作, 第二份工作是在汇付天下做的api 网关相关的工作. 配置中心是公司各个系统用来对配置的管理、变更、以及维护的系统, 用户在界面上或者是通过restAPI 对配置文件进行变更, 可以在一秒以内推送到用户的机器上去, 其中像一些中间件的配置放在了配置中心上, 例如SOA 的一些超时配置、数据库的连接串、数据的超时配置等等. 其中在机房演练期间, 需要保证将数据库的连接串快速的推送到用户的机器上. 然后我在里面承担着配置中心的稳定性提升以及可用性易用性开发等职责. 另外一个项目在汇付天下从事的API网关, API网关是将外网流量转发到内网的机器上去, 同时也肩负着内网一些流程的转发, 例如前端或者一些控台类的, 需要走http 请求的. 我在里面承担着如何提升网关的性能, 以及稳定性易用性提升的一些相关工作.</p>
+<h2 id="为什么需要将tomcat-换成netty"><a href="#为什么需要将tomcat-换成netty" class="headerlink" title="为什么需要将tomcat 换成netty"></a>为什么需要将tomcat 换成netty</h2><pre><code class="hljs">vmstat 1
+在请求量大的情况下:
+    1. CPU 负载发现急剧上升, 
+    2. 整体请求的耗时一下子上来了
+排查原因:	
+    1. 由于线程开的太多了, 上下文切换比较频繁
+    2. 有一些请求会由于tomcat 阻塞住了. 导致外部请求有堆积. 将允许的线程数开大的话, 会导致线程切换更加频繁
+解决办法: 将网络框架换成netty 去处理
+    1. tomcat 相比较于netty 的线程模型
+        1.1 tomcat 采用的是多线程阻塞模式, 每个请求对应到一个线程上去, 在请求量变多的情况下, 会导致线程数急剧上涨, 从而带来线程上下文的开销, 同时线程池中的核心线程数到了上线后, 后面过来的请求就是需要等待了. 对比netty 的线程模型, netty 采用了基于NIO 和 事件异步驱动的方式来处理的, 只需要通过少量的线程和eventLoop 机制就可以处理大量的并发请求, 它不会为每个请求创建一个线程, 通过少量的线程来管理多个IO 事件, 从而极大的避免了线程的上下文切换
+    2. IO 模型:
+        tomcat 采用的是 blockingIO, netty 采用的是NIO 来做的
+</code></pre>
+<h3 id="netty-做为客户端发送请求-netty-做为服务端接收请求的完整流程是什么样的"><a href="#netty-做为客户端发送请求-netty-做为服务端接收请求的完整流程是什么样的" class="headerlink" title="netty 做为客户端发送请求, netty 做为服务端接收请求的完整流程是什么样的"></a>netty 做为客户端发送请求, netty 做为服务端接收请求的完整流程是什么样的</h3><pre><code class="hljs">客户端
+    初始化:
+        EventLoopGroup 的创建, 用于管理和服务之间网络链接和IO 操作, Bootstrap 配置客户端的各种参数, 包括线程模型, NioSocketChannel, 远端服务器的地址, 以及客户端的handler
+    建立链接
+        连接服务器: 通过Bootstrap.connect() 方法启动连接过程, 链接成功后会将channel 注册到event loop 上
+        等待建立连接完成:  connect() 返回一个ChannelFuture, 可以通过sync() 或者是addListener 进行完成
+    发送请求
+        构造数据进行请求, 连接成功后, 通过channel 向服务器发送数据, 通常是将请求封装成 ByteBuf 
+        对数据进行writeAndFlush 写数据, 数据会通过ChannelPipeline 的outbounder 进行处理, 通过底层的socket 发送到服务器
+    接收响应
+        pipeline 处理, 当服务器响应数据到的时候, 数据会到channelHander 的inbounder,
+        处理响应数据: 业务逻辑进行处理, 处理完后返回给应用层
+    关闭连接
+        主动关闭连接: channel.close 关闭连接, 释放资源
+        监听关闭操作: close 返回的future 进行监听, 进行监听关闭是否成功。
+    资源清理
+        group.shutDownGracefully() 进行清理
+服务端
+    初始化阶段
+        创建EventLoopGroup, bossGroup 和 workerGroup, bossGroup 负责接受请求, workerGroup 负责处理; BossGroup 分配过来的IO 操作
+        配置 serverBootstrap : 使用 ServerBootstrap 来配置 Netty 服务, 包括 channel 的类型, 指定 EventLoopGroup, 配置 channelPipeline , 以及设置服务器的监听端口
+    绑定端口
+        serverBootStrap.bind() 方法绑定服务器的监听端口, 会启动一个异步操作过程, bossGroup 中的线程会监听这个连接请求
+        bind() 返回一个future, 可以通过sync()  或者是addListener 来等待响应
+    接受客户端请求
+        bossGroup 中的线程会去监听端口的连接请求, 当有新的请求进来的时候,bossGroup 中的某个eventLoop 会调用 NIO 的 selector 来监听OP_ACCEPT 事件, 一旦有新的连接时间发生, Boss Group 会接受这个连接并为这个连接创建一个channel, 并将连接对应的 channel 分配给worker 的EventLoop上,
+        注册channel: 新的channel 会被注册在worker Group 中的eventLoop 上, 接下来和这个连接的相关读写操作都是在这个EventLoop 上
+    处理客户端请求
+        每个channel 关联的channelpipeline, 包含了一系列的handler
+        当客户数据到达的时候, 数据会通过channelPipeline 中的inbounder 来进行处理, 负责数据的读取, 解码，业务逻辑处理等
+    响应客户端
+        当业务逻辑处理完后, 通过会通过ChannelHandlerContext.writeAndFlush() 将数据响应回给客户端
+        数据会通过channelpipeline 中的outbounder，然后通过底层的socket 发送给客户端
+    关闭连接
+        客户端关闭连接, 或者是服务端主动关闭连接的时候, Netty 会处发ChannelInbounderHandler 的channelInactive 或者是channelUnregistered, 可以进行资源清理
+        在关闭服务器的时候, 需要调用bossGroup 和worker Group 的shutdownGracefully 进行线程资源的释放
+</code></pre>
+<h3 id="为什么tomcat-要用那么多线程去进行处理-而netty-用几个线程就可以去完成同样的事情"><a href="#为什么tomcat-要用那么多线程去进行处理-而netty-用几个线程就可以去完成同样的事情" class="headerlink" title="为什么tomcat 要用那么多线程去进行处理, 而netty 用几个线程就可以去完成同样的事情"></a>为什么tomcat 要用那么多线程去进行处理, 而netty 用几个线程就可以去完成同样的事情</h3><pre><code class="hljs">1. IO 模型上的差异
+    1. tomcat 是基于blocking IO 来实现的, 每个HTTP 请求创建一个独立的线程来做的, 如果线程被阻塞住了, 会导致无法处理其他任务. 为了保证高并发下可以去处理, tomcat 需要在配置足够多的线程去预先准备好, 但是线程数过多后会导致线程的上下文切换和内存开销, netty 是基于 NIO 和 事件驱动机制来做的, 不用为每个请求去创建一个线程去处理
+</code></pre>
+<h3 id="netty-的几个概念"><a href="#netty-的几个概念" class="headerlink" title="netty 的几个概念"></a>netty 的几个概念</h3><h4 id="channel"><a href="#channel" class="headerlink" title="channel"></a>channel</h4><pre><code class="hljs">负责网络IO操作相关的
+1.1 管理IO 操作
+    对数据读取、发送、和连接的管理
+1.2 处理事件
+    从网络传输到channelPipeline, 将channelPipeline 处理后的数据返回到网络中去
+1.3 支持异步IO
+    即将数据异步写入到网络中,不会阻塞当前线程
+</code></pre>
+<h4 id="eventLoop"><a href="#eventLoop" class="headerlink" title="eventLoop"></a>eventLoop</h4><pre><code class="hljs">1.每一个EventLoop 维护着一个 Selector 和 线程
+2.处理IO 事件和任务
+    监视和处理IO事件, 基于Java NIO 的selector 事件
+3. 任务的调度
+    还可以管理定时任务和普通任务, 可以提交任务到eventLoop上, 按照顺序和指定周期执行
+4. 线程管理
+    一个eventLoop通常和一个线程绑定, 每个eventLoop 可以维护多个channel, 但一个channel 始终绑定在一个eventLoop 上, 确保了同一个channel 上的事件处理是线程安全的
+5. 事件的派发与处理
+    负责从IO操作中获取事件, 将这些事件派发到对应的ChannelHandler中, 每个channel 代表一个连接或者IO操作, 在其pipeline中的一系列处理
+</code></pre>
+<h4 id="channelPipeline"><a href="#channelPipeline" class="headerlink" title="channelPipeline"></a>channelPipeline</h4><pre><code class="hljs">是一个处理链, 每个IO 事件都会按照顺序通过channelPipeline, 将多个channelHandler连接起来, 形成一条链, 每个channelHandler只负责处理特定的事件
+</code></pre>
+<h4 id="channelHandler"><a href="#channelHandler" class="headerlink" title="channelHandler"></a>channelHandler</h4><pre><code class="hljs">用于处理特定类型事件的处理器, 不同的channelHandler 实现不同的功能, 有的可以用来编解码, 有的可以用来处理连接事件
+常见的inbounderHandler, outBounderHandler, IdleStateHandler,
+</code></pre>
+<h4 id="netty-的堆外内存是怎么管理的"><a href="#netty-的堆外内存是怎么管理的" class="headerlink" title="netty 的堆外内存是怎么管理的"></a>netty 的堆外内存是怎么管理的</h4><pre><code class="hljs">通过PooledByteBufAllocator 和 ByteBuf 来实现的, 在需要使用堆外内存的时候, 分配一个新chunk 或者直接向操作系统申请一个, 然后通过ByteBuf 的API 对堆外内存去进行读写. 内存释放的时候通过引用计数机制的减少
+ResourceLeakDetector 可以用来检测
+-XX:MaxDirectMemorySize=1G 限制堆外内存的使用
+</code></pre>
+<h4 id="netty-的事件驱动是怎么体现的"><a href="#netty-的事件驱动是怎么体现的" class="headerlink" title="netty 的事件驱动是怎么体现的"></a>netty 的事件驱动是怎么体现的</h4><pre><code class="hljs">基于reactor模式去做的, 通过EventLoop来管理IO 操作事件, 并将这些事件派发给相关的channelHandler, 实现高效的网络通信, 可以处理大量的并发连接
+核心组建:
+    eventLoop
+    channel
+    channelPipeline: 是一个处理链, 每个IO 事件都会按照顺序通过channelPipeline, 将多个channelHandler连接起来, 形成一条链, 每个channelHandler只负责处理特定的事件
+    channelHandler: 用于处理特定类型事件的处理器, 不同的channelHandler 实现不同的功能, 有的可以用来编解码, 有的可以用来处理连接事件
+    Selector: 用于监听多个Channel 上的IO 事件, 当selector 发现某个Channel 上有事件发生的时候, 会通过EvenetLoop 来进行处理
+工作流程:
+    boosGroup 和 workerGroup
+        bossGroup 负责监听客户端的连接请求事件, 将接收请求并将连接交给workerGroup进行处理
+        workerGroup负责处理具体的IO 操作
+    事件的监听与触发
+        当一个新的连接到达的时候, boss group 中的某个 eventLoop 会去调用 NIO  的selector 来监听 OP_ACCPEPT 事件, 一旦有连接事件发生, bossGroup 会接受这个连接并创建一个新的channel 对象, 并将这个channel 对象分配给workerGroup 中的一个eventLoop,  workerGroup 中的eventLoop 负责处理后续这个 channel 上的IO事件, 后续事件会按照事件类型依次在channelPipeline 上流过, 通过channelHandler 来具体处理
+    channelHandler 处理事件
+        入站事件有inbounder 处理, 出站事件由outbounder 处理
+        每个channelHandler 可以对事件进行处理, 处理完成后让下一个处理器进行处理
+线程模型
+    EventLoop 绑定一个线程, 因此EventLoop管理的channel 也是在同一个线程上去运行的, 确保每个channel 上的事件处理是安全的, 从而减少了上下文切换的开销
+</code></pre>
+<h4 id="netty-的零拷贝怎么实现的"><a href="#netty-的零拷贝怎么实现的" class="headerlink" title="netty 的零拷贝怎么实现的"></a>netty 的零拷贝怎么实现的</h4><pre><code class="hljs">零拷贝: 数据传输的过程中避免CPU 参与多次不必要的数据拷贝, 从而提高IO 效率, 常见的方式有sendfile mmap
+</code></pre>
+<h2 id="为什么需要对后端连接去-池化-处理"><a href="#为什么需要对后端连接去-池化-处理" class="headerlink" title="为什么需要对后端连接去 池化 处理"></a>为什么需要对后端连接去 池化 处理</h2><pre><code class="hljs">1. 减少连接的创建和销毁带来的开销
+    1.1 每次创建新的连接都是需要建立TCP 链接的握手等操作, 连接池通过复用的连接, 避免了频繁的创建和销毁连接的开销, 同时可以降低资源的消耗
+2. 避免资源耗尽
+    2.1 连接池允许多个请求同时使用共存的连接, 同时会对后端机器、整个应用级别有连接数的限制, 防止资源的耗尽
+3. 优化响应时间
+    3.1 通过对连接的复用, 应用不需要等待新连接的创建或者释放, 提高了响应速度
+</code></pre>
+<h2 id="为什么需要将请求去做全异步化-这样可以带来什么好处"><a href="#为什么需要将请求去做全异步化-这样可以带来什么好处" class="headerlink" title="为什么需要将请求去做全异步化, 这样可以带来什么好处"></a>为什么需要将请求去做全异步化, 这样可以带来什么好处</h2><pre><code class="hljs">1. 提高网关自身的稳定性
+2. 防止由于后端应用处理耗时上涨, 将整体性能拖垮
+</code></pre>
+<h2 id="集群拆分可以带来什么好处"><a href="#集群拆分可以带来什么好处" class="headerlink" title="集群拆分可以带来什么好处"></a>集群拆分可以带来什么好处</h2><pre><code class="hljs">1. 提高系统的可用性和容错性值
+    1.1 避免个别应用的问题影响到全局的, 进行了故障隔离, 
+2. 提升了可维护性
+    2.1 针对指定功能的使用上,
+</code></pre>
+<h2 id="日志异步化处理怎么理解"><a href="#日志异步化处理怎么理解" class="headerlink" title="日志异步化处理怎么理解"></a>日志异步化处理怎么理解</h2><pre><code class="hljs">1. 将日志异步化去记录. 通过log4j2 去做. 
+2. log4j2 更快的是通过 disruptor 做为核心技术队列, 通过无锁的方式处理线程的间的数据传递, 降低了上下文切换的开销
+    LMAX disruptor的原理:
+        通过使用ringBuffer 环形缓冲区来实现的
+</code></pre>
+<h2 id="serverless-网关流量转发是怎么处理的-在什么情况下需要去对集群扩所容"><a href="#serverless-网关流量转发是怎么处理的-在什么情况下需要去对集群扩所容" class="headerlink" title="serverless 网关流量转发是怎么处理的. 在什么情况下需要去对集群扩所容"></a>serverless 网关流量转发是怎么处理的. 在什么情况下需要去对集群扩所容</h2><h2 id="api-文档平台怎么理解自动的-以及可以解决业务什么问题"><a href="#api-文档平台怎么理解自动的-以及可以解决业务什么问题" class="headerlink" title="api 文档平台怎么理解自动的, 以及可以解决业务什么问题"></a>api 文档平台怎么理解自动的, 以及可以解决业务什么问题</h2><h2 id="针对大的请求需要怎么处理"><a href="#针对大的请求需要怎么处理" class="headerlink" title="针对大的请求需要怎么处理?"></a>针对大的请求需要怎么处理?</h2><pre><code class="hljs">1. 会限制单个请求的大小, 每个请求的大小限制在64M, 同时针对大文件请求有专门的集群去处理。
+2. 返回数据的时候会开启gzip 压缩。 频繁压缩会吃CPU
+</code></pre>
+<h2 id="针对耗时长的需要怎么处理"><a href="#针对耗时长的需要怎么处理" class="headerlink" title="针对耗时长的需要怎么处理"></a>针对耗时长的需要怎么处理</h2><pre><code class="hljs">1. 将耗时长的应用和核心交易应用的集群分开, 防止耗时长的应用占用过多的TCP 连接
+2. 由于做了全异步处理, 耗时长的应用只会占用过多的端口号
+3. 监控上去处理, 针对耗时长的是否合理, 对于不合理的请求直接限流
+4. 自身保护机制上和后端单台机器限制1000个TCP 连接, 整个应用限制在5000 个连接。
+</code></pre>
+<h2 id="网关后端机器的CAP-是怎么考虑的-为什么要用zk"><a href="#网关后端机器的CAP-是怎么考虑的-为什么要用zk" class="headerlink" title="网关后端机器的CAP 是怎么考虑的, 为什么要用zk"></a>网关后端机器的CAP 是怎么考虑的, 为什么要用zk</h2><h2 id="网关给后端服务转发的时候负载均衡怎么考虑的"><a href="#网关给后端服务转发的时候负载均衡怎么考虑的" class="headerlink" title="网关给后端服务转发的时候负载均衡怎么考虑的"></a>网关给后端服务转发的时候负载均衡怎么考虑的</h2><pre><code class="hljs">1. 随机
+2. 加权随机
+</code></pre>
+<h2 id="cat-的-transaction-是通过什么方式去进行传递的-遇到跨线程了怎么处理"><a href="#cat-的-transaction-是通过什么方式去进行传递的-遇到跨线程了怎么处理" class="headerlink" title="cat 的 transaction 是通过什么方式去进行传递的, 遇到跨线程了怎么处理"></a>cat 的 transaction 是通过什么方式去进行传递的, 遇到跨线程了怎么处理</h2><pre><code class="hljs">1. threadLocal
+2. 跨线程传递的话 可以直接传递整个对象.
+</code></pre>
+<h3 id="threadLocal-的原理"><a href="#threadLocal-的原理" class="headerlink" title="threadLocal 的原理"></a>threadLocal 的原理</h3><pre><code class="hljs">每个线程维护一个叫threadLocals 的 ThreadLocalMap,每个线程维护自己的ThreadLocalMap, threadLocalMap 中其中key 是ThreadLocal 对象, value 
+是要保存的值, 因此是线程安全的
+多个threadLocal 通过ThreadLocal 对象的hash值 来定位到table 中的位置,
+ThreadLocal 实例被创建的对象持有, ThreadLocal 值也是被线程实例持有, 都是位于堆上的
+</code></pre>
+<h5 id="threadLocal-为什么会导致内存泄漏"><a href="#threadLocal-为什么会导致内存泄漏" class="headerlink" title="threadLocal 为什么会导致内存泄漏"></a>threadLocal 为什么会导致内存泄漏</h5><pre><code class="hljs">由于ThreadLocal 保存的时候把自己当作key 防盗了ThreadLocalMap 中, 同时是弱引用的, 由于发生了GC的时候, 会被回收, 但是由于线程一直运行, value 
+是无法得到回收的,  在线程池中, 容易造成内存泄漏, 容易导致ThreadLocalMap 中的key 变为了null, 但是由于threadLocal线程还是一直在运行的, 
+这个value 一直得不到回收, 导致内存泄漏, 需要在最后使用的地方加上remove, 
+
+如果Entry 中的key 是强引用的, 容易导致key 也内存泄漏
+如果k v 都是弱引用的话, 会导致获取值的不确定性
+
+fastThreadLocal 通过InternaleThreadLocal 来避免了内存泄漏, 通过数组的索引可以直接访问数据, 线程退出的时候, 会自动进行清理与该线程相关的FastThreadLocal 信息
+</code></pre>
+<h2 id="网关自身的灰度特性-灰度机器的配置下发"><a href="#网关自身的灰度特性-灰度机器的配置下发" class="headerlink" title="网关自身的灰度特性, 灰度机器的配置下发"></a>网关自身的灰度特性, 灰度机器的配置下发</h2><h2 id="单元化是怎么理解的"><a href="#单元化是怎么理解的" class="headerlink" title="单元化是怎么理解的"></a>单元化是怎么理解的</h2><pre><code class="hljs">指一个能完成所有业务操作的自包含集合，在这个集合中包含了所有业务所需的所有服务，以及分配给这个单元的数据. 请求需要根据用户的region 或者是uuid 去做sharding
+
+
+
+单元化:
+1. 数据按照用户的属性进行shard, 拆分, 到数据库后怎么处理
+    各个数据库做了数据同步, 拆分后的数据会落到对应的数据库上去, 
+2. 对于无法拆分的数据应该怎么做处理
+3. 
+不同单元之间需要进行数据同步,
+两边的唯一性索引 通常采用分布式ID生成器来做, 那对于已有的怎么处理的?
+对于已有的数据怎么处理? 假设已经有了1KW条数据, 存量数据通过什么方式同步??
+DDL 已有的怎么处理
+数据回环怎么处理
+    额外插入一张表来进行处理, 相当于在事物中增加了一条sql 语句	
+        BEGIN;
+        #往目标库同步时，首先额外插入一条记录，表示这个事务中的数据都是A产生的。
+        insert into direction(idc,db_cluster) values(&quot;IDC1”,&quot;DB_A”)
+        #插入原来的记录信息
+        insert into users(name) values(&quot;tianshouzhi”);
+        COMMIT;
+    通过mysql 的binLog 同步的时候, 判断gtId 是否执行过, 来进行决定是否要执行同步, 因此可以主动设置next gtId 来做, set next gtId
+</code></pre>
+<h3 id="配置中心如何去实现单元化"><a href="#配置中心如何去实现单元化" class="headerlink" title="配置中心如何去实现单元化"></a>配置中心如何去实现单元化</h3><pre><code class="hljs">1. 配置的单元化，客户端读取配置的时候带上机器所属的信息, 配置的时候读取不同环境下的值
+2. 客户端请求到对应的机房上去
+</code></pre>
+<h3 id="公司整体的单元化是怎么看的"><a href="#公司整体的单元化是怎么看的" class="headerlink" title="公司整体的单元化是怎么看的"></a>公司整体的单元化是怎么看的</h3><pre><code class="hljs">1. 通过用户的uuId 去做sharding, 或者是按照地理位置信息 将用户请求到不同的机房上去, 通过网关入口开始流量分割, 
+</code></pre>
+<h2 id="数据的批量变更-数据预热处理为什么要这样去做-可以带来什么样的收益"><a href="#数据的批量变更-数据预热处理为什么要这样去做-可以带来什么样的收益" class="headerlink" title="数据的批量变更, 数据预热处理为什么要这样去做, 可以带来什么样的收益"></a>数据的批量变更, 数据预热处理为什么要这样去做, 可以带来什么样的收益</h2><pre><code class="hljs">1. 配置变更的整体耗时降低不下来. 由于数据库到达了瓶颈, 配置文件挨个去变更, 以及客户端收到配置变更后, 并发的读取, 导致缓存击穿, 向数据库查询配置文件信息, 导致压力变大
+2. 配置变更的过程本身就是批量变更的, 一些DB的配置文件, 通过restAPI 的方式, 一次性变更了100个, 但是处理保存到数据库的时候是挨个保存的, 并且是挨个通知的. 
+3. 将保存的数据库进行批量保存, 同时通知的话也改成批量通知, 降低DB的压力了
+4. 整体耗时从3分钟下降到1分钟左右。 
+</code></pre>
+<h2 id="full-gc的排查思路"><a href="#full-gc的排查思路" class="headerlink" title="full gc的排查思路"></a>full gc的排查思路</h2><pre><code class="hljs">1. 使用jmap 去对内存进行dump
+2. 启动的时候增加gc 日志查看
+    2.1 如果是full GC 很频繁, 说明老年代空间不足, 或者是老年代内存被填满了, 有可能是对象过早的进入老年代,可以调整对象的晋升比例, 防止过早的进入老年代
+    2.2 如果是full GC 很长, 说明GC 无法及时的释放内存, 可以增加老年代的内存, 同时可以通过分析文件, 确定是否有内存泄漏
+    2.3 查看每次GC 后堆内的使用情况, 判断是否有内存持续增长无法回收, 
+3. 查看dump 下来的内存文件
+    3.1 通过MAT 查看 大对象、对象的引用链路、
+4. 如果是堆内存不足
+    4.1 尝试增加堆内存
+    4.2 针对频繁的full gc, 或者是yong gc 对内存占用分析, 调整比例
+    4.3 对频繁创建和销毁的对象可以通过polling, 减少不必要的重复创建
+    4.2 更换GC 算法
+</code></pre>
+<h3 id="OOM-怎么去排查"><a href="#OOM-怎么去排查" class="headerlink" title="OOM 怎么去排查"></a>OOM 怎么去排查</h3><pre><code class="hljs">1. Java heap space：堆内存不足
+    1.1 增大内存空间
+    1.2 排查是否有内存泄漏
+    1.3 对象polling 
+    1.4 减少大对象的使用
+2. GC overhead limit exceeded GC 频率过多, 但是回收了很少
+    2.1 增大内存空间
+    2.2 排查是否有内存泄漏
+    2.3 -xx MaxGCPauseMillis. G1 的话可以调整GC 预期事件
+3. Metaspace 元空间不足
+    3.1 排查内存泄漏, 例如反射是不是使用了很多??
+4. Direct buffer memory：直接内存不足
+    4.1 NIO 排查,  排查是否有内存泄漏
+5. Unable to create new native thread：无法创建新的线程，线程数超出系统资源限制
+    5.1 创建过多的线程了, 排查线程数的创建, 使用线程池
+</code></pre>
+<h3 id="full-gc-频繁的时候应该怎么去排查"><a href="#full-gc-频繁的时候应该怎么去排查" class="headerlink" title="full gc 频繁的时候应该怎么去排查"></a>full gc 频繁的时候应该怎么去排查</h3><pre><code class="hljs">1. 打开GC 日志
+    1.1 如果每次full gc 后, 老年代的内存占用没啥变化, 说明老年代有大量无法回收的对象
+        1.1.1 dump 内存快照, 查看内存占用的情况
+        1.1.2 排查是否有内存泄漏
+        1.1.3 排查这些对象是否合理
+    1.2 查看晋升的情况
+        1.2.2 yong gc 后大量对象晋升到了老年代, 晋升频率是否过低, 导致很多应该在yong gc 回收的对象到了老年代来, 通过调整MaxTenuringThreshold, 避免过早晋升到老年代
+2. 排查堆内存占用情况
+    2.1 full GC 后老年代使用率都是100%
+3. 检查是否有大对象创建
+    3.1 在GC 日志中老年代内存快速上涨
+4. gc 算法
+</code></pre>
+<h3 id="full-gc-耗时比较高怎么去排查"><a href="#full-gc-耗时比较高怎么去排查" class="headerlink" title="full gc 耗时比较高怎么去排查"></a>full gc 耗时比较高怎么去排查</h3><pre><code class="hljs">1. 打开GC 日志
+    1.1 如果每次full gc 后, 老年代的内存占用没啥变化, 说明老年代有大量无法回收的对象
+        1.1.1 dump 内存快照, 查看内存占用的情况
+        1.1.2 排查是否有内存泄漏
+        1.1.3 排查这些对象是否合理
+    1.2 查看晋升的情况
+        1.2.2 yong gc 后大量对象晋升到了老年代, 晋升频率是否过低, 导致很多应该在yong gc 回收的对象到了老年代来, 通过调整MaxTenuringThreshold, 避免过早晋升到老年代
+2. 排查堆内存占用情况
+    2.1 full GC 后老年代使用率都是100%
+    2.2 如果用的是CMS 的话, 排查是否有大量的内存碎片, 导致老年代空间不够连续
+3. 检查是否有大对象创建
+    3.1 在GC 日志中老年代内存快速上涨
+4. gc 算法
+</code></pre>
+<h3 id="yong-gc-耗时比较高怎么排查"><a href="#yong-gc-耗时比较高怎么排查" class="headerlink" title="yong gc 耗时比较高怎么排查"></a>yong gc 耗时比较高怎么排查</h3><pre><code class="hljs">1. 打开GC日志
+2. eden 区是否设置过大, 导致扫描的对象过多
+2. 是否有临时对象在短期内大量创建, 这些对象是否会到老年代去, 这些对象是否可以池化处理
+3. GC 算法, 避免内存碎片
+</code></pre>
+<h3 id="yong-gc-频繁怎么去排查处理"><a href="#yong-gc-频繁怎么去排查处理" class="headerlink" title="yong gc 频繁怎么去排查处理"></a>yong gc 频繁怎么去排查处理</h3><pre><code class="hljs">1. 打开GC日志
+2. eden 区是否设置过大, 导致扫描的对象过多
+2. 是否有临时对象在短期内大量创建, 这些对象是否会到老年代去, 这些对象是否可以池化处理
+3. GC 算法, 避免内存碎片
+</code></pre>
+<h3 id="jvm-每个区域的作用"><a href="#jvm-每个区域的作用" class="headerlink" title="jvm 每个区域的作用"></a>jvm 每个区域的作用</h3><pre><code class="hljs">1. 堆
+2. 虚拟机栈
+3. 程序计数器
+4. 本地方法栈
+5. metaspace
+</code></pre>
+<h3 id="GC-算法"><a href="#GC-算法" class="headerlink" title="GC 算法"></a>GC 算法</h3><pre><code class="hljs">1. CMS
+    1. 初始标记
+        从GCRoots 出发的直接可达性对象, 需要进行STW, 
+    2. 并发标记
+        在初始标记的基础上, 标记处内存中所有的可达性对象, 此时没有进行STW, 用户线程和GC 线程同时在运行.
+    3. 重新标记	
+        需要进行STW, 对并发标记遗漏的对象进行修正, 在并发标记起期间产生的不可达对象需要在下一次GC 周期才能被回收
+    4. 并发清除
+        清除所有未被标记的对象, 进行对象回收, GC 线程和 用户线程同时在运行
+    缺点: 
+        1. 碎片化验证, 清除过程中不对内存进行压缩整理, 导致内存碎片话严重
+        1.1 影响: 碎片化严重, 可能会导致老年代无法分配达对象, 触发full GC
+        2. 浮动垃圾: 在并发标记期间产生的垃圾, 无法在当前GC周期被清除, 只能等到下一次GC
+        2.1 影响: GC 效果不如预期, 需要预留更多的内存空间
+        3. 某些情况下会退化成单线程回收
+        3.1 如果堆内存不足以支撑程序的内存分配, 进而出发一次Full GC
+        3.2 年轻代向老年代晋升, 如果老年代没有足够的空间去容纳这些对象的时候, 也会导致CMS 失败, 从而退化成单线程的Serial Old 收集器
+        3.3 空间碎片化, 由于CMS 回收产生的碎片化, 导致大对象无法找到连续的内存进行分配, 最终触发full GC
+2. G1
+    其中-XX:G1NewSizePercent  新生代比列默认时5%
+    使用标记-整理算法
+        1. 标记阶段
+            1. 初始标记
+            从GC Roots 出发, 标记直接可达的对象, 需要进行STW
+            2. 并发标记
+                从GCRoots 出发, 找出存活对象, 应用线程和GC线程是可以同时活动的, 
+            3. 再标记
+                标记在并发标记时转移的对象
+        2. 清理阶段
+                清点出有存活的对象和没有存活的对象
+        3. 复制阶段
+            重新分配对象内存和复制成员变量, 转移的时候需要进行STW, 复制的耗时和存活对象的数量以及对象的复杂程度成正比
+          
+        **初始标记**
+            标记从GC Roots 出发的可达对象 需要进行STW
+        - **并发标记**
+            标记整个堆中的存活对象, 不会进行STW
+        - **最终标记**
+            完成并发标记, 并且处理在并发标记期间导致应用对象的变化, 需要进行STW
+        - **筛选回收**
+            确定进行回收, 并根据收集的数据区域进行回收
+        - **拷贝回收**
+            将存活的对象从回收区拷贝到新的区块, 方便进行回收
+            特点:
+                region 管理, 每个区域可能是Eden 区, 也可能是Survivor区, 也可能是old区
+                并发标记和整理, 支持并发标记, 降低了STW 
+                可预测的停顿时间
+                优先回收: 维护一个优先队列, 根据各个区域回收的价值(回收成本和收益) 决定哪些要优先回收
+            G1 怎么解决浮动垃圾:
+                将对分割成多个region, 更加灵活的去管理和回收内存, 降低浮动垃圾的影响
+                垃圾回收的时候, 可以进行并发标记和整理, 最大限度的降低程序的停顿
+3. ZGC
+    通过染色指针和读屏障技术解决了对象转移的问题, 从而降低了耗时
+    染色指针: 指针中存放了对象的一些信息, 例如对象是否被标记, 是否移动了, 相当于用空间换时间
+</code></pre>
+<h2 id="yong-gc-怎么降低时间"><a href="#yong-gc-怎么降低时间" class="headerlink" title="yong gc 怎么降低时间"></a>yong gc 怎么降低时间</h2><pre><code class="hljs">1. 调整yong区的比列大小
+2. 调整G1 的MaxGCPauseMillis, 到MaxGCPauseMillis。
+3. 调整gc 方式
+</code></pre>
+<h2 id="pmap-怎么关联到是malloc-导致rss-内存上涨"><a href="#pmap-怎么关联到是malloc-导致rss-内存上涨" class="headerlink" title="pmap 怎么关联到是malloc 导致rss 内存上涨"></a>pmap 怎么关联到是malloc 导致rss 内存上涨</h2><pre><code class="hljs">1. gdb --batch --pid 36563 --ex &#39;call malloc_trim()
+2. 
+ptmalloc 中用户释放掉的内存, 为了下次快速使用, 会存到自己的空闲列表中, 因此导致了很多的64M 内存占用的问题
+</code></pre>
+<h2 id="配置文件切换的时候-走IP-直连-为什么没有走VIP"><a href="#配置文件切换的时候-走IP-直连-为什么没有走VIP" class="headerlink" title="配置文件切换的时候, 走IP 直连, 为什么没有走VIP"></a>配置文件切换的时候, 走IP 直连, 为什么没有走VIP</h2><pre><code class="hljs">1. VIP 还会涉及到dns 缓存解析, 需要通过dns 解析缓存刷新的时候, 就是最终切换的时间, 相比较于客户端之连, 会慢一点, 主从直接通过IP连上去.
+2. 主从连接的账号密码的话, 用户不需要感知, 用户只需要知道这个对应的陪文件即可
+</code></pre>
+<h3 id="堆外内存怎么排查"><a href="#堆外内存怎么排查" class="headerlink" title="堆外内存怎么排查"></a>堆外内存怎么排查</h3><pre><code class="hljs">1. 排查代码中哪里使用了堆外内存, 发生了内存泄漏
+2. dump 一下内存文件,通过MAT 查看哪些对象是堆 DirectByteBuffer 有引用关系的
+</code></pre>
+<h2 id="MGR-原理"><a href="#MGR-原理" class="headerlink" title="MGR 原理"></a>MGR 原理</h2><pre><code class="hljs">1. 基于 Paxos 分布式一致性协议和自动化故障恢复机制, 允许多个Mysql 服务器组成一个复制组, 实现高可用性和容错能力
+1.1 分布式协议基于 paxos 协议
+1.2 所有写操作都是需要经过所有组员的一致同意, 写操作先在主节点上提交, 主节点会通过 GTID (全局事物ID) 将事物广播给其他节点, 只有多数节点同意了, 事物才是被认为可执行的
+1.2.1 冲突检测机制, 确保全局唯一
+    基于writeSet 的冲突检测机制: 每个事物提交的时候, MGR 会生成一个write-set, 记录了该事物中所有的修改, 相当于对该事物的写操作生成了一个集合
+                    冲突检测: 当一个节点尝试提交事物的时候, 会将该事物的write-set 与组内其他节点已提交但未应用的事物write-set 进行比较, 判断是否有冲突发生
+</code></pre>
+<h3 id=""><a href="#" class="headerlink" title=""></a></h3><h2 id="1-FullGc消除-young-gc-从2秒到10ms-怎么做到的"><a href="#1-FullGc消除-young-gc-从2秒到10ms-怎么做到的" class="headerlink" title="1. FullGc消除, young gc 从2秒到10ms 怎么做到的"></a>1. FullGc消除, young gc 从2秒到10ms 怎么做到的</h2><p>背景: 每次演练后, 通过CAT 的老年代明显的上涨, 再过1-2周, 会导致应用发生OOM<br>1.1 FullGC 怎么消除<br>1.1.1 增加jvm 的OOM 文件dump, -XX:+HeapDumpOnOutOfMemoryError -XX:HeapDumpPath&#x3D;${DUMP_LOG_DIR}<br>1.1.2 主动去dump 文件 jmap -dump:live,format&#x3D;b,file&#x3D;test.hprof pid<br>1.1.3 将dump 下来的文件导入到MAT上<br>1.1.4 查看堆上的内存占用<br>1.1.5 发现有个对象占用特别高, 但是该对象也是需要常驻内存的, 该内存具体使用的是哪些客户端正在监听该配置文件, 每次配置推送的时候需要通过该对内存找到有哪些客户端正在使用该配置文件,从而将最新的版本好内容推送给客户端。<br>具体流程如下:</p>
+<ol>
+<li>根据变更配置文件去找到对应的监听机器, 其中数据结构如下</li>
+<li>行是ip, 列是ConfigMeta, value 是Cache&lt;Listener, Listener&gt;&gt;,<br>3.1 出发点是有哪些IP 用了这个配置文件, 因此key 是IP, value 是configMeta, 然后每个缓存用的是Listener<br>3.2 从机器出发, 机器的Ip 是固定,  当机器重启后, IP 出现了漂移, ip1在应用A 读取的配置是a,b,c 经过漂移后, ip1在应用B 下面读取的配置是e，f,g. 其中a,b,c 的数据不会被删除掉, 从而导致内存越用越多<br>3.3 更改数据结构, 将监听列表从table 换成了一个map, 换成从配置文件的角度出发, k 是configMeta, value 是cache<Listener>。 每个配置文件有哪些客户端正在使用,</li>
+</ol>
+<h2 id="2-如果解决yong-gc-比较耗时比较高的问题"><a href="#2-如果解决yong-gc-比较耗时比较高的问题" class="headerlink" title="2. 如果解决yong gc 比较耗时比较高的问题"></a>2. 如果解决yong gc 比较耗时比较高的问题</h2><p>2.1 其中yong 区的比例是5<br>2.1.1  设置 MaxGCPauseMillis 到100ms<br>2.1.2 jdk1.8 默认的是新生代比列是5%, 调整G1NewSizePercent 的比列到30,<br>2.1.3 结果: 对上面设置了以后yong gc 时间还是在1秒左右<br>yong gc 的频率从原来的7几次降低到了3次, 然后此时yong gc 的频率下来了, 但是每次的时间从原来的 300 ms 变成了450ms左右<br>3. 其中总的耗时仍然为1分钟1.5 秒左右<br>4. 最后将g1 替换成了zgc<br>根据g1 的算法<br>G1 里面的yong gc采用标记-复制的算法<br>复制的时候用户线程和GC线程无法并行处理</p>
+<ol>
+<li><p>并发标记:在用户线程运行的同时, GC 线程 从root 对象出发, 标记会并发的标记存活对象, 这个过程是和用户同时进行的</p>
+</li>
+<li><p>初始标记:<br>2.1 初始标记: 从root 对象出发, 标记所有root 对象(需要STW), 时间比较短, 由于root 对象比较少<br>2.2 并发标记: 再从root 对象到可直接到达的对象 有哪些对象可达, 其中应用线程和GC线程可以同时去处理<br>2.3 再标记: 在并发2.2 中过程中发生变化的对象, 需要STW</p>
+</li>
+<li><p>确定回收集<br>进行最后的一次标记, 标记哪些对象需要回收, 需要STW</p>
+</li>
+<li><p>删选回收<br>采用复制算法, 会进行存活对象的移动<br>在次过程是需要STW的, 这个过程中为什么耗时比较高?????? 复制过程的耗时与对象的存活数量以及对象的复杂度成正比, 并且是没办法和用户线程去并行处理的，这个过程如果进行和用户线程进行并行处理, 会导致指针无法确认对象的问题<br>1.1 并发标记在初始标记之前的目的: 并发标记是用户线程和GC线程可以同时进行的, 但是在并发标记的时候可能会有新的对象被分配和标记, 因此在并发标记完成后, 再进行准确的初始标记, 用来获得准确的对象, 目的是可以准确的利用并发标记的优势, 将第GC 对程序的影响, 提高回收的准确率<br>G1 是将整个堆的空间分成多个大小的内存区域, 每个内存区域即可以是yong 区的一部分, 也有可能是old 区的一部分,其中我们指定的是4M<br>2.5 最终考虑升级到 zgc<br> zgc 相比较于g1 的gc 方式, 有了完全的提升<br>2.6 带来影响CPU 负载会有上升<br>GC 算法</p>
+</li>
+<li><p>不过 G1 为了解决 CMS 并发清理导致内存碎片化的问题，使用了复制算法转移对象，这样如果在转移过程中 GC 线程和用户线程并行，会导致指针无法准确定位对象的问题</p>
+</li>
+<li><p>zgc: 采用内存分区，使用染色指针和读屏障解决了复制算法并发转移对象导致的指针无法准确定位对象的问题<br>染色指针: 每个对象的指针在存储时都包含了附加的信息，用于表示对象的状态，比如是否是可达对象、是否需要被回收等<br>读屏障: 在 ZGC 中，读屏障用于捕获并记录正在被并发标记的对象引用，以便在后续的并发标记阶段中正确地标记这些对象。读屏障能够保证并发标记的准确性，防止对象在标记过程中被移动或修改引用关系导致的错误标记。</p>
+</li>
+</ol>
+<p>原来是把GC 的标记放在了对象头上去, zgc 是将GC 的标记放在了指针中<br>M0,M1, Remapped<br>mmap 地址映射<br>读屏障<br>对象引用指针<br>  : 之前: GC 的标记信息放在对象头上去<br>  : 之后: GC 的标记信息直接放在引用指针上去<br>ZGC 过程:<br>  标记 -&gt; 转移<br>  完全做到了和用户进程的并发去处理<br>    并发标记: 使用读屏障的并发标记, 访问对象时插入特殊的屏障来跟踪对象的引用关系<br>    并发整理:<br>    并发引用重定位: 使用并发引用重定位去更新引用对象, 对象移动的时候, 可以正确更新对象的引用</p>
+<p>  具体实现: 通过着色指针和读屏障技术<br>    读屏障技术: 解决对象发生转移, 对象地址未及时更新的情况, 读屏障在对象发生转移后, 会将读出来的指针更新到对象地址上去<br>      怎么判断是否发生移动, 通过着色指针<br>    空间换时间<br>      M0 , M1, Remapped</p>
+<ol start="3">
+<li>升级了zgc, 大概每次过1 个月左右, 应用发生了OOM, 在内部的监控上面发现应用机器的RSS内存从12G 慢慢上涨到15G, 导致应用被操作系统kill了, 这个是在使用g1 的时候没有发生过的<br>3.1 如何解决zgc 导致应用发生了OOM<br>通过pmap 去查看堆外内存的占用<br>gdb –batch –pid 36563 –ex ‘call malloc_trim()’ 强行释放内存回收</li>
+</ol>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E9%9D%A2%E8%AF%95/" class="category-chain-item">面试</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>项目介绍</div>
+      <div>http://localhost:4000/2024/09/06/interview/项目介绍/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>pc-xie</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2024年9月6日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2024/08/17/interview/%E9%9D%A2%E7%BB%8F/" title="面经">
+                        <span class="hidden-mobile">面经</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>
