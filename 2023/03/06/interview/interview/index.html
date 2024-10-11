@@ -16,18 +16,18 @@
   <meta name="author" content="pc-xie">
   <meta name="keywords" content="">
   
-    <meta name="description" content="自我介绍我叫谢鹏程, 我研究生毕业于电子科技大学 计算机科学与技术专业，我一直从事于基础架构的相关工作, 目前在汇付天下中间价部门担任高级开发工程师的角色, 负责API 平台的开发与维护，主要致力于API平台的高可用、稳定性以及易用性的提升，我上一份工作是在携程框架架构研发部担任高级开发工程师，主要致力于公司的配置中心的高可用、稳定性以及易用性的提升 java 基础collectionHashMa">
+    <meta name="description" content="自我介绍我叫谢鹏程, 我研究生毕业于电子科技大学 计算机科学与技术专业，我一直从事于基础架构的相关工作, 目前在汇付天下中间价部门担任高级开发工程师的角色, 负责API 平台的开发与维护，主要致力于API平台的高可用、稳定性以及易用性的提升，我上一份工作是在携程框架架构研发部担任高级开发工程师，主要致力于公司的配置中心的高可用、稳定性以及易用性的提升 项目介绍1. 配置中心的架构     配置中心">
 <meta property="og:type" content="article">
 <meta property="og:title" content="pc-xie">
 <meta property="og:url" content="http://localhost:4000/2023/03/06/interview/interview/index.html">
 <meta property="og:site_name" content="pc-xie">
-<meta property="og:description" content="自我介绍我叫谢鹏程, 我研究生毕业于电子科技大学 计算机科学与技术专业，我一直从事于基础架构的相关工作, 目前在汇付天下中间价部门担任高级开发工程师的角色, 负责API 平台的开发与维护，主要致力于API平台的高可用、稳定性以及易用性的提升，我上一份工作是在携程框架架构研发部担任高级开发工程师，主要致力于公司的配置中心的高可用、稳定性以及易用性的提升 java 基础collectionHashMa">
+<meta property="og:description" content="自我介绍我叫谢鹏程, 我研究生毕业于电子科技大学 计算机科学与技术专业，我一直从事于基础架构的相关工作, 目前在汇付天下中间价部门担任高级开发工程师的角色, 负责API 平台的开发与维护，主要致力于API平台的高可用、稳定性以及易用性的提升，我上一份工作是在携程框架架构研发部担任高级开发工程师，主要致力于公司的配置中心的高可用、稳定性以及易用性的提升 项目介绍1. 配置中心的架构     配置中心">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="http://localhost:4000/img/jdk/hashMap_put.png">
 <meta property="og:image" content="https://guide-blog-images.oss-cn-shenzhen.aliyuncs.com/github/javaguide/java/jvm/access-location-of-object-handle.png">
 <meta property="og:image" content="https://guide-blog-images.oss-cn-shenzhen.aliyuncs.com/github/javaguide/java/jvm/access-location-of-object-handle-direct-pointer.png">
 <meta property="article:published_time" content="2023-03-06T02:01:17.966Z">
-<meta property="article:modified_time" content="2024-09-08T06:55:54.701Z">
+<meta property="article:modified_time" content="2024-10-07T14:42:27.679Z">
 <meta property="article:author" content="pc-xie">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:image" content="http://localhost:4000/img/jdk/hashMap_put.png">
@@ -222,7 +222,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          9.5k 字
+          11k 字
         
       </span>
     
@@ -233,7 +233,7 @@
         
         
         
-          79 分钟
+          89 分钟
         
       </span>
     
@@ -277,6 +277,25 @@
               <div class="markdown-body">
                 
                 <h1 id="自我介绍"><a href="#自我介绍" class="headerlink" title="自我介绍"></a>自我介绍</h1><p>我叫谢鹏程, 我研究生毕业于电子科技大学 计算机科学与技术专业，我一直从事于基础架构的相关工作, 目前在汇付天下中间价部门担任高级开发工程师的角色, 负责API 平台的开发与维护，主要致力于API平台的高可用、稳定性以及易用性的提升，我上一份工作是在携程框架架构研发部担任高级开发工程师，主要致力于公司的配置中心的高可用、稳定性以及易用性的提升</p>
+<h2 id="项目介绍"><a href="#项目介绍" class="headerlink" title="项目介绍"></a>项目介绍</h2><pre><code class="hljs">1. 配置中心的架构
+    配置中心总共由2个人进行维护, 我是里面的主要开发, 主要负责配置中心的性能、稳定性、以及易用性等提升. 在高可用上, 我们对对接用户的控台、客户端请求过来的服务端以及需要用户引入的客户端上都进行了相关的修改, 
+    1. 降低了DB的变更压力, 大规模配置变更期间, 通过对数据库查询进行批量化操作, 降低了DB的压力
+    2. 保护系统的连接资源, 通过对tomcat 的 请求进行异步化处理, 防止由于极端情况下, 由于tomcat 线程在处理业务逻辑时, 业务请求处理时间高, 导致tomcat 无法接受请求处理
+    3. 为了进行自身核心逻辑的保护, 将一些边缘的逻辑进行弱依赖处理, 例如由于一些审计日志的行为, 将主流程进行bolck
+    4. 针对来源方的不同级别, 分配不同的资源去进行处理, 例如我们的来源方有DB 的主从切换, 业务的restAPI 等等, 针对不同的需求, 进行限流, 并且分配不同的线程去进行处理
+     
+
+
+    1.1 配置中心由控制平面, 服务端, 客户端, 以及mysql数据库四部分组成, 用户可以通过restAPI 和 前端部分在控制平面上对数据进行变更, 客户端是需要用户主动去引入, 将配置文件拉取过去, 服务端的作用是负责接收控台变更的通知, 然后再将变更的配置文件通知给正在使用配置文件的客户端, 从而实现将配置文件热更新到用户的进程中去, 客户端和服务端之间会有长轮训请求在那里, 每个服务端的进程里面同时起了一个eureka, 用于服务端直接节点的相互注册. 数据库在里面起的作用是对配置文件的一个持久化. 具体的流程是 用户在控制平面对配置文件进行变更, 然后控制平面将配置文件的元信息(环境 + 应用名 + 文件名) 广播http 请求的通知给所有的服务端节点。服务端收到请求后, 会去找哪些客户端监听了对应的配置文件. 然后将最新的版本号下发给客户端, 客户端收到新的版本号后,再向服务端拉取配置文件内容
+    我在里面主要承担配置中心的稳定性以及易用性上的提升.
+    1. 配置文件的批量话操作和对读取数据的预热, 降低了配置文件中DB 被击穿, 导致DB 网络IO大, 从而降低了配置文件的一个延时
+    2. 优化了YONG GC: 我们使用的GC方式是G1, 尝试通过提升年轻代的比例和 增加MaxGCPauseMillis 去对yong gc 进行优化, 将yong gc 从2秒优化到了500ms, 再通过将 G1 替换成zgc, 将gc 时间降低到了10ms
+    3. 优化了FULL GC, 通过jmap dump 内存的文件, 再通过MAT 去分析内存的占用情况, 
+    4. 优化了堆外内存的占用. 通过pmap 查看操作系统中内存的占用情况
+    5. 提升了稳定性
+2. API 网关上提升了性能
+    2.1 网关是由控制平面, 服务端, zk, mysql, redis 数据库四部分组成的,
+</code></pre>
 <h1 id="java-基础"><a href="#java-基础" class="headerlink" title="java 基础"></a>java 基础</h1><h2 id="collection"><a href="#collection" class="headerlink" title="collection"></a>collection</h2><h3 id="HashMap"><a href="#HashMap" class="headerlink" title="HashMap"></a>HashMap</h3><h4 id="数据结构"><a href="#数据结构" class="headerlink" title="数据结构"></a>数据结构</h4><p>大体上, HashMap 是一个数组, 数组每一个元素是个单向链表, 数组是HashMap 的主体， 链表是为了解决hash碰撞存在的， 其中解决hash碰撞是通过拉链法去解决冲突, 在jdk1.8后在解决冲突的时候引入了红黑树，其中当链表中的长度大于8的时候，将链表转换成红黑树</p>
 <h5 id="解决hash-冲突方法"><a href="#解决hash-冲突方法" class="headerlink" title="解决hash 冲突方法"></a>解决hash 冲突方法</h5><p>开放地址法<br>拉链法</p>
 <h5 id="put"><a href="#put" class="headerlink" title="put"></a>put</h5><p><strong>对putVal方法添加元素的分析如下：</strong></p>

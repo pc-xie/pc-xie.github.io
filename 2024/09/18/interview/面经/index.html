@@ -1,0 +1,1064 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
+  <link rel="icon" href="/img/fluid.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="pc-xie">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="面试SHEIN1. 项目 2. 堆外内存的排障 3. gdb --batch --pid 36563 --ex &#39;call malloc_trim() 进行内存释放 2. 并发压不上去怎么处理 3. dubbo 4. grpc 5. kafka 6. redis 7. HTTP 1.1 2.0 等 8. jdk 各个版本的差异 为了解决什么问题 9. spring spring boot">
+<meta property="og:type" content="article">
+<meta property="og:title" content="面经">
+<meta property="og:url" content="http://localhost:4000/2024/09/18/interview/%E9%9D%A2%E7%BB%8F/index.html">
+<meta property="og:site_name" content="pc-xie">
+<meta property="og:description" content="面试SHEIN1. 项目 2. 堆外内存的排障 3. gdb --batch --pid 36563 --ex &#39;call malloc_trim() 进行内存释放 2. 并发压不上去怎么处理 3. dubbo 4. grpc 5. kafka 6. redis 7. HTTP 1.1 2.0 等 8. jdk 各个版本的差异 为了解决什么问题 9. spring spring boot">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2024-09-18T14:29:52.195Z">
+<meta property="article:modified_time" content="2024-10-11T14:51:19.846Z">
+<meta property="article:author" content="pc-xie">
+<meta name="twitter:card" content="summary_large_image">
+  
+  
+  
+  <title>面经 - pc-xie</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"localhost","root":"/","version":"1.9.3","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Fluid</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="面经"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2024-09-18 22:29" pubdate>
+          2024年9月18日 晚上
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          8.3k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          70 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">面经</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h1 id="面试"><a href="#面试" class="headerlink" title="面试"></a>面试</h1><h2 id="SHEIN"><a href="#SHEIN" class="headerlink" title="SHEIN"></a>SHEIN</h2><pre><code class="hljs">1. 项目
+2. 堆外内存的排障
+3. gdb --batch --pid 36563 --ex &#39;call malloc_trim() 进行内存释放
+2. 并发压不上去怎么处理
+3. dubbo
+4. grpc
+5. kafka
+6. redis
+7. HTTP 1.1 2.0 等
+8. jdk 各个版本的差异 为了解决什么问题
+9. spring spring boot 
+各个协议的问题, 并在下一个协议上怎么去解决的
+</code></pre>
+<h2 id="哈罗单车"><a href="#哈罗单车" class="headerlink" title="哈罗单车"></a>哈罗单车</h2><pre><code class="hljs">1. 配置下发的流程
+2. 长轮训怎么实现的
+3. 服务端如何保证在超时后返回
+4. 服务端和客户端的负载均衡
+5. static 关键字修饰哪些
+6. 类加载的时候做一些事情, 怎么去实现
+7. 范型 好处, 为什么要引入范型
+8. 创建线程的方式
+    8.1. Thread 和 runnable 和 Callable 有什么关系???
+9. 线程池运行的逻辑是什么样的
+10. static int a 两个线程 执行100 次, 最终 a 的值是什么
+11. 数据库的事物是什么
+12. 代码中如何使用事物的
+    12.1 Transaction 注解, 怎么实现的
+    12.2 两个方法都加了transaction, transaction 是否在一个事物中还是多个事物下
+13. springBoot 的自动装配========
+14. 操作日志中怎么获取到当前用户
+    14.1 threadLocal
+15. 网关的突破性亮点是什么
+16. 工作量大不大
+17. 对其他中间件有没有了解
+18. redis 有哪些特性
+19. rocket mq 和 kafka 分别的场景
+</code></pre>
+<h2 id="极兔速递"><a href="#极兔速递" class="headerlink" title="极兔速递"></a>极兔速递</h2><pre><code class="hljs">1. 网关为什么要用netty
+2. 线程数怎么去定的 为什么大多数是CPU 核数+1
+    2. 每个请求耗时比较高
+    3. 
+4. pipeline handler 是做什么用的
+5. 后端机器上下线
+    下游应用存在非RPC 或者是非
+6. 鉴权怎么做的?
+7. 限流怎么做的
+    7.1 为什么要自己去进行限流
+8. 为什么使用4C 8G 升级到4C 16G
+9. 全链路灰度怎么做的
+    全链路定义:
+    请求头的识别
+        9.1 header、body、param、cookie、流量比例
+10. 网关自身怎么灰度
+11. 针对异步的请求怎么去做灰度
+12. 配置中心怎么去做灰度的, 数据库等的话 需要影子库
+13. 自动生成API 文档怎么说的 -&gt; 自动性怎么体现
+14. serverless 架构思想怎么体现的
+15. 流量怎么监控, 监控的告警阈值怎么配置??????????  告警 限流 等治理?????
+16. Agent
+17. 个人评估觉得厉害的:
+    17.1 
+    17.2 
+    17.3 MQ 延迟队列、灰度功能
+
+18. spring boot 的扩展点有哪些
+19. 什么是动态代理
+20. 如果自己去实现动态代理怎么去做
+21. MQ 的消息扭转, 生产者 消费者怎么消费
+22. 长轮训 怎么理解???
+    为什么要用长轮训去做
+23. 时间轮 怎么做的
+24. 语言表达不清楚
+</code></pre>
+<h2 id="霸王茶姬"><a href="#霸王茶姬" class="headerlink" title="霸王茶姬"></a>霸王茶姬</h2><pre><code class="hljs">1. 请求的URL 配置
+2. 全链路灰度怎么做的
+3. 自研网关和spring cloud 或者zuul 
+4. 限流的模式是什么
+    4.1 和sentional 
+5. zk 脑裂问题
+6. netty 中的 channel 作用是什么
+7. netty 中的 eventLoop 作用
+8. 线程数中各个参数的关系是什么
+9. mysql 的隔离级别
+10. 幻读怎么解决的
+11. 缓存和数据库的一致性问题
+12. redis 缓存穿透和 击穿
+13. synchronized
+14. hashMap 中的扩容因子选取
+    14.1 为什么是0.75
+</code></pre>
+<h2 id="神舟"><a href="#神舟" class="headerlink" title="神舟"></a>神舟</h2><pre><code class="hljs">1. 集群化分
+2. 和spring Cloud 怎么去对比
+3. 后端 IP信息怎么动态感知
+4. 日志是怎么记录的
+6. spring 注解 和 配置中心加载读取的顺序
+</code></pre>
+<h2 id="茄子科技"><a href="#茄子科技" class="headerlink" title="茄子科技"></a>茄子科技</h2><h3 id="一面"><a href="#一面" class="headerlink" title="一面"></a>一面</h3><pre><code class="hljs">1. 网关内外网流量怎么区分
+1. 内部服务治理有哪些
+    1.1 负载均衡
+    1.2 服务路由
+    1.3 服务降级
+    1.4 服务限流
+    1.5 服务监控
+2. 限流机制
+    1. 如何进行自我保护
+3. 网关下游处理时长抖动怎么保证网关的可用性
+4. 一次RPC 调用的过程
+请求的过程
+    服务注册:
+        服务的提供方在启动的时候将请求接口、方法、版本协议等信息注册到注册中心上
+        服务的消费者从注册中心订阅所依赖服务的信息, 注册中心会返回服务提供者地址的列表
+    服务发现
+        服务发现的过程, 服务的消费者会从注册中心拉取到服务提供者的列表并保存到本地缓存中, 当有新的服务的提供方或者老的服务提供方需要下线的时候, 注册中心会通知消费者, 消费者动态更新服务的提供者列表
+    服务准备调用
+        proxy 生成: 服务的消费者使用动态代理机制, 生成服务接口的代理对象, 当消费者调用接口方法时, 实际上是调用这个接口对象的方法
+        Cluster &amp; LoadBalance
+    网络通信准备
+        编码和序列化: 代理对象将方法调用, 参数信息封装成一个RPC请求, 通过编解码器对请求进行序列化和反序列化
+        Netty 通道管理: 使用 Netty 作为底层通信框架, 消费者和提供方之间的通信依赖 Netty 去进行传输数据
+    发送请求
+        consumer: 消费者通过Netty 客户端将序列化后的RPC 请求发送到指定的服务提供方
+        provider: 提供方的Netty server 会去接收请求, 并将其传递给指定的服务处理线程池去进行处理
+    请求处理
+        服务的提供方接收到请求并对接收到的数据进行反序列化, 恢复出原始请求对象
+        调用服务: 服务的提供方根据请求对象的服务名、方法名、通过反射的方式执行实际的业务逻辑
+        返回结果: 提供方将执行结果返回给响应对象, 并序列化后, 返回给发送方
+    接收响应
+        consumer: 消费者的Netty 客户端接收到响应后, 并将其反序列化成对象
+        结果处理: 将拿到的结果反序列化成对象返回给上层调用者
+    服务调用完成
+        上层的程序获得结果, 整个RPC 请求结束
+
+5. Netty 的一次网络请求过程是什么
+    客户端
+        初始化:
+            EventLoopGroup 的创建, 用于管理和服务之间网络链接和IO 操作, Bootstrap 配置客户端的各种参数, 包括线程模型, NioSocketChannel, 远端服务器的地址, 以及客户端的handler
+        建立链接
+            连接服务器: 通过Bootstrap.connect() 方法启动连接过程, 链接成功后会将channel 注册到event loop 上
+            等待建立连接完成:  connect() 返回一个ChannelFuture, 可以通过sync() 或者是addListener 进行完成
+        发送请求
+            构造数据进行请求, 连接成功后, 通过channel 向服务器发送数据, 通常是将请求封装成ByteBuf 
+            对数据进行writeAndFlush 写数据, 数据会通过ChannelPipeline 的outbounder 进行处理, 通过底层的socket 发送到服务器
+        接收响应
+            pipeline 处理, 当服务器响应数据到的时候, 数据会到channelHander 的inbounder,
+            处理响应数据: 业务逻辑进行处理, 处理完后返回给应用层
+        关闭连接
+            主动关闭连接: channel.close 关闭连接, 释放资源
+            监听关闭操作: close 返回的future 进行监听, 进行监听关闭是否成功。
+        资源清理
+            group.shutDownGracefully() 进行清理
+    服务端
+        初始化阶段
+            创建EventLoopGroup, bossGroup 和 workerGroup, bossGroup 负责接受请求, workerGroup 负责处理BossGroup 分配过来的IO 操作
+            配置serverBootstrap: 使用ServerBootstrap 来配置Netty 服务, 包括channel 的类型, 指定EventLoopGroup, 配置channelPipeline, 以及设置服务器的监听端口
+        绑定端口
+            serverBootStrap.bind() 方法绑定服务器的监听端口, 会启动一个异步操作过程, bossGroup 中的线程会监听这个连接请求
+            bind() 返回一个future, 可以通过sync()  或者是addListener 来等待响应
+        接受客户端请求
+            bossGroup 中的线程会去监听端口的连接请求, 当有新的请求进来的时候, Netty会为这个连接创建一个channel, 并将其分配给worker 的EventLoop上,
+            注册channel: 新的channel 会被注册在worker Group 中的eventLoop 上, 接下来和这个连接的相关读写操作都是在这个EventLoop 上
+        处理客户端请求
+            每个channel 关联的channelpipeline, 包含了一系列的handler
+            当客户数据到达的时候, 数据会通过channelPipeline 中的inbounder 来进行处理, 负责数据的读取, 解码，业务逻辑处理等
+        响应客户端
+            当业务逻辑处理完后, 通过会通过ChannelHandlerContext.writeAndFlush() 将数据响应回给客户端
+            数据会通过channelpipeline 中的outbounder，然后通过底层的socket 发送给客户端
+        关闭连接
+            客户端关闭连接, 或者是服务端主动关闭连接的时候, Netty 会处发ChannelInbounderHandler 的channelInactive 或者是channelUnregistered, 可以进行资源清理
+            在关闭服务器的时候, 需要调用bossGroup 和worker Group 的shutdownGracefully 进行线程资源的释放
+6. TCP 流式处理怎么对流量进行拆分
+7. Redis 的高可用怎么保证的, 
+    哨兵模式和主从模式
+    哨兵负责三个事情: 
+        监控: 
+            主观下线
+                发送Ping 命令给主节点, 如果主节点在一定时间内没有相应的话, 会被标记为SDOWN, 主观下线,
+            客观下线
+                多个哨兵节点通信认为某个节点不可用, 则认为改节点为客观下线, ODOWN
+        哨兵节点的选主:
+            在主节点被标记为ODOWN 后, 哨兵节点会通过RAFT进行一次投票选举, 确定哪个哨兵节点作为领导者, 负责执行故障转移, 每个哨兵节点可以发起投票,并且每个哨兵节点只能投票给一个哨兵节点
+            获得多数票的哨兵节点被选为领导者, 负责后续的主从切换
+        选择主节点
+            哨兵的leader 从可用的从节点中选主一个新的主节点, 主节点标准:
+                1. 从节点的优先级高的更可能被选中
+                2. 复制偏移量, (代表和主节点是否更接近的,) 更有可能选中
+                3. 链接状态好的
+            哨兵的leader 会向其他哨兵节点通知选主的主节点
+        主从切换
+            选中的从节点会倍提升为主节点, 新的主节点会停止从旧的主节点同步数据, 并且开始接受写入操作
+            重新配置集群,  其他从节点开始从新的主节点上去同步数据, 包含和旧的主节点连接的断开. 从新的主节点获取数据
+            通知客户端, 客户端根据配置更新配置
+        恢复正常运行
+8. 问题:
+    底层技术不是太差? 广度上不够, 需要对各个原理有了解
+</code></pre>
+<h3 id="二面"><a href="#二面" class="headerlink" title="二面"></a>二面</h3><pre><code class="hljs">1. 描述一下突出个人价值, 个人在项目中的重要性
+2. 开放性问题 一个是银行的 取号 一个是火车站排队
+3. 比较难熬的时间点
+    3.1. 怎么解决的
+4. 最近在看哪些东西的
+</code></pre>
+<h2 id="得物"><a href="#得物" class="headerlink" title="得物"></a>得物</h2><pre><code class="hljs">1. java 中线程的状态有哪些
+2. sleep 和 wait 方法的区别
+3. 可见性和原子性
+    3.1 可见性如何保证
+</code></pre>
+<ol start="4">
+<li><p>A 机器中数据发送到B 机器上 会有哪些数据拷贝<br><a target="_blank" rel="noopener" href="https://www.xiaolincoding.com/os/8_network_system/zero_copy.html#%E4%BC%A0%E7%BB%9F%E7%9A%84%E6%96%87%E4%BB%B6%E4%BC%A0%E8%BE%93%E6%9C%89%E5%A4%9A%E7%B3%9F%E7%B3%95">答案</a></p>
+</li>
+<li><p>当前机器网线拔掉了, 然后过了一秒钟插回去, 这个时候对于TCP 连接有影响么<br><a target="_blank" rel="noopener" href="https://www.xiaolincoding.com/network/3_tcp/tcp_unplug_the_network_cable.html#%E6%8B%94%E6%8E%89%E7%BD%91%E7%BA%BF%E5%90%8E-%E6%9C%89%E6%95%B0%E6%8D%AE%E4%BC%A0%E8%BE%93">答案</a></p>
+<ol start="6">
+<li>http 如何保证读取到响应的完整性</li>
+<li>NIO 和 BIO 的主要区别<br> 7.1 非阻塞 怎么实现的<br> 7.2 epool 怎么工作的</li>
+<li>netty 的 eventLoop 执行逻辑 </li>
+<li>如果在GC 过程时内存不够分配怎么处理</li>
+</ol>
+</li>
+</ol>
+<h2 id="传音"><a href="#传音" class="headerlink" title="传音"></a>传音</h2><h3 id="一面-1"><a href="#一面-1" class="headerlink" title="一面"></a>一面</h3><pre><code class="hljs">1. 网关是不是从0 到 1 去做的
+2. 原来网关在哪里有问题
+3. 恶意流量怎么拦截
+    3.1 为什么耗时会比较长
+4. 把性能拖慢掉了 是因为什么
+5. 网关上考虑的核心指标是什么
+6. 网关机器上的连接数怎么看
+7. waf 在前面, 网关能否抗住
+8. 网关的签名是怎么做的
+9. 有哪些业务线在用网关
+10. 当前网关可以给业务提供什么能力????
+11. qconfig 和 apollo 的区别是什么
+12. netty 和 tomcat 上的改进是什么, 怎么去选择
+13. netty 去起一个服务端 和 一个客户端 怎么去做的
+14. 为什么要用 netty 去进行请求转发
+15. 对后面职业规划是怎么考虑的
+
+16. 技术 + 业务的面试
+    16.1 业务思维
+    16.2 业务困难点在什么上:
+        16.2.1 业务困难方在什么上, 如何站在业务的角度上去考虑问题
+        16.2.2 业务支付上的关心安全, 业务不同的需求是什么
+        16.2.3 
+</code></pre>
+<h3 id="二面-1"><a href="#二面-1" class="headerlink" title="二面"></a>二面</h3><pre><code class="hljs">1. 自身的职业规划是什么
+2. 服务端团队有多少人
+3. 高可靠 + 高并发
+4. 个人优势
+5. 个人爱好
+6. 个人学习怎么学习的
+7. 对公司有什么期望
+8. 个人属于什么样的人
+</code></pre>
+<h2 id="美团-DTS-组"><a href="#美团-DTS-组" class="headerlink" title="美团 DTS 组"></a>美团 DTS 组</h2><h3 id="一面-2"><a href="#一面-2" class="headerlink" title="一面"></a>一面</h3><pre><code class="hljs">1. qconfig 服务端 CAP 怎么选择, 为什么这样去选
+2. qconfig 元数据是否放在ZK 中
+3. 单元化的理解
+3.1 单元化如何实现的, 就是从整个公司的角度, 以及从配置中心角度=====
+3.2 单元化的时候数据怎么落到正确的存储上去
+    3.2.1 单元化的目的:
+4. 数据批量变换和数据预热怎么处理, 为什么要这样去做
+5. 批量变更在什么情况下有问题
+    5.1 批量变更不是delay 去做, 是从请求方开始就聚集去做处理
+6. jmap 查看堆上的内存, 查看内存占用的过程是什么样的
+7. pmap 查看堆外内存的场景,为什么会怀疑和malloc 分配内存有关联
+    7.1. ptmalloc 申请内存 和 jemlloc 为什么 ptmalloc
+    7.2 	ptmalloc 中用户释放掉的内存, 为了下次快速使用, 会存到自己的空闲列表中, 因此导致了很多的64M 内存占用的问题
+8. 线程资源占用 应该调整哪个参数 或者jvm 应该怎么调整					=======
+    1. 需要调整线程栈的大小 和 堆上的大小
+9. 稳定性有什么总结性的
+    9.1 幂等服务
+    =======
+    事物管理
+    限流熔断
+    重试机制
+10. 网关 为什么要从tomcat 换成netty
+11. 为什么netty 可以用更少的线程来做同样的事情
+12. netty 怎么去管理堆外内存
+    12.1 mmap + bytebuf
+    12.1 每个bytebuf 有个引用计数器, 当bytebuf 被使用的时候, 计数器+1, 不再需要使用的时候, 计数器-1, 当byteBuf关联的计数器降为0的时候。
+    通过PooledByteBufAllocator 和 ByteBuf 来实现的, 在需要使用堆外内存的时候, 分配一个新chunk 或者直接向操作系统申请一个, 然后通过ByteBuf 的API 对堆外内存去进行读写. 内存释放的时候通过引用计数机制的减少
+ResourceLeakDetector 可以用来检测
+-XX:MaxDirectMemorySize=1G 限制堆外内存的使用
+13. 网关上降本增效 怎么去做这个事情
+14. 读已提交 和 可重复读 怎么保证的
+15. mvcc 是利用什么机制实现的
+16. undo log 在什么时候会去删除掉
+17. undo log 在多版本比较的时候会在什么时候可以删除 ===============
+    17.1 当所有以来undo log 的事物都不再使用的时候就可以删除了
+18. 内存写了, 磁盘还没有落的时候, crash 了.  怎么去保证
+19. synchronized 的锁升级的过程
+20. cas 会有什么问题
+</code></pre>
+<h3 id="二面-2"><a href="#二面-2" class="headerlink" title="二面"></a>二面</h3><pre><code class="hljs">1. 项目哪个印象更深刻一点
+2. 详细介绍一下配置中心做了哪些事情
+3. 配置读取的单元化
+    3.1 配置读取的就近读、就近写的单元化, 配置中心底层的数据读取怎么做到单元化
+    3.2 配置中心数据放在MGR数据库上, MGR集群
+4. 网关tomcat 换成netty 为什么要去做这个事情
+5. 对重要应用的隔离是怎么去做的
+    5.1 重要应用的定义怎么定义
+    5.1 重要性怎么收集
+6. 网关集群流量配置的灰度, 配置的灰度怎么去做的
+7. 网关流量权重怎么设计的
+8. 网关灰度的机器和普通机器怎么做, 其他人是怎么做的 业界方案怎么做的
+9. 单台机器QPS 从多少提升到10000
+    9.1 原来值是多少 2000
+    9.2 做了哪些改造有那么高提升
+10. 网关服务的容灾 和 高可用
+11. 网关的水平扩、缩容怎么做的
+12. 基于k8s 的自动扩缩容, 提供给业务同学用, 和网关之间的关联性
+    12.1 进行扩缩绒的标准是什么
+    12.2 自动扩缩容的机制是怎么实现的
+    12.3 采集流量的QPS 信息
+    12.4 如何确定好下游的节点是够的???
+    12.5 弹性伸缩为什么要放在网关侧去做
+13. 网关项目的参与人
+    13.1 为啥人那么少
+14. 项目的迭代周期是什么
+    14.1 网关项目的重点是什么
+15. 网关转发的同样的请求, 转发到不同的应用、集群、机器上去
+16. 项目有什么做的不好的???
+17. 项目中长期的规划, 有哪些可以做的
+18. 对标其他公司的差距有哪些?                            网关 和 配置中心
+    18.1. 稳定性、容灾性、性能上的差距, 支持的能力上差距
+19. 性能优化的思路、流程
+    19.1 以耗时高的为例子
+    19.2 CPU比较高的话 排查工具
+20. 如何快速定位full GC
+21. java 服务 的full GC 多久是属于正常的
+22. java 服务日常关注哪些指标
+23. mysql 的高可用架构
+24. 主从架构下, mysql update 的数据流程
+25. 有了解过消息中间件么?? 使用的场景有么?
+26. 多线程并发工具, 如何控制多线程同步, 控制线程的调度顺序
+27. 网关部分线程池在什么情况下会用到
+28. 算法题: 接雨水
+29. 为什么离职
+30. 是否有其他offer
+31. 容灾、可用性、稳定性
+32. 个人关注的技术方向有哪些、以及了解渠道
+33. 日常自己总结, 提升效率的有什么方法
+</code></pre>
+<h2 id="美团RPC"><a href="#美团RPC" class="headerlink" title="美团RPC"></a>美团RPC</h2><h3 id="一面-3"><a href="#一面-3" class="headerlink" title="一面"></a>一面</h3><pre><code class="hljs">1. 网关的部署架构是什么样的
+2. 网关按照不同的集群是根据什么去进行划分的
+3. 网关有多少个集群
+4. 后端的业务机器数量有多少个
+    4.1 机器数量
+    4.2 服务数量有多少
+5. 对比开源网关有什么区别 
+    对比功能有什么区别
+    所有对比有哪些
+6. 网关部署的架构是什么样的
+7. 网关中 mysql 和 zk 数据有哪些区别
+8. 有哪些数据通过zk 进行通知
+9. 网关的灰度指的是什么
+10. 性能优化 tomcat 怎么分析
+    10.1 对比tomcat 的 startAsync 有什么区别
+    10.2 客户端的一个优化
+11. 日志的异步化 为什么要这样去做
+12. qconfig 的工作原理 数据架构是什么样的
+13. eureka 在 qconfig 作用是什么的
+14. 客户端和服务端数据, 如何拿到服务端的节点数据
+15. 服务端是否每次都是向数据库去要
+16. 如何保证服务端机器中的数据要老
+    16.1 轮训数据库是否会给数据库压力太大
+17. 推送延迟的一秒是如何计算的
+    17.1 各个计算节点耗时是怎么做的
+18. 自身怎么做单元化
+19. 客户端访问服务端 长轮训具体怎么做的
+    19.1 长轮训有什么缺陷
+20. 实际过程中CPU 高的情况
+21. GC 比较频繁怎么看
+    21.1 CPU 
+22. 印象比较深的case
+23. 技术文章啥的
+24. 链表反转
+</code></pre>
+<h3 id="二面-3"><a href="#二面-3" class="headerlink" title="二面"></a>二面</h3><pre><code class="hljs">1. 换工作的原因
+2. 找新的工作, 比较看重什么
+3. 具体做的事情希望做什么
+4. 公司里面的项目角色是什么
+5. 过往的绩效, 老板的反馈是什么
+6. 过往经历的优势 和 劣势
+7. 配置中心是全局的大集群么
+8. 配置中心部署的模式
+9. 感知到变更 推送给所有服务端是否依赖于eureka
+10. 为什么不尝试扫表的逻辑, 通过 changeLog 来做   ==========   
+11. 小于一秒的延迟 是什么单位
+12. 怎么解决全局大集群的问题					  控台上资源进行限制========
+13. 配置中心热点 key 怎么解决
+14. 怎么解决推送风暴的问题
+15. 怎么保证缓存一致性的, 服务端数据和MGR数据的一致性
+16. 推拉结合做作的
+    16.1 注册中心和配置中心的架构是不是差不多
+17. 异地多活和配置中心的关系
+18. API 网关前面那一层是否有nginx 负载
+19. 给下游转发的时候, 没有做范化调用
+20. api 平台通用的路由插件, 是否支持热更新, tomcat 换成netty
+21. 过往的经验中 有独立的探索和学习, 然后交付的事情
+22. 过往中, 最难的经历是怎么解决的
+23. 除去配置中心和网关, 是否学习过哪些其他的开源项目
+</code></pre>
+<h2 id="华为"><a href="#华为" class="headerlink" title="华为"></a>华为</h2><h3 id="一面-4"><a href="#一面-4" class="headerlink" title="一面"></a>一面</h3><pre><code class="hljs">1. 单元化是什么意思
+2. 怎么做的单元化
+3. 配置中心是怎么做的
+4. 本地的降级文件为什么没有做成可推送的方式
+    4.1 热加载的情况下, 通过域名也有可能出问题
+5. 单元化里面数据库优化怎么做的
+6. GC 做了哪些优化
+    6.1. yong GC 做了哪些
+    6.2. full GC 做了哪些
+    6.3. 堆内哪些查看到
+7. 项目部署的是用什么方式部署的
+</code></pre>
+<h3 id="二面-4"><a href="#二面-4" class="headerlink" title="二面"></a>二面</h3><pre><code class="hljs">1. 配置中心最具有复杂和挑战的是什么情况
+2. 在过程中日常开发怎么保持
+3. 单元化怎么理解的
+4. 数据库的预热读取具体指的是什么措施
+5. mysql MGR 提升数据的高可用实例指的是什么
+6. 内外流量是否有做区分
+7. serverless 架构的思想是什么
+8. 网关的机器配置
+9. netty httpClient 替换的思路, 启发 总结有什么.
+10. 异步调用链, traceId 和 spanId 是怎么做的
+11. 整体架构上有什么想法
+12. 线程和非线程安全collection 有哪些
+13. 抽象类和接口在什么情况下使用
+14. 锁的问题怎么处理
+15. 悲观锁和乐观锁的区别是什么
+</code></pre>
+<h2 id="字节"><a href="#字节" class="headerlink" title="字节"></a>字节</h2><h3 id="抖音电商平台治理-一面"><a href="#抖音电商平台治理-一面" class="headerlink" title="抖音电商平台治理 一面"></a>抖音电商平台治理 一面</h3><pre><code class="hljs">1. 
+</code></pre>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E6%80%BB%E7%BB%93/" class="category-chain-item">总结</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>面经</div>
+      <div>http://localhost:4000/2024/09/18/interview/面经/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>pc-xie</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2024年9月18日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2024/09/24/interview/%E5%BC%80%E6%94%BE%E6%80%A7%E9%97%AE%E9%A2%98/" title="开放性问题">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">开放性问题</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2024/09/06/interview/%E9%A1%B9%E7%9B%AE%E4%BB%8B%E7%BB%8D/" title="项目介绍">
+                        <span class="hidden-mobile">项目介绍</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>
