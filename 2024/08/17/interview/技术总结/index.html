@@ -16,19 +16,19 @@
   <meta name="author" content="pc-xie">
   <meta name="keywords" content="">
   
-    <meta name="description" content="操作系统epool 介绍 select: 允许程序监听一组文件描述符, 检查这些文件描述符是否可读、可写、是否发生异常 优点: 简单 缺点: 单进程有监听上限, 每次调用的时候需要遍历fd_set, 即使大部分文件描述符没有事件发生, 但是仍然需要去进行扫描 pool: 使用动态数组来存储文件描述符及其感兴趣的事件, 而不是固定的大小fd_set 优点: 可以解决select 中对于文件描述符上限">
+    <meta name="description" content="操作系统epool 介绍 select: 允许程序监听一组文件描述符, 检查这些文件描述符是否可读、可写、是否发生异常 优点: 简单 缺点: 单进程有监听上限, 每次调用的时候需要遍历fd_set, 即使大部分文件描述符没有事件发生, 但是仍然需要去进行扫描 场景: 适用于少量文件描述符(连接数量在1024 个 以内), 需要跨平台开发的应用程序,  pool: 使用动态数组来存储文件描述符及其感">
 <meta property="og:type" content="article">
 <meta property="og:title" content="技术总结">
 <meta property="og:url" content="http://localhost:4000/2024/08/17/interview/%E6%8A%80%E6%9C%AF%E6%80%BB%E7%BB%93/index.html">
 <meta property="og:site_name" content="pc-xie">
-<meta property="og:description" content="操作系统epool 介绍 select: 允许程序监听一组文件描述符, 检查这些文件描述符是否可读、可写、是否发生异常 优点: 简单 缺点: 单进程有监听上限, 每次调用的时候需要遍历fd_set, 即使大部分文件描述符没有事件发生, 但是仍然需要去进行扫描 pool: 使用动态数组来存储文件描述符及其感兴趣的事件, 而不是固定的大小fd_set 优点: 可以解决select 中对于文件描述符上限">
+<meta property="og:description" content="操作系统epool 介绍 select: 允许程序监听一组文件描述符, 检查这些文件描述符是否可读、可写、是否发生异常 优点: 简单 缺点: 单进程有监听上限, 每次调用的时候需要遍历fd_set, 即使大部分文件描述符没有事件发生, 但是仍然需要去进行扫描 场景: 适用于少量文件描述符(连接数量在1024 个 以内), 需要跨平台开发的应用程序,  pool: 使用动态数组来存储文件描述符及其感">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="http://localhost:4000/img/tcp/tcp_start_connection.png">
 <meta property="og:image" content="http://localhost:4000/img/tcp/tcp_finish_connection.png">
 <meta property="og:image" content="http://localhost:4000/img/jdk/threadState.png">
 <meta property="og:image" content="http://localhost:4000/img/jdk/hashMap_put.png">
 <meta property="article:published_time" content="2024-08-17T05:20:30.839Z">
-<meta property="article:modified_time" content="2024-10-11T08:34:42.198Z">
+<meta property="article:modified_time" content="2024-12-29T14:19:11.227Z">
 <meta property="article:author" content="pc-xie">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:image" content="http://localhost:4000/img/tcp/tcp_start_connection.png">
@@ -223,7 +223,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          94k 字
+          109k 字
         
       </span>
     
@@ -234,7 +234,7 @@
         
         
         
-          781 分钟
+          911 分钟
         
       </span>
     
@@ -278,27 +278,90 @@
               <div class="markdown-body">
                 
                 <h1 id="操作系统"><a href="#操作系统" class="headerlink" title="操作系统"></a>操作系统</h1><h2 id="epool-介绍"><a href="#epool-介绍" class="headerlink" title="epool 介绍"></a>epool 介绍</h2><ol>
-<li>select: 允许程序监听一组文件描述符, 检查这些文件描述符是否可读、可写、是否发生异常<br> 优点: 简单<br> 缺点: 单进程有监听上限, 每次调用的时候需要遍历fd_set, 即使大部分文件描述符没有事件发生, 但是仍然需要去进行扫描</li>
-<li>pool: 使用动态数组来存储文件描述符及其感兴趣的事件, 而不是固定的大小fd_set<br> 优点: 可以解决select 中对于文件描述符上限的限制<br> 缺点: 每次调用的时候需要遍历文件描述符</li>
-<li>epool: 基于事件的通知机制, 只会通知应用程序哪些文件描述符发生了变化, 而不是遍历所有的文件描述符<br> 过程:<br>     1. epool_create: 创建一个epool 实例<br>     2. epool_ctl: 使用epool_ctl 进行注册, 修改 或者删除要监控的文件描述符, 文件描述符及其感兴趣的事件会放到红黑树中去进行管理<br>         epool 使用红黑树的目的:<br>             高效的插入和删除, 对于频繁的注册和注销 操作复杂度为logn<br>             有序性:<br>             支持快速查找: 在支持大量的文件描述符时, 可以快速的查找,红黑树可以以logn 的时间去进行查找<br>             避免退化: 最坏情况下可以避免退化<br>     3. epool_wait: 等待事件发生, 当有事件发生的时候, epool 会将发生事件的文件描述符放入到一个链表中, 并通过epool_wait 返回<br> 两种工作模式:<br>     1. 水平触发: 默认模式, 只要文件描述符上有事件未处理, epool_wait 会持续返回<br>         特性: 只要文件描述符状态为可读或者可写, epool wait 每次调用都会返回该文件描述符, 意味着如果有数据可读, 会进行持续通知<br>         优点: 简单易用, 不容易丢失事件,适合处理高并发 和 不确定性高的场景, 尤其是应用程序可能未及时处理所有可读数据<br>     2. 边缘触发: 只在事件发生瞬间通知一次, 之后不会再次通知<br>         特性: 只有在状态发生变化的时候才进行通知, 例如从不可读变为可读, 要求应用程序尽快接受到事件后处理所有数据<br>         优点: 提高性能, 减少系统的调用次数, 适合处理大量并发连接的场景, 因为减少了不必要的通知<br> 事件复杂度为O(1)<br>     netty 中可以通过设置EpollChannelOption 来进行设置</li>
+<li><p>select: 允许程序监听一组文件描述符, 检查这些文件描述符是否可读、可写、是否发生异常<br> 优点: 简单<br> 缺点: 单进程有监听上限, 每次调用的时候需要遍历fd_set, 即使大部分文件描述符没有事件发生, 但是仍然需要去进行扫描<br> 场景: 适用于少量文件描述符(连接数量在1024 个 以内), 需要跨平台开发的应用程序,</p>
+</li>
+<li><p>pool: 使用动态数组来存储文件描述符及其感兴趣的事件, 而不是固定的大小fd_set<br> 优点: 可以解决select 中对于文件描述符上限的限制<br> 缺点: 每次调用的时候需要遍历文件描述符<br> 场景: 当文件描述符比较多, 但并发连接的规模还未特别庞大</p>
+</li>
+<li><p>epool: 基于事件的通知机制, 只会通知应用程序哪些文件描述符发生了变化, 而不是遍历所有的文件描述符<br> 过程:<br>     1. epool_create: 创建一个epool 实例<br>     2. epool_ctl: 使用epool_ctl 进行注册, 修改 或者删除要监控的文件描述符, 文件描述符及其感兴趣的事件会放到红黑树中去进行管理<br>         epool 使用红黑树的目的:<br>             高效的插入和删除, 对于频繁的注册和注销 操作复杂度为logn<br>             有序性:<br>             支持快速查找: 在支持大量的文件描述符时, 可以快速的查找,红黑树可以以logn 的时间去进行查找<br>             避免退化: 最坏情况下可以避免退化<br>     3. epool_wait: 等待事件发生, 当有事件发生的时候, epool 会将发生事件的文件描述符放入到一个链表中, 并通过epool_wait 返回<br> 两种工作模式:<br>     1. 水平触发: 默认模式, 只要文件描述符上有事件未处理, epool_wait 会持续返回<br>         特性: 只要文件描述符状态为可读或者可写, epool wait 每次调用都会返回该文件描述符, 意味着如果有数据可读, 会进行持续通知<br>         优点: 简单易用, 不容易丢失事件,适合处理高并发 和 不确定性高的场景, 尤其是应用程序可能未及时处理所有可读数据<br>     2. 边缘触发: 只在事件发生瞬间通知一次, 之后不会再次通知<br>         特性: 只有在状态发生变化的时候才进行通知, 例如从不可读变为可读, 要求应用程序尽快接受到事件后处理所有数据<br>         优点: 提高性能, 减少系统的调用次数, 适合处理大量并发连接的场景, 因为减少了不必要的通知<br> 事件复杂度为O(1)<br>     netty 中可以通过设置EpollChannelOption 来进行设置<br> 场景: 大规模的并发连接, 程序需要处理大量的非阻塞式IO, 追求性能优化<br> 主要机制:<br>     1. 事件监听: 通过epool 实例来监听多个文件描述符的IO 事件, 应用程序将需要监听的的文件描述符注册到epool 实例中<br>     2. 事件通知: 当文件描述符上的IO事件发生时, 内核会将这些事件通知给应用程序, 应用程序可以调用epool_wait 函数来获取发生的事件列表<br>     3. epool  支持两种触发模式:<br>         3.1 边缘触发:	 只在IO发生的时候通知应用程序一次,<br>         3.2 水平触发: 只要文件描述符上有事件未处理, epool_wait 会持续的通知</p>
+</li>
+</ol>
+<h2 id="操作系统的功能有哪些"><a href="#操作系统的功能有哪些" class="headerlink" title="操作系统的功能有哪些"></a>操作系统的功能有哪些</h2><pre><code class="hljs">1. 进程和线程的管理: 进程的创建、撤销、阻塞、唤醒、进程间的通信
+2. 存储管理: 内存的分配和管理、外存的分配和管理
+3. 文件管理: 文件的读、写、创建和删除
+4. 设备管理: 完成设备的请求或释放, 以及设备启动等功能
+5. 网络管理: 
+6. 安全管理: 用户的身份认证、访问控制、文件加密等
+</code></pre>
+<h2 id="用户态-和-内核态"><a href="#用户态-和-内核态" class="headerlink" title="用户态 和 内核态"></a>用户态 和 内核态</h2><pre><code class="hljs">为了保护计算机系统的安全、稳定和性能
+1. 用户态:可以直接读取用户程序的数据, 拥有较低的权限, 当应用程序需要执行某些特殊权限的操作的时候, 例如读写磁盘、网络通信等。需要向操作系统发起系统调用, 进入内核态
+2. 内核态: 几乎可以访问计算机的任何资源, 包含了内存空间, 设备、驱动程序等。拥有非常高的权限. 当操作系统接受到进程的系统调用请求时,就会从用户态切换到内核态, 执行响应的系统调用, 并将结果返回给应用程序. 最后再从内核态切换到用户态
+切换的方式
+    1. 系统调用: 用户态进程主动要求切换到内核态, 目的是使用内核态才可以做的事情
+    2. 中断: 硬件或者软件发出的信号, 要求操作系统对某些事件进行处理
+    3. 异常: 在执行的过程中发生的错误
+</code></pre>
+<h2 id="进程和线程定义"><a href="#进程和线程定义" class="headerlink" title="进程和线程定义"></a>进程和线程定义</h2><ol>
+<li>进程时独立运行的程序, 而线程时进程的一部分, 线程共享进程的资源, 线程创建和销毁的开销较小, 通信比较方便<table>
+<thead>
+<tr>
+<th><strong>区别</strong></th>
+<th><strong>进程</strong></th>
+<th><strong>线程</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>基本单位</strong></td>
+<td>是资源分配和管理的基本单位</td>
+<td>是CPU调度和执行的基本单位</td>
+</tr>
+<tr>
+<td><strong>内存空间</strong></td>
+<td>进程拥有独立的内存地址空间，各进程之间不共享内存</td>
+<td>同一进程中的线程共享相同的内存地址空间</td>
+</tr>
+<tr>
+<td><strong>资源开销</strong></td>
+<td>创建或切换进程需要的资源较多（如分配内存、文件句柄等）</td>
+<td>创建或切换线程开销较小，线程之间的切换更加高效</td>
+</tr>
+<tr>
+<td><strong>通信方式</strong></td>
+<td>进程间通信需要使用复杂的机制，如消息队列、管道、共享内存等</td>
+<td>线程之间共享进程资源，通信更加简单，可以直接使用共享内存</td>
+</tr>
+<tr>
+<td><strong>安全性</strong></td>
+<td>进程间独立运行，进程间的错误互不影响</td>
+<td>线程之间共享内存，一个线程崩溃可能导致整个进程崩溃</td>
+</tr>
+<tr>
+<td><strong>调度</strong></td>
+<td>操作系统进行进程调度，开销大</td>
+<td>操作系统或进程调度线程，调度开销小</td>
+</tr>
+</tbody></table>
+</li>
 </ol>
 <h2 id="进程间调度算法"><a href="#进程间调度算法" class="headerlink" title="进程间调度算法"></a>进程间调度算法</h2><pre><code class="hljs">1. 先来先服务
     原理: 按照进程到达就绪队列的顺序分配CPU时间, 最早到的进程先运行
     优点: 简单, 进程不需要设置优先级或者是复杂处理
     缺点: 平均等待时间长, 不可抢占
+    场景: 适合对实时性要求不高的批处理程序中, 或者在简单的任务调度场景中
 2. 短作业优先
     原理: 优先调度运行时间最短的进程, 以减少系统的平均等待时间
     优点: 在理想情况下, 可以最大化吞吐量,以最小化平均等待时间
     缺点: 不可预测性, 无法提前知道进程运行的时间, 可能导致某个进程长时间无法得到运行
+    场景: 适合任务处理时间已知且短小的场景, 如小型计算任务或者是交互式系统
 3. 优先调度
     为每个进程设置一个优先级, 优先级高的优先获得CPU的分配, 优先级可以调整
     优点: 可以根据进程的优先级按照重要的进程先运行
     缺点: 饥饿问题, 低优先级的可能永远无法运行
+    场景: 适用于快速响应的系统, 如实时应用或者是任务需要优先处理的场合
 4. 轮训
     每个进程按照时间片的顺序进行执行, 每个进程执行一小段时间后就让出CPU, 如果时间片用完了, 进程放回到就绪队列的末尾
     优点: 适用于时间共享的系统, 保证所有进程公平的得到CPU 时间
     缺点: 时间片大小对系统的性能影响比较大
-5. 公平调度
+    场景: 能够公平的分配CPU时间, 适合对响应时间有一定要求的场景
 </code></pre>
 <h2 id="进程间通信"><a href="#进程间通信" class="headerlink" title="进程间通信"></a>进程间通信</h2><pre><code class="hljs">管道: 父子进程之间使用较为简单, 不适合跨多个无关的进程
 消息队列: 支持异步通信, 可以在不同进程之间传递数据
@@ -310,6 +373,85 @@ socket: 适合在不同机器或者是跨网络的进程之间通信
 wait / notify
 信号量
 锁
+</code></pre>
+<h2 id="线程同步"><a href="#线程同步" class="headerlink" title="线程同步"></a>线程同步</h2><pre><code class="hljs">1. 互斥锁: 采用互斥对象, 只有拥有互斥对象的线程才可以访问公共资源的权限, 因为互斥对象只有一个, 才可以保证公共资源不会被多个线程同时访问
+2. 读写锁: 允许多线程同时读取共享资源, 但是只有一个线程可以对共享资源进行修改
+3. 信号量: 允许同一时刻多个线程访问同一资源, 但是需要控制同一时刻访问此资源的最大线程数量
+4. 屏障: 用于多个线程到达某个点后再一起继续执行, 当一个线程到达屏障后, 会停止执行并等待其他线程到达屏障, 知道所有的线程到达屏障后, 才会一起去执行
+5. 事件: 通过通知的方式来保持多线程同步
+</code></pre>
+<h2 id="PCB"><a href="#PCB" class="headerlink" title="PCB"></a>PCB</h2><pre><code class="hljs">进程控制块, 操作系统中用来管理和跟踪进程的数据结构, 每个进程都对应着一个独立的PCB, 
+PCB 内容:
+    1. 进程的描述信息
+    2. 进程的调度信息
+    3. 进程对资源的需求情况
+    4. 进程打开文件的信息
+</code></pre>
+<h2 id="进程的状态"><a href="#进程的状态" class="headerlink" title="进程的状态"></a>进程的状态</h2><pre><code class="hljs">1. 创建状态
+2. 就绪状态
+3. 运行状态
+4. 阻塞状态
+5. 结束状态
+转换条件
+    就绪 -&gt; 运行
+        调度器选择就绪队列中的一个进程并且分配CPU
+    运行 -&gt; 阻塞
+        进程因为I/O 或者其他资源无法继续执行, 进入阻塞状态
+    阻塞 -&gt; 就绪
+        当进程的等待事件发生后, IO 操作完成后, 会从阻塞状态转换为就绪状态
+    运行 -&gt; 结束
+        进程完成运行后, 进入结束状态
+    运行 -&gt; 就绪
+        进程在时间片耗尽或者是被高优先级进程抢占, 会从运行状态转换到就绪状态
+</code></pre>
+<h2 id="内存管理"><a href="#内存管理" class="headerlink" title="内存管理"></a>内存管理</h2><pre><code class="hljs">1. 内存的分配与回收: 对进程所需的内存进行分配和释放, malloc 函数: 申请内存, free 函数: 释放内存
+2. 地址转换: 将程序的虚拟地址转换成内存中的物理地址
+3. 内存扩充: 当系统中内存不足的时候, 利用虚拟内存或者自动覆盖技术, 从逻辑上扩充内存
+4. 内存映射: 将一个文件直接映射到进程的进程空间中, 可以通过指针的方式读写内存直接存取文件内容
+5. 内存优化: 通过调整内存分配策略和回收算法来优化内存使用率
+6. 内存安全: 保证进程之间的内存互不干扰, 避免一些恶意进程通过修改内存来破环系统的安全性
+</code></pre>
+<h2 id="内存碎片"><a href="#内存碎片" class="headerlink" title="内存碎片"></a>内存碎片</h2><pre><code class="hljs">1. 外部碎片
+    通过伙伴系统解决
+        伙伴系统: 从物理连续大小的固定段上去进行分配内存, 保证内核在申请一小块内存的情况下, 不会从大块的连续空间中截取一小段, 从而保证了大块内存的连续性和完整性,
+        具体是将内存分割成大小为2 的幂次方的块, 并使用伙伴机制来合并或者是分割
+        1.1 内存划分: 即将内存分割成大小为2 的幂次方的内存块, 如果请求内存的大小不是2的次幂, 系统会找到内存稍大的最小2 的次幂方的块进行分配
+        1.2 伙伴机制: 当一个较大的内存块需要分配一部分的时候, 如16KB 分配 8KB, 此时会将这部分内存分割成两个大小的伙伴(8KB)
+        1.3 合并与分割: 当释放一个内存的时候, 系统会检查他的伙伴是否也被释放, 如果是的话, 两个伙伴会合并成一个更大的块
+        1.4 减少碎片: 伙伴系统通过合并和分割内存块, 减少了传统内存算法中外部碎片的问题
+        1.5 场景: 内核级别的内存管理. 
+                优点: 分配和释放内存的速度快, 外部碎片少
+                缺点: 可能产生内部碎片
+
+2. 内部碎片
+    通过SLAB 来解决
+        通过将内存划分为用于相同类型对象的缓存, 通过批量分配和合并内存块, 解决了内存碎片问题, 减少了内存内部碎片和外部碎片, 加快了内存的分配与释放, 
+        SLAB 具体解决方式:
+            1. 对象缓存:
+                预先给相同类型的内存分配内存块,当系统需要分配内存的时候, 如果对象已经有缓存, 那直接从缓存中分配, 不需要频繁的调用底层的分配机制, 从而减少了内存分配的开销
+            2. 减少内部碎片
+                通过将对象分配到合适大小的缓存中, 保证每个对象分配的内存块与其大小匹配, 对于不同大小的对象, SLAB 分配器可以创建多个缓存, 每个缓存针对特定类型或大小的对象
+            3. SLAB 的生命周期
+                SLAB 通过三种状态来管理内存块: 空闲, 部分使用, 完全使用. 每当一个对象被释放时, 内存块状态可能从完全使用变为部分使用, 或者从部分使用变为空闲
+                当一个SLAB 的所有对象都被释放, 该SLAB 就会被标记为空闲, 避免了未被使用的SLAB 继续占用内存, 
+            4. 批量分配与开销
+                进行提前分配好内存块, 每次分配和回收只需要在缓存中查找和管理, 减少了内存分配和释放的性能开销
+</code></pre>
+<h2 id="地址映射"><a href="#地址映射" class="headerlink" title="地址映射"></a>地址映射</h2><pre><code class="hljs">内存管理单元（MMU，Memory Management Unit）
+将虚拟地址翻译成物理地址的集中机制
+    1. 分段机制
+        将虚拟地址分为段号和段内偏移量, 段号用于查找段表中段的描述符, 段描述符包含了该段的基址和长度, MMU 通过段号找到对应的段基址, 再将虚拟地址的偏移量加到段基址上, 得到物理地址
+        优点:支持灵活的内存管理, 不同大小的段可以根据需要进行分配物理内存
+        缺点:容易产生外部碎片, 段大小的不同, 会导致物理内存空间的空闲区域难以充分利用
+    2. 分页机制
+        虚拟地址被分割成固定大小的页(4KB, 8KB ) 物理内存也被划分成多个相同大小的帧, MMU 使用页表来记录虚拟页 和 物理页之间的关系
+        虚拟页的高位用于查找页表中对应的物理页桢, 低位是页内偏移, 用于确定页的具体位置
+        优点:解决了外部碎片的问题, 不同页大小一致, 方便管理; 支持虚拟内存, 实现将部分内存换到硬盘的技术; 
+        缺点: 需要复杂的也表进行管理, 页表可能会占用较多内存
+    3. 段页机制
+        虚拟地址首先被分为段号 和 段内偏移量, 段号用于查找段表, 段表中记录了段的基址和长度; 段内偏移量被分为了页号和页内偏移量, 页号通过页表转换成物理页桢
+        优点: 结合分段和分页的优点, 分段可以灵活调整, 分页可以解决外部碎片的问题
+        缺点: 复杂度高, 地址转换需要查找段表和页表
 </code></pre>
 <h2 id="发送整个请求的流程"><a href="#发送整个请求的流程" class="headerlink" title="发送整个请求的流程"></a>发送整个请求的流程</h2><pre><code class="hljs">1. 客户端生成请求
     1.1 用户对请求进行触发
@@ -342,6 +484,15 @@ wait / notify
     使用缓存
     负载均衡和CDN
     优化数据库访问
+HTTPS 的过程:
+  1. 客户端发起请求
+  2. 服务器收到请求后, 向客户端发送数字证书(SSL/TLS 证书), 证书包含服务器的公钥和CA 签名的信息
+  3. 客户端验证证书
+  3.1 客户端检验证书、查看证书的有效期、证书链接、证书的域名是否和服务器匹配       防止中间人攻击
+  3.2 如果证书不可信, 客户端会警告用户并提示
+  4. 客户端使用生成会话密钥, 信息通过公钥进行加密, 服务器使用私钥进行解密。        确保只有对应私钥的才可以进行揭秘
+  5. 客户端和服务端双方拥有会话密钥后, 通过会话密钥进行对数据传输
+  6. 数据传输
 </code></pre>
 <h2 id="stackoverflow-通常是怎么引起的"><a href="#stackoverflow-通常是怎么引起的" class="headerlink" title="stackoverflow 通常是怎么引起的"></a>stackoverflow 通常是怎么引起的</h2><pre><code class="hljs">1. 递归深度过深
 2. 虚拟机栈 -xss 设置太小了
@@ -487,11 +638,24 @@ exist 可以返回一行数据
 null 值的处理:
     in 可以正确处理子查询中包含null 的情况, 而exist 不受子查询结果中null  值的影响
 </code></pre>
+<h3 id="存储引擎为什么用innodb"><a href="#存储引擎为什么用innodb" class="headerlink" title="存储引擎为什么用innodb"></a>存储引擎为什么用innodb</h3><pre><code class="hljs">1. 支持事物
+2. innodb 是聚集索引, MyISAM 是非聚集索引
+3. 锁力度: innodb 最小是行锁，myIsam 是表锁
+</code></pre>
 <h3 id="索引"><a href="#索引" class="headerlink" title="索引"></a>索引</h3><h4 id="索引分类"><a href="#索引分类" class="headerlink" title="索引分类"></a>索引分类</h4><ol>
 <li>逻辑功能分类:<br>1.1 普通索引:没有任何约束条件, 用户提高查询的效率<br>1.2 唯一索引: 在普通索引的基础上增加了唯一性约束的条件, 一张表里面可以有多个唯一索引<br>1.3 主键索引: 在唯一索引的基础上增加了不为空的约束条件, 一张表里面最多有一个主键索引</li>
 <li>物理实现分类<br>2.1 聚集索引: 基于表的主键列的索引, 索引的叶子节点存储了实际的数据行, 一张表只能有一个聚集索引, 通常为主键索引<br>2.2 非聚集索引: 叶子节点存储了索引的值和一个指向数据实际存储位置的指针, 一个表可以有多个非聚集索引</li>
 <li>字段个数<br>3.1 单一索引: 索引列为一个的索引<br>3.2 联合索引: 多个列组合在一起的索引</li>
 </ol>
+<h4 id="什么列适合当主键"><a href="#什么列适合当主键" class="headerlink" title="什么列适合当主键"></a>什么列适合当主键</h4><pre><code class="hljs">聚集索引列: 
+    如果有主键, 则默认会使用主键作为聚集索引的索引键
+    如果没有主键, 选择第一个不为 NULL 的唯一列作为聚集索引的索引键
+    如果都选择不到, Innodb 将自动生成一个隐式自增 id 列作为聚集索引的索引键
+1. 字段具有唯一性, 且不为空的字段
+2. 字段最好有递增趋势的, 无序的可能引发页分裂
+3. 不建议使用业务字段, 因为业务字段可能会重复
+4. 通常情况下选择自增字段来当作, 考虑到多台机器, 可以用 ID 生成器, 雪花算法
+</code></pre>
 <h4 id="什么时候需要创建索引"><a href="#什么时候需要创建索引" class="headerlink" title="什么时候需要创建索引:"></a>什么时候需要创建索引:</h4><ol>
 <li>字段的数值有唯一性的限制，比如用户名</li>
 <li>频繁作为 WHERE 查询条件的字段</li>
@@ -537,7 +701,7 @@ null 值的处理:
 <li>使用查询缓存: 查询缓存指的是查询结果被写入磁盘前, 将查询结果缓存到内存当中, 下一次查询直接从内存当中去进行获取,避免回表的操作</li>
 <li>优化查询语句: 尽可能将查询条件放在索引列上, 从而减少回表的次数</li>
 </ol>
-<h4 id="Mysql索引底层数据结构-为什么用B-树"><a href="#Mysql索引底层数据结构-为什么用B-树" class="headerlink" title="Mysql索引底层数据结构, 为什么用B+树"></a>Mysql索引底层数据结构, 为什么用B+树</h4><pre><code class="hljs">B+树
+<h4 id="为什么用B-树"><a href="#为什么用B-树" class="headerlink" title="为什么用B+树"></a>为什么用B+树</h4><pre><code class="hljs">B+树
 支持高效的搜索、稳定的搜索效率,支持范围查找、内存占用比较低
         ## 索引各个场景
         有5个字段 a,b,c,d,e,f,g,h 
@@ -623,6 +787,26 @@ I 隔离性: 并发访问数据库, 一个事物的执行不被其他事物所�
 D 持久性: 一个事物提交以后, 他对数据库中的数据改变是持久的
     redo log （重做日志）可以实现事物的持久性
 </code></pre>
+<h4 id="事物隔离级别"><a href="#事物隔离级别" class="headerlink" title="事物隔离级别"></a>事物隔离级别</h4><pre><code class="hljs">读未提交 允许读取到未提交的事物, 可能导致脏读、不可重复读、幻读
+读已提交 允许读取到事物已经提交的数据, 可以防止脏读, 可能导致不可重复读、幻读
+    在每次执行的时候读取数据的read view
+可重复读 对于多次读取的数据是一致的, 可以防止脏读、不可以重复读, 可能导致幻读
+    在同一个事物内, 读取的是同一个read view
+    防止幻读 指的是在整个事物读取的read view 是同一个
+    无法避免由于新增和删除导致带来的变化
+    第一个事物进行了查询
+    然后第二个事物插入了一条数据, 此时第一个事物去进行查询的时候, 返回的数据条数和前面是一样的. 
+串行化   事物的最高级别, 所有事物都是要串行的去执行, 可以防止脏读、幻读、不可重复读
+
+脏读: 读取到其他未提交事物的数据											
+不可重复读:  对于同一条数据, 在同一个事物中前后读区结果不一致						
+幻读: 在同一个事物中, 对于一个范围内的数据进行多次多去, 发现返回的数据结果行数不一致	
+mysql 默认是可重复读				
+</code></pre>
+<h4 id="可重复读为什么不能解决幻读"><a href="#可重复读为什么不能解决幻读" class="headerlink" title="可重复读为什么不能解决幻读"></a>可重复读为什么不能解决幻读</h4><pre><code class="hljs">读已提交: 事物中只能读取到其他已提交的数据
+    通过在语句执行之前生成一个read view, 因此可以保证每次读取的时候可以读取到其他事物提交后的数据
+可重复读 是通过在启动事物时生成一个read view, 整个事物期间都在用这个read view, 因此没办法防止幻读, 因为整个事物期间基于的视图时一样的
+</code></pre>
 <h5 id="日志"><a href="#日志" class="headerlink" title="日志"></a>日志</h5><pre><code class="hljs">redo log: 事物的持久性
 undo log: 实现了事物的原子性, 用于事物的回滚
 bin log: server 生成的日志, 用于数据备份和主从复制
@@ -662,6 +846,18 @@ undo log: 回滚和多版本mvcc
 事物commit 后清除undo log 信息
 mvcc 读的时候只需要返回前面一个版本的数据即可
 </code></pre>
+<h4 id="binlog"><a href="#binlog" class="headerlink" title="binlog"></a>binlog</h4><pre><code class="hljs">记录了所有数据库的表结构变更和表结构修改的日志, 属于进行追加文件, 一个文件写满了, 就会往另外一个文件写
+</code></pre>
+<h4 id="undo-log"><a href="#undo-log" class="headerlink" title="undo log"></a>undo log</h4><pre><code class="hljs">保证了原子性
+Innodb 在对一条记录进行操作的时候, 需要将回滚的信息写入到 undo log 中, 当事物进行回滚的时候, 读取 undo log 中的数据, 然后进行操作
+</code></pre>
+<h4 id="undo-log-和-redo-log"><a href="#undo-log-和-redo-log" class="headerlink" title="undo log 和 redo log"></a>undo log 和 redo log</h4><pre><code class="hljs">通过 redo log 和 WAL(write ahead of logging), 可以保证数据库发生异常,  之前的提交记录都不会丢失,
+redo log 是通过顺序往磁盘追加的方式, 相比较于 undo log 随机写, 开销更小
+    WAL 技术: 写操作不是立刻写到磁盘上, 先写日志, 再以合适的时间写到磁盘上
+redo log: 对 XXX 表 中的 YYY 数据页 ZZZ 偏移量的地方做了 AAA 的更新
+redo log 记录的是 完成之后的状态, 记录的更新更新之后的值
+undo log 记录的是 完成之前的状态, 记录的更新是更新之前的值
+</code></pre>
 <h4 id="mvcc-原理"><a href="#mvcc-原理" class="headerlink" title="mvcc 原理"></a>mvcc 原理</h4><pre><code class="hljs">mvcc 原理
 隐藏列:trx_id
 通过readView 去解决读已提交和可重复读两个隔离级别中的问题
@@ -695,6 +891,13 @@ mvcc 读的时候只需要返回前面一个版本的数据即可
                     4.1.3 并发控制: 在高并发下可以读取旧版本数据
                 4.2 MVCC 和 undolog 关系
                     MVCC 的多版本记录是通过undo log 来实现的, 事物每次对数据的修改, 都是生成一条undo log 记录
+</code></pre>
+<h4 id="MVCC-如何解决脏读"><a href="#MVCC-如何解决脏读" class="headerlink" title="MVCC 如何解决脏读"></a>MVCC 如何解决脏读</h4><pre><code class="hljs">1. 快照读取
+    在MVCC中, 每个事物启动, 会看到一份当前数据库的快照, 该快照代表了数据库在事物的开始时的状态, 其他事物正在对同一数据行进行修改的时候, 当前事物读取到的仍然是事物开始的版本, 不会读取到未提交的修改, 从而避免了脏读
+2. 版本控制
+    每个数据都是有多个版本, 当一个事物修改某个数据行的时候, 实际上是去创建一个新的版本, 旧的版本仍然保留, 当其他事物读取的时候, 会读取开始时对应的版本, 从而不会读取新事物中未提交的数据
+3. 提交标记
+    只有一个事物提交后, 其他事物才可以看到他所做的修改, 保证了数据的一致性, 避免了脏读
 </code></pre>
 <h4 id="主从复制"><a href="#主从复制" class="headerlink" title="主从复制"></a>主从复制</h4><pre><code class="hljs">mysql 并行复制
 writeset
@@ -747,13 +950,45 @@ GTID: 全局事物id
 <h4 id="索引的开销"><a href="#索引的开销" class="headerlink" title="索引的开销"></a>索引的开销</h4><pre><code class="hljs">1. 空间上的开销: 建立索引需要创建一颗B+树, 每棵B+树都是一个数据页, 	一个页会默认占用16KB的空间
 2. 时间上的开销: 每次数据的增加、删除、修改, 需要对索引进行维护修改
 </code></pre>
-<h4 id="行锁"><a href="#行锁" class="headerlink" title="行锁"></a>行锁</h4><pre><code class="hljs">对数据表中的行记录进行加锁, 比如事物A更新了一行, 事物B也要更新一行数据, 则必须要等事物A操作完成后才可以去进行更新
+<h4 id="索引优化"><a href="#索引优化" class="headerlink" title="索引优化"></a>索引优化</h4><pre><code class="hljs">1. 覆盖索引优化:
+    1.1. 查询只包含查询字段的索引
+    1.2. 根据查询类选择适当的列顺序, 将区分度高的放在联合索引的前面
+2. 主键索引最好是自增的
+3. 防止索引失效
+</code></pre>
+<h4 id="锁"><a href="#锁" class="headerlink" title="锁"></a>锁</h4><h5 id="全局锁"><a href="#全局锁" class="headerlink" title="全局锁"></a>全局锁</h5><pre><code class="hljs">1. flush tables with read lock, 将整个数据库设置为只读状态, 用于全库的逻辑备份上
+</code></pre>
+<h5 id="表锁"><a href="#表锁" class="headerlink" title="表锁"></a>表锁</h5><pre><code class="hljs">1. lock tables 可以对表进行加锁, 
+</code></pre>
+<h5 id="行锁"><a href="#行锁" class="headerlink" title="行锁"></a>行锁</h5><pre><code class="hljs">对数据表中的行记录进行加锁, 比如事物A更新了一行, 事物B也要更新一行数据, 则必须要等事物A操作完成后才可以去进行更新
 间隙锁可以用来解决幻读:
     幻读的原因: 行锁只能锁住行, 但是新插入记录这个动作, 是要更新的记录之间的 间隙 , 因此通过间隙锁去解决幻读这个问题
+    where 条件范围使用
 间隙锁, 导致锁的影响范围变大
     对update 的语句进行范围上锁
 行锁命令分析
 show status like &#39;innodb_row_lock%&#39;; 
+两条sql update set name = pc where id = 1, 是会进行阻塞的
+ 第一条update set city = &quot;SH&quot; where id &lt; 10;
+ 第二条 update set city = &quot;SC&quot; where id &gt; 15;
+是不会进行阻塞的, 因为锁住的范围不一样
+如果where的条件中不是主键或者是索引的话, 那可能会讲全表进行锁住, 因为在扫描过程中是会进行加锁
+</code></pre>
+<h5 id="update-的过程是否为原子性的"><a href="#update-的过程是否为原子性的" class="headerlink" title="update 的过程是否为原子性的"></a>update 的过程是否为原子性的</h5><pre><code class="hljs">是的, 主要通过锁(行级锁) + undolog 来保证的
+</code></pre>
+<h4 id="数据库死锁怎么解决"><a href="#数据库死锁怎么解决" class="headerlink" title="数据库死锁怎么解决"></a>数据库死锁怎么解决</h4><pre><code class="hljs">1. 分析和监控死锁
+2. 事物长时间持有锁, 可能导致其他事物等待, 增加死锁的风险
+    1.1 缩短事物的执行时间
+    1.2 尽早提交事物
+3. 保证资源的锁定顺序一致
+    2.1 统一顺序
+4. 降低锁的粒度
+    3.1 使用行锁 而不是表锁
+    3.2 避免间隙锁
+5. 合理使用隔离级别
+6. 查询和索引优化
+    5.1 由于表结构设计的不合理, 可能导致锁定的数据过多, 导致死锁
+8. 大事物进行分解
 </code></pre>
 <h4 id="存储引擎为什么默认选择innodb"><a href="#存储引擎为什么默认选择innodb" class="headerlink" title="存储引擎为什么默认选择innodb"></a>存储引擎为什么默认选择innodb</h4><pre><code class="hljs">1. 支持事物
 2. innodb 是聚集索引, MyISAM 是非聚集索引
@@ -783,19 +1018,10 @@ show status like &#39;innodb_row_lock%&#39;;
             先记录redolog 的prepare 状态, 再写入binlog, 最后提交redo log， 防止奔溃恢复时出现数据的不一致
         奔溃恢复
             如果在写入binlog 后, 但是在提交redolog 之前的 发生了奔溃, mysql 在恢复时根据redolog 的prepare状态 和binlog 的记录继续完成提交, 确保事物的一致性
-</code></pre>
-<h4 id="事物隔离级别-什么是脏读、幻读"><a href="#事物隔离级别-什么是脏读、幻读" class="headerlink" title="事物隔离级别, 什么是脏读、幻读"></a>事物隔离级别, 什么是脏读、幻读</h4><pre><code class="hljs">读未提交 允许读取到未提交的事物, 可能导致脏读、不可重复读、幻读
-读已提交 允许读取到事物已经提交的数据, 可以防止脏读, 可能导致不可重复读、幻读
-可重复读 对于多次读取的数据是一致的, 可以防止脏读、不可以重复读, 可能导致幻读
-串行化   事物的最高级别, 所有事物都是要串行的去执行, 可以防止脏读、幻读、不可重复读
-
-脏读: 读区到其他未提交事物的数据											
-不可重复读:  对于同一条数据, 在同一个事物中前后读区结果不一致						
-幻读: 在同一个事物中, 对于一个范围内的数据进行多次多去, 发现返回的数据结果行数不一致					
-</code></pre>
-<h4 id="可重复读为什么不能解决幻读"><a href="#可重复读为什么不能解决幻读" class="headerlink" title="可重复读为什么不能解决幻读"></a>可重复读为什么不能解决幻读</h4><pre><code class="hljs">读已提交: 事物中只能读取到其他已提交的数据
-    通过在语句执行之前生成一个read view, 因此可以保证每次读取的时候可以读取到其他事物提交后的数据
-可重复读 是通过在启动事物时生成一个read view, 整个事物期间都在用这个read view, 因此没办法防止幻读, 因为整个事物期间基于的视图时一样的
+crash 恢复
+    1. 如果是在prepare  阶段发生 crash,
+        1.1. undo log 中有数据, binlog 中没有数据, 说明bin log 中还没有刷盘, 则进行回滚
+        1.2. undo log 中有数据, binlog 中也有数据, 说明bin log 中刷盘成功了, 则提交即可
 </code></pre>
 <!-- #### 	存储引擎为什么默认选择innodb
     1. 支持事物
@@ -865,7 +1091,11 @@ redis cluster 或者主从的时候出现脑裂怎么办
 <h3 id="删除策略"><a href="#删除策略" class="headerlink" title="删除策略"></a>删除策略</h3><pre><code class="hljs">1. 主库通过lazy 的方式进行删除
 2. 主库会发送一个del 事件给从库, 从库收到后对数据进行删除
 </code></pre>
-<h3 id="内存满了后怎么处理"><a href="#内存满了后怎么处理" class="headerlink" title="内存满了后怎么处理"></a>内存满了后怎么处理</h3><pre><code class="hljs">1. 进行淘汰
+<h3 id="内存满了后怎么处理"><a href="#内存满了后怎么处理" class="headerlink" title="内存满了后怎么处理"></a>内存满了后怎么处理</h3><pre><code class="hljs">1. 拒绝写入: 客户端执行set 的时候 可能收到 内存已满的信息
+2. 数据淘汰: 如果配置了内存淘汰策略, 当redis 达到内存的最大限制时, 会根据淘汰策略进行删除一些数据
+3. 客户端可能感受到延迟
+4. 有些命令会被阻塞: BPOP
+5. 性能下降
 </code></pre>
 <h3 id="Redis-缓存设计"><a href="#Redis-缓存设计" class="headerlink" title="Redis 缓存设计"></a>Redis 缓存设计</h3><pre><code class="hljs">如何避免缓存失效
     1. 不给热点key 设置过期时间
@@ -901,11 +1131,80 @@ Write back
 <h3 id="如果找到大key"><a href="#如果找到大key" class="headerlink" title="如果找到大key"></a>如果找到大key</h3><pre><code class="hljs">1. redis-cli --bigkeys
 2. scan 找大key
 </code></pre>
-<h1 id="java-基础"><a href="#java-基础" class="headerlink" title="java 基础"></a>java 基础</h1><h2 id="类型"><a href="#类型" class="headerlink" title="类型"></a>类型</h2><h3 id="拆装箱"><a href="#拆装箱" class="headerlink" title="拆装箱"></a>拆装箱</h3><pre><code class="hljs">什么是自动拆装箱？
+<h1 id="java-基础"><a href="#java-基础" class="headerlink" title="java 基础"></a>java 基础</h1><h2 id="对象"><a href="#对象" class="headerlink" title="对象"></a>对象</h2><h3 id="创建对象的方式"><a href="#创建对象的方式" class="headerlink" title="创建对象的方式"></a>创建对象的方式</h3><pre><code class="hljs">1. 使用new 关键字
+2. 使用 Class 的 newInstance
+    MyClass obj = (MyClass) Class.forName(&quot;com.example.MyClass&quot;).newInstance();
+3. 使用 Constructor 的 new Instance
+    Constructor&lt;MyClass&gt; constructor = MyClass.class.getConstructor(); 
+    MyClass obj = constructor.newInstance();
+4. 使用 Clone() 方法
+    MyClass obj1 = new MyClass(); 
+    MyClass obj2 = (MyClass) obj1.clone();
+5. 使用反序列化
+</code></pre>
+<h2 id="异常"><a href="#异常" class="headerlink" title="异常"></a>异常</h2><pre><code class="hljs">java 异常体系主要基于两个类, Throwable 类和它的子类, Throwable 子类有 Error 和 Exception; 分别代表了不同的异常的情况
+1. Error
+    表示运行时环境的错误, 该错误程序无法处理, 如OOM, stackOverFlowError
+2. Expcetion
+    2.1. 非运行时异常
+        编译时期就产生的异常: ClassNotFoundExcepton
+    2.2. 运行时异常
+        运行时产生的异常: RunTimeException
+通过 try-catch 可以去进行捕获, finally 中都是会进行捕获,
+    try&#123;return “a”&#125; fianlly&#123;return “b”&#125; 返回了b
+    finally  中遇到JVM 崩溃了; 强制终止JVM,System.exit(); try 中死循环
+</code></pre>
+<h2 id="类型"><a href="#类型" class="headerlink" title="类型"></a>类型</h2><h3 id="拆装箱"><a href="#拆装箱" class="headerlink" title="拆装箱"></a>拆装箱</h3><pre><code class="hljs">什么是自动拆装箱？
+拆装箱的原因如下
+    1. 集合框架的需要: 集合类只能存储对象
+    2. 类型安全: 使用包装类型可以利用泛型提供的安全类型, 避免在类型转换的时候出现异常
+    3. 方法参数: 某些方法参数需要接收对象作为参数, 拆装箱可以将基本数据类型传递给这些方法
+    4. 对象特性: 包装类提供了常用的方法给, 使得在使用的时候更加灵活
+缺点:
+    每次拆装箱都会涉及对象上的创建和销毁
+
 java 中将基本数据类型和对象之间转换的过程, 目的是将基本类型和对象的转换更加方便. 
-装箱：将基本类型用它们对应的引用类型包装起来；
-拆箱：将包装类型转换为基本数据类型
+装箱：将基本类型用它们对应的引用类型包装起来 将 int 转换成 Integer
+    Integer i = 10;  //装箱
+    优点: 便于和 Java 集合框架兼容; 简化代码; 方便 API 传参
+    缺点: 性能开销, 对于频繁的装箱, 需要创建对象; 内存占用增加; 可能引发多余的对象创建
+拆箱：将包装类型转换为基本数据类型 将 Integer 转换成int
+    Integer i = 10;
+    int n = i;   //拆箱
+    优点: 简化代码; 方便进行基本运算; 
+    缺点: 空指针风险; 性能开销; 代码行为不明显
 int short byte long double float boolean char
+</code></pre>
+<h3 id="Integer相比int有什么优点"><a href="#Integer相比int有什么优点" class="headerlink" title="Integer相比int有什么优点"></a>Integer相比int有什么优点</h3><pre><code class="hljs">1. Integer 是一个类, int 是一个基础类型, 作为对象, Integer 可以用于集合类, 而 int 是不可以直接存储在这些集合中
+2. null 的支持
+3. Integer 提供了常用的方法, 例如parseInt()
+4. 自动拆箱装箱
+5. 常量池: Integer 类实现了缓存机制，对于 -128 到 127 之间的整数，Java 会缓存这些值，可以通过 Integer.valueOf() 方法快速获取，节省内存和提升性能。
+</code></pre>
+<h3 id="Integer-和-int-的区别"><a href="#Integer-和-int-的区别" class="headerlink" title="Integer 和 int 的区别"></a>Integer 和 int 的区别</h3><pre><code class="hljs">1. int 是基本类型, Integer 是引用类型, int 不需要实例化就可以使用, Integer 作为引用类型需要实例化对象来进行引用
+2. 拆装箱: 
+    拆箱: 将包装类型转换成基本类型
+    装箱: 将基本类型转换成包装类型
+3. 空指针异常:  int 变量赋值为0, 而 Integer 需要通过实例化对象来进行赋值, 对一个未初始化对象的 Integer 进行操作, 会有NPE 的问题
+</code></pre>
+<h3 id="多态的体现"><a href="#多态的体现" class="headerlink" title="多态的体现"></a>多态的体现</h3><pre><code class="hljs">1. 方法重载
+2. 方法重写
+3. 接口与实现
+4. 向上转型和向下转型
+    4.1. 向上转型: 使用父类类型的引用指向子类对象, 运行时采用不同的子类来实现
+    4.2. 向下转型: 将父类引用转回其子类类型, 使用前需要确认, 避免类型转换错误
+多态解决的问题: 提高代码的扩展性和复用性
+</code></pre>
+<h3 id="设计原则"><a href="#设计原则" class="headerlink" title="设计原则"></a>设计原则</h3><pre><code class="hljs">1. 单一原则: 一个类只应该负责一项职责
+2. 开放封闭原则: 外聚内偶, 模块外部高聚合, 外部内部地耦合
+3. 里试替换原则: 子类可以替换父类的所有对象
+4. 接口隔离原则: 通过接口抽象来实现底层和高层模块之间的解耦
+5. 依赖倒置原则: 抽象不应该依赖细节, 细节应该依赖抽象. 一个公司有部门类, 应该考虑合成/聚合的关系
+6. 最少知识原则: 一个对象对于其他对象的了解应该尽可能的少
+</code></pre>
+<h3 id="抽象类和普通类的区别"><a href="#抽象类和普通类的区别" class="headerlink" title="抽象类和普通类的区别"></a>抽象类和普通类的区别</h3><pre><code class="hljs">1. 实例化: 普通类可以直接实例化对象, 抽象类不能被实例化, 只能被继承
+2. 方法实现:普通类中的方法可以有具体的实现, 抽象类中的方法可以有具体实现, 也可以没有
+3. 实现限制: 普通类可以被其他类继承和使用; 而抽象类一般作为基类, 被其他类继承和扩展使用
 </code></pre>
 <h3 id="变量"><a href="#变量" class="headerlink" title="变量"></a>变量</h3><pre><code class="hljs">成员变量与局部变量的区别？
     语法形式: 从语法形式上看，成员变量是属于类的，而局部变量是在代码块或方法中定义的变量或是方法的参数
@@ -922,8 +1221,15 @@ int short byte long double float boolean char
 <h3 id="浅拷贝和深拷贝"><a href="#浅拷贝和深拷贝" class="headerlink" title="浅拷贝和深拷贝"></a>浅拷贝和深拷贝</h3><pre><code class="hljs">浅拷贝：浅拷贝会在堆上创建一个新的对象（区别于引用拷贝的一点），不过，如果原对象内部的属性是引用类型的话，浅拷贝会直接复制内部对象的引用地址，也就是说拷贝对象和原对象共用同一个内部对象。
 深拷贝：深拷贝会完全复制整个对象，包括这个对象所包含的内部对象。
 </code></pre>
-<h3 id="x3D-x3D-和-equals-的区别"><a href="#x3D-x3D-和-equals-的区别" class="headerlink" title="&#x3D;&#x3D; 和 equals() 的区别"></a>&#x3D;&#x3D; 和 equals() 的区别</h3><pre><code class="hljs">1. 对于基本数据类型来说，== 比较的是值。
+<h4 id="实现深拷贝的方式"><a href="#实现深拷贝的方式" class="headerlink" title="实现深拷贝的方式"></a>实现深拷贝的方式</h4><pre><code class="hljs">1. 实现 Cloneable 接口并重写 Clone 方法
+2. 使用序列化和反序列化
+3. 手动递归复制
+</code></pre>
+<h3 id="x3D-x3D-和-equals-的区别-hashCode"><a href="#x3D-x3D-和-equals-的区别-hashCode" class="headerlink" title="&#x3D;&#x3D; 和 equals() 的区别, hashCode"></a>&#x3D;&#x3D; 和 equals() 的区别, hashCode</h3><pre><code class="hljs">1. 对于基本数据类型来说，== 比较的是值。
 2. 对于引用数据类型来说，== 比较的是对象的内存地址。
+3. equals 是属于内容的比较
+4. hashCode 是对象的哈希值
+5. 重写equals 的时候, 通常也要重写hashCode
 </code></pre>
 <h2 id="string"><a href="#string" class="headerlink" title="string"></a>string</h2><h3 id="为什么是不可变的"><a href="#为什么是不可变的" class="headerlink" title="为什么是不可变的"></a>为什么是不可变的</h3><pre><code class="hljs">1. 保存字符串的数组是被final 修饰, 并且是私有的, 并且string  没有提供修改这个字符串的方法
 2. String 类被final 修饰 导致不能被继承
@@ -969,6 +1275,19 @@ strinbgBuilder: 适用于单线程操作字符串缓冲区下操作大量数据
     3. TargetObject o = new TargetObject();
             Class alunbarClass2 = o.getClass();
     4. ClassLoader.getSystemClassLoader().loadClass(&quot;cn.javaguide.TargetObject&quot;);
+使用场景:
+1. 加载数据库驱动
+2. spring 通过配置文件加载各种各样的bean
+    Spring 通过配置文件加载bean 过程
+        2.1. 将XML 或者是配置文件的内容加载到内存中
+        2.2. 解析XML 或者是配置文件, 得到对应实体类的字节码字符串以及相关属性的内容
+        2.3. 使用反射机制, 根据字符串获得某个类的Class 实例
+        2.4. 动态配置实例的属性
+</code></pre>
+<h3 id="反射特性"><a href="#反射特性" class="headerlink" title="反射特性"></a>反射特性</h3><pre><code class="hljs">1. 允许运行时获取类的完整结构信息
+2. 动态创建对象: 可以使用反射 API 进行创建实例,  Class 类的 newInstance() 或者 Constructor 的 newInstance
+3. 动态方法调用: 通过 Method 类的 invoke()方法进行动态调用对象的方法, 包含private 方法
+4. 访问和修改字段值: 可以通过 Field 去修改对象的值
 </code></pre>
 <h3 id="反射的操作"><a href="#反射的操作" class="headerlink" title="反射的操作"></a>反射的操作</h3><pre><code class="hljs">创建一个我们要使用反射操作的类 TargetObject
 使用反射操作这个类的方法以及参数
@@ -1049,6 +1368,68 @@ ExtensionLoader 原理
 <h2 id="序列化"><a href="#序列化" class="headerlink" title="序列化"></a>序列化</h2><pre><code class="hljs">序列化: 将数据结构或对象转换成可以存储或者是传输的形式, 通常为二进制的字节流
 反序列化: 将在序列化过程中所生成的数据转换为原始数据结构或者对象的过程
 </code></pre>
+<h3 id="将对象转换成二进制流"><a href="#将对象转换成二进制流" class="headerlink" title="将对象转换成二进制流"></a>将对象转换成二进制流</h3><pre><code class="hljs">1. 让类实现 Serializable 接口
+2. 创建输出流, 并写入对象
+3. 创建输入流, 并读取对象
+</code></pre>
+<h3 id="怎么样才可以实现序列化"><a href="#怎么样才可以实现序列化" class="headerlink" title="怎么样才可以实现序列化"></a>怎么样才可以实现序列化</h3><pre><code class="hljs">1. 对象实现java.io.Serializable 接口
+2. 定义serialVersionUID
+3. 属性的可序列化, 对于不想要进行序列化的属性, 可以用 transient 修饰
+4. 对于嵌套对象, 嵌套对象也要实现 Serializable 接口
+5. 最好使用无参构造器
+</code></pre>
+<h3 id="Serializable-接口的作用是什么"><a href="#Serializable-接口的作用是什么" class="headerlink" title="Serializable 接口的作用是什么"></a>Serializable 接口的作用是什么</h3><h4 id="serialVersionUID-作用"><a href="#serialVersionUID-作用" class="headerlink" title="serialVersionUID 作用"></a>serialVersionUID 作用</h4><pre><code class="hljs">1. 版本控制: 用于表示类的版本, 进行序列化的时候, 会将类的serialVersionUID 写入到序列化数据中, 当对象被反序列化的时候, JVM 会检察该类的serialVersionUID 值是否和序列化中的值一致, 如果不一致则抛出 InvalidClassException 异常, 表示版本不兼容
+2. 防止反序列化错误: 类的结构发生了变化后, 使用 serialVersionUID 可以确保反序列化的安全性, 如果不使用 serialVersionUID 的话, JVM 会根据类的结构自动生成一个版本号, 可能导致类定义更改后无法反序列化为正确的对象
+3. 增强可维护性: 通过显示定义 serialVersionUID , 开发者可以清晰的管理类的版本的变化, 避免因为无意间更改了结构导致序列化和反序列化的不匹配
+</code></pre>
+<h4 id="工作原理"><a href="#工作原理" class="headerlink" title="工作原理"></a>工作原理</h4><pre><code class="hljs">1. Serializable 是一个标记接口,  告诉JVM 和 序列化机制, 某个类的对象可以被序列化, 实现此接口的类被视为可序列化对象
+2. 当java 序列化的时候, 检测到了 Serializable 接口, 会自动调用对象的序列化逻辑, 
+    2.1 将对象的非 non-transient 和 可序列化字段的值写入到输出流中, 生成字节流
+    2.2 对于嵌套对象, 只有实现了 Serializable 才可以被序列化
+3. 反序列化, JVM 将字节流反序列化成对象, 并重新构建状态
+</code></pre>
+<h4 id="作用"><a href="#作用" class="headerlink" title="作用"></a>作用</h4><pre><code class="hljs">1. 对象持久化: 实现 Serializable 的对象可以方便的保存到文件或者数据库中
+2. 网络传输: 可以通过序列化将对象进行传输, 实现远程调用和数据传输
+3. 对象复制: 序列化和反序列化可以实现对象深拷贝, 创建完整的对象副本, 而不是对象引用
+4. 状态保存和恢复: 可以在程序运行时保存对象
+</code></pre>
+<h3 id="序列化框架"><a href="#序列化框架" class="headerlink" title="序列化框架"></a>序列化框架</h3><pre><code class="hljs">1. JSON: 
+    适合Web开发，特别是需要与前端进行数据交换的场景，尽管在性能上不如二进制序列化框架，但其易用性和广泛的语言支持使其非常流行。
+    优点: 方便调试, 支持的语言广泛
+    缺点: 性能低, 对比二进制格式, 序列化和反序列化慢,数据体积比较大
+2. Protobuf: 适合需要高效、跨语言通信和数据存储的场景，特别是在需要数据结构化的分布式系统和微服务架构中非常有用。
+    优点: 性能强, 序列化和反序列化快; 数据体积小, 适合网络传输; 支持版本控制, 可以在不影响旧客户端的情况下向数据结构添加新的字段
+    缺点: 格式相比较于JSON, 不易理解; 需要编译步骤来生成特定的代码
+3. Thrift: 支持跨语言的
+    优点: 多语言, 适合不同变成语言之间的通信; 支持多种传输协议和序列化格式, 灵活性高;
+    缺点: 配置和使用比较复杂; 需要学习Thrift 的IDL(接口定义语言)
+4. Kryo: 专注于Java生态系统，提供高效的二进制序列化，适用于高性能计算和需要优化网络传输的应用。
+    优点: 性能高, 序列化和反序列化快; 支持自定义的序列化, 灵活性高; 生成字节数组体积小, 适合网络传输
+    缺点: 主要针对JAVA, 其他语言支持少; 在处理复杂对象, 需要额外的配置
+5. Hessian: 轻量级的二进制序列化协议，适用于 Java 和其他语言的跨平台通信
+    优点: 轻量级, 适合高效的网络传输; 支持多语言, 易于集成; 适合简单的数据交换, 不需要复杂的配置
+    缺点: 性能对比ProtoBuf 和 Kryo 差一点; 复杂对象不如其他框架灵活
+</code></pre>
+<h3 id="duubo-进行序列化和反序列化过程"><a href="#duubo-进行序列化和反序列化过程" class="headerlink" title="duubo 进行序列化和反序列化过程"></a>duubo 进行序列化和反序列化过程</h3><h4 id="序列化过程"><a href="#序列化过程" class="headerlink" title="序列化过程"></a>序列化过程</h4><pre><code class="hljs">1. 调用过程
+    1.1. 接口定义: 首先定义服务接口和数据结构
+    1.2. 远程调用: 客户端在调用远程服务的时候, 会将请求参数序列化成字节数组
+2. 序列化实现
+    2.1. dubbo 默认使用 Hessian 序列化, 序列化通常在 Invoker 类中进行, 具体步骤如下:
+        2.1.1. 客户端创建 Invocation 对象, 包含方法名称, 参数信息等
+        2.1.2. 通过 Serializer 接口的将实现类将 Invocation 对象序列化成字节数组
+        byte[] requestData = serializer.serialize(invocation);
+</code></pre>
+<h4 id="反序列化过程"><a href="#反序列化过程" class="headerlink" title="反序列化过程"></a>反序列化过程</h4><pre><code class="hljs">1. 调用过程
+    1.1. 服务端接收请求, 服务端收到客户端发送过来的字节数组
+    1.2. 将字节数组反序列化为请求参数, 并调用相应的方法
+2. 反序列化过程
+    2.1. dubbo 使用与序列化相同的框架来进行反序列化
+    2.2. 在服务端, 接收到的字节数组会被反序列化为对应的 Invocation 对象, 然后进行方法调用
+    Invocation invocation = serializer.deserialize(requestData);
+    Object result = service.invoke(invocation);
+序列化配置方式
+&lt;dubbo:protocol name=&quot;dubbo&quot; port=&quot;20880&quot; serialize=&quot;hessian&quot;/&gt;
+</code></pre>
 <h3 id="java-自身序列化问题"><a href="#java-自身序列化问题" class="headerlink" title="java 自身序列化问题"></a>java 自身序列化问题</h3><pre><code class="hljs">1. 不支持跨语言调用
 2. 性能差
 </code></pre>
@@ -1069,13 +1450,61 @@ ExtensionLoader 原理
     7.1 清理资源: 对象生命周期结束时, 确保资源可以正确被释放
     7.2. 默认实现
 </code></pre>
+<h3 id="SLEEP-和-WAIT-的区别"><a href="#SLEEP-和-WAIT-的区别" class="headerlink" title="SLEEP  和 WAIT  的区别"></a>SLEEP  和 WAIT  的区别</h3><pre><code class="hljs">1. sleep 没有释放锁, wait 释放锁
+2. wait 用于线程交互, sleep 用于暂停
+3. wait() 方法被调用后, 线程不会自动苏醒, 需要用其他线程调用notify() 或者是 notifyAll() 方法, sleep 执行完成后, 线程会自动苏醒, 或者可以使用wait(timeOut) 可以让线程苏醒
+4. sleep 时 Thread  类中的静态方法, wait 是object 本地方法
+    4.1 wait 是让对象锁线程实现等待, 会自动释放当前线程占有的对象, 每个对象拥有对象锁, 既然要释放当前线程占有的对象锁进入waitting 状态, 因此需要操作的是Object 对象
+    4.2 sleep 是让当前线程暂停, 而不是对象, 不涉及到对象类上
+</code></pre>
 <h2 id="final-static-volatile"><a href="#final-static-volatile" class="headerlink" title="final static volatile"></a>final static volatile</h2><h3 id="final"><a href="#final" class="headerlink" title="final"></a>final</h3><pre><code class="hljs">1. 修饰的类不能被继承, 类中的所有成员方法都会被隐式的制定为final 方法
 2. 修饰的方法不能被重写
 3. 修饰的变量是常量
+4. 不可以保证并发安全的, final 变量引用的对象是可变的, 例如 数组 或者集合
 </code></pre>
 <h3 id="static"><a href="#static" class="headerlink" title="static"></a>static</h3><pre><code class="hljs">1. 修饰成员变量和成员方法, 被static 修饰的成员变量 属于类, 不属于单个方法, 被类中所有对象共享. 
 2. 修饰静态代码块. 静态代码块在非静态代码块之前执行
 3. 静态内部类.
+    静态内部类和非静态内部类的区别:
+</code></pre>
+<table>
+<thead>
+<tr>
+<th>区别</th>
+<th>非静态内部类</th>
+<th>静态内部类</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>是否依赖外部类的实例</td>
+<td>依赖外部类的实例</td>
+<td>不依赖外部类的实例</td>
+</tr>
+<tr>
+<td>访问外部类的成员</td>
+<td>可以访问外部类的实例变量和方法</td>
+<td>只能访问外部类的静态成员</td>
+</tr>
+<tr>
+<td>静态成员定义</td>
+<td>不能定义静态成员</td>
+<td>可以定义静态成员</td>
+</tr>
+<tr>
+<td>实例化时机</td>
+<td>外部类实例化后才能实例化</td>
+<td>可以独立实例化</td>
+</tr>
+<tr>
+<td>访问外部类的私有成员</td>
+<td>可以访问外部类的私有成员</td>
+<td>不能直接访问外部类的私有成员（需要通过实例化外部类来访问）</td>
+</tr>
+</tbody></table>
+<h3 id="子类父类加载顺序"><a href="#子类父类加载顺序" class="headerlink" title="子类父类加载顺序"></a>子类父类加载顺序</h3><pre><code class="hljs">1. 父类静态成员变量, 静态代码块
+2. 子类静态成员变量, 静态代码块
+3. 父类构造方法
+4. 子类构造方法
 </code></pre>
 <h3 id="volatile"><a href="#volatile" class="headerlink" title="volatile"></a>volatile</h3><pre><code class="hljs">1. 保证可见性
 2. 保证有序性
@@ -1120,7 +1549,7 @@ run 是 runnable 接口中的一个方法, 包含了线程中要执行的代码,
     调用了阻塞类型的系统中断，比如请求 IO，线程被阻塞。
     被终止或结束运行
 </code></pre>
-<h5 id="SLEEP-和-WAIT-的区别"><a href="#SLEEP-和-WAIT-的区别" class="headerlink" title="SLEEP  和 WAIT  的区别"></a>SLEEP  和 WAIT  的区别</h5><pre><code class="hljs">1. sleep 没有释放锁, wait 释放锁
+<h5 id="SLEEP-和-WAIT-的区别-1"><a href="#SLEEP-和-WAIT-的区别-1" class="headerlink" title="SLEEP  和 WAIT  的区别"></a>SLEEP  和 WAIT  的区别</h5><pre><code class="hljs">1. sleep 没有释放锁, wait 释放锁
 2. wait 用于线程交互, sleep 用于暂停
 3. wait() 方法被调用后, 线程不会自动苏醒, 需要用其他线程调用notify() 或者是 notifyAll() 方法, sleep 执行完成后, 线程会自动苏醒, 或者可以使用wait(timeOut) 可以让线程苏醒
 4. sleep 时 Thread  类中的静态方法, wait 是object 本地方法
@@ -1177,7 +1606,11 @@ submit()
 </code></pre>
 <h3 id="什么是线程不安全"><a href="#什么是线程不安全" class="headerlink" title="什么是线程不安全"></a>什么是线程不安全</h3><pre><code class="hljs">1. 多线程下面对同一份数据获取, 获取到的数据混乱, 错误或者是丢失
 </code></pre>
-<h2 id="锁"><a href="#锁" class="headerlink" title="锁"></a>锁</h2><h3 id="乐观锁、悲观锁"><a href="#乐观锁、悲观锁" class="headerlink" title="乐观锁、悲观锁"></a>乐观锁、悲观锁</h3><pre><code class="hljs">1. 悲观锁: 假设并发访问冲突会导致数据不一致, 在使用悲观锁的情况下, 线程访问共享资源会事先获得锁, 确保可以独占的进行, 而其他线程则会被阻塞, 悲观锁适用于数据修改比较频繁, 并发冲突比较高的场景下,
+<h3 id="线程停止运行"><a href="#线程停止运行" class="headerlink" title="线程停止运行"></a>线程停止运行</h3><pre><code class="hljs">1. 线程调用 interrupt(), 在线程的 run 方法里面去判断 interrupted 状态
+2. 暴力stop
+3. run 里面 通过 return 返回
+</code></pre>
+<h2 id="锁-1"><a href="#锁-1" class="headerlink" title="锁"></a>锁</h2><h3 id="乐观锁、悲观锁"><a href="#乐观锁、悲观锁" class="headerlink" title="乐观锁、悲观锁"></a>乐观锁、悲观锁</h3><pre><code class="hljs">1. 悲观锁: 假设并发访问冲突会导致数据不一致, 在使用悲观锁的情况下, 线程访问共享资源会事先获得锁, 确保可以独占的进行, 而其他线程则会被阻塞, 悲观锁适用于数据修改比较频繁, 并发冲突比较高的场景下,
 2. 乐观锁: 假设并发冲突较少发生, 多个线程可以同时进行读写操作而不去加锁, 乐观锁的实现是通过版本号或者时间戳来判断数据是否被进行了修改, 如果一个线程要更新数据, 会先获取当前版本号, 如果当前版本号发生了变化, 则说明其他线程进行了修改, 如果当前版本号没有发生变化, 说明可以进行修改,适用于读多写少的情况, 冲突比较少的情况
 
 悲观锁通常多用于写比较多的情况（多写场景，竞争激烈），这样可以避免频繁失败和重试影响性能，悲观锁的开销是固定的。不过，如果乐观锁解决了频繁失败和重试这个问题的话（比如LongAdder），也是可以考虑使用乐观锁的，要视实际情况而定。
@@ -1244,6 +1677,44 @@ lock 是基于aqs 来进行实现的
     默认是非公平锁, 非公平锁降低了线程的上下文切换, 具有更高的吞吐量, 降低了锁竞争导致的延迟, 适用于短暂的任务,并发高的情况下
     公平锁场景: 对资源的执行顺序具有严格要求的, 业务逻辑处理要求具有公平性的
 </code></pre>
+<table>
+<thead>
+<tr>
+<th>区别</th>
+<th>synchronized</th>
+<th>ReentrantLock</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>用法不同</strong></td>
+<td>可修饰普通方法、静态方法和代码块</td>
+<td>只能用在代码块上</td>
+</tr>
+<tr>
+<td><strong>获取锁和释放锁方式不同</strong></td>
+<td>自动加锁和释放锁，进入代码块自动加锁，离开自动释放</td>
+<td>需手动加锁和释放锁</td>
+</tr>
+<tr>
+<td><strong>锁类型不同</strong></td>
+<td>非公平锁</td>
+<td>可选择公平锁或非公平锁</td>
+</tr>
+<tr>
+<td><strong>响应中断不同</strong></td>
+<td>不能响应中断</td>
+<td>可以响应中断，避免死锁</td>
+</tr>
+<tr>
+<td><strong>底层实现不同</strong></td>
+<td>通过 JVM 层面的监视器实现</td>
+<td>基于 AQS（AbstractQueuedSynchronizer）实现</td>
+</tr>
+</tbody></table>
+<h4 id="非公平锁性能更好原因"><a href="#非公平锁性能更好原因" class="headerlink" title="非公平锁性能更好原因"></a>非公平锁性能更好原因</h4><pre><code class="hljs">1. 减少了线程的切换, 非公平锁允许插队, 当一个线程释放锁后, 如果有其他线程请求立刻可以获取锁
+2. 更高的资源利用率: 非公平锁不要求线程排队, 新请求的线程可以立马获得锁, 减少了线程等待的时间
+3. 更少的上下文切换: 公平锁需要进行线程排队, 增加了上下文切换的次数, 非公平锁更加灵活, 避免了过多的上下文切换
+</code></pre>
 <h3 id="死锁判定"><a href="#死锁判定" class="headerlink" title="死锁判定"></a>死锁判定</h3><pre><code class="hljs">1. 互斥条件: 资源在某个时刻只能由一个线程占用, 如果一个线程占用了一个资源, 其他线程不能访问该资源
 2. 持有并等待: 线程已经持有了一个资源, 但又请求新的资源, 并且由于新资源被其他线程占用而陷入等待, 同时不会释放自己所占用的资源
 3. 不剥夺条件: 资源不能强制从持有他的线程中剥夺, 只有持有该资源的线程在完成任务后主动释放
@@ -1296,7 +1767,66 @@ fastThreadLocal 通过InternaleThreadLocal 来避免了内存泄漏, 通过数�
 happens before 规则
     对于一个volatile 变量写的操作happens-before 任意线程对该变量的读操作, 确保了volatile的可见性
 </code></pre>
-<h2 id="collection"><a href="#collection" class="headerlink" title="collection"></a>collection</h2><h3 id="hashMap"><a href="#hashMap" class="headerlink" title="hashMap"></a>hashMap</h3><h4 id="hashMap-默认是0-75"><a href="#hashMap-默认是0-75" class="headerlink" title="hashMap 默认是0.75"></a>hashMap 默认是0.75</h4><pre><code class="hljs">扩容因子: 
+<h4 id="指令重排序"><a href="#指令重排序" class="headerlink" title="指令重排序"></a>指令重排序</h4><pre><code class="hljs">原理: 执行程序的时候, 为了提高性能, 编译器和处理器会对指令进行重排序
+</code></pre>
+<h2 id="collection"><a href="#collection" class="headerlink" title="collection"></a>collection</h2><h3 id="list"><a href="#list" class="headerlink" title="list"></a>list</h3><h4 id="Arraylist-与-LinkedList-区别"><a href="#Arraylist-与-LinkedList-区别" class="headerlink" title="Arraylist 与 LinkedList 区别?"></a>Arraylist 与 LinkedList 区别?</h4><pre><code class="hljs">是否保证线程安全： ArrayList 和 LinkedList 都是不同步的，也就是不保证线程安全；
+底层数据结构： ArrayList 底层使用的是 Object 数组；LinkedList 底层使用的是 双向链表 数据结构（JDK1.6 之前为循环链表，JDK1.7 取消了循环。注意双向链表和双向循环链表的区别，下面有介绍到！）
+插入和删除是否受元素位置的影响：
+ArrayList 采用数组存储，所以插入和删除元素的时间复杂度受元素位置的影响。 比如：执行add(E e)方法的时候， ArrayList 会默认在将指定的元素追加到此列表的末尾，这种情况时间复杂度就是 O(1)。但是如果要在指定位置 i 插入和删除元素的话（add(int index, E element)），时间复杂度就为 O(n)。因为在进行上述操作的时候集合中第 i 和第 i 个元素之后的(n-i)个元素都要执行向后位/向前移一位的操作。
+LinkedList 采用链表存储，所以在头尾插入或者删除元素不受元素位置的影响（add(E e)、addFirst(E e)、addLast(E e)、removeFirst()、 removeLast()），时间复杂度为 O(1)，如果是要在指定位置 i 插入和删除元素的话（add(int index, E element)，remove(Object o),remove(int index)）， 时间复杂度为 O(n) ，因为需要先移动到指定位置再插入和删除。
+是否支持快速随机访问： LinkedList 不支持高效的随机元素访问，而 ArrayList（实现了 RandomAccess 接口） 支持。快速随机访问就是通过元素的序号快速获取元素对象(对应于get(int index)方法)。
+内存空间占用： ArrayList 的空间浪费主要体现在在 list 列表的结尾会预留一定的容量空间，而 LinkedList 的空间花费则体现在它的每一个元素都需要消耗比 ArrayList 更多的空间（因为要存放直接后继和直接前驱以及数据）。
+</code></pre>
+<h4 id="扩容机制"><a href="#扩容机制" class="headerlink" title="扩容机制"></a>扩容机制</h4><pre><code class="hljs">1. 初始容量, 默认的初始容量是10
+2. 元素添加, 添加元素的时候, 会先检察当前数组的大小, 如果数组未满, 新的元素需要添加到数组末尾
+3. 当尝试添加一个元素的时候, 发现数组满了会进行扩容, 扩容大小为原来的1.5倍
+4. 进行扩容
+    4.1. 创建一个新的数组, 新的容量是原来数组的1.5倍, 扩容方式为: old + old &gt;&gt; 1;
+    4.2. 将旧数组中的元素复制到新的数组中
+</code></pre>
+<h4 id="ArrayList是线程不安全的-具体表现有哪些"><a href="#ArrayList是线程不安全的-具体表现有哪些" class="headerlink" title="ArrayList是线程不安全的, 具体表现有哪些"></a>ArrayList是线程不安全的, 具体表现有哪些</h4><pre><code class="hljs">1. 元素的插入和删除, 数据不一致。
+    多线程进行add 的时候, 都认为自己可以进行插入元素, 实际上插入可能导致一个元素被覆盖或者遗漏
+    多线程同时去add 数据的时候, 例如两个线程同时往一个List 去add 10000 条数据, 最终的数据不一定是20000 条
+2. 扩容导致的数据丢失或者异常
+    多线程下扩容可能导致数据丢失或者是ArrayIndexOutOfBoundException
+    原因:
+        覆盖问题: 多线程同时扩容, 可能导致一个线程的扩容结果覆盖另外一个线程的结果
+        数组越界异常: 一个线程扩容时, 另外一个线程在旧数组上插入元素, 会导致越界异常
+3. get() 和 size() 的组合使用, 数据不一致或者是 IndexOutBoundsException
+    现象: 多线程在迭代, 访问元素或者是检察大小的时候, 可能得到错误的数据 或者抛出IndexOutBoundsException
+    原因: 当一个线程执行get(), set(), 或者是size(), 另外一个线程修改了数据结构, 例如remove(), 这样可能get() 方法可能会访问不存在的元素
+4. 迭代过程中出现 ConcurrentModificationException
+    现象: 在遍历的时候 同时进行删除操作会发生ConcurrentModificationException
+    原因: ArrayList 使用快速失败的机制, 如果在迭代过程中发现集合被修改, 就会抛出ConcurrentModificationException
+</code></pre>
+<h3 id="hashMap"><a href="#hashMap" class="headerlink" title="hashMap"></a>hashMap</h3><h4 id="扩容"><a href="#扩容" class="headerlink" title="扩容"></a>扩容</h4><pre><code class="hljs">    默认初始大小是16, 扩容的负载因子是0.75, 阈值是 16 * 0。75 = 12
+1. 当 hashMap 中元素超过了总容量的0.75 的时候, 会进行扩容
+2. 容量会变成原来的两倍
+3. 新建一个哈希桶的数组, 将原来的元素重新分布到新的数组中去
+4. 重新分布的时候, 会根据哈希值计算每个元素的位置, 避免分布不均匀.
+5. 当桶中的元素超过8的时候, 会将链表转换成红黑树
+</code></pre>
+<h4 id="转换成红黑树"><a href="#转换成红黑树" class="headerlink" title="转换成红黑树"></a>转换成红黑树</h4><pre><code class="hljs">1. 数组大小超过64
+2. bucket 中元素超过8个
+</code></pre>
+<h4 id="解决-hash-冲突"><a href="#解决-hash-冲突" class="headerlink" title="解决 hash 冲突"></a>解决 hash 冲突</h4><pre><code class="hljs">1. 链表法: 当发生冲突的时候, 以链表的形式存在一个桶中, 每个数组位置对应一个链表或树, 发生冲突的时候, 将冲突的元素加入到链表或者树中
+    hashMap
+        选择的原因: 
+            实现简单, 扩展性好
+            支持动态扩缩容
+2. 开放地址法
+    2.1. 线性探测法
+    2.2. 二次探测法
+    2.3. 双重散列法
+</code></pre>
+<h4 id="线程不安全-具体表现"><a href="#线程不安全-具体表现" class="headerlink" title="线程不安全, 具体表现"></a>线程不安全, 具体表现</h4><pre><code class="hljs">1. put 操作数据不一致
+    现象: 多线程进行 put 方法时, 可能会导致后面的值对前面值的覆盖, 导致数据不一致
+    原因: HashMap 的 put 操作没有同步控制, 因此多线程操作可能同时插入或者是更新相同的值, 导致值覆盖
+2. 迭代过程中出现 ConcurrentModificationException
+    现象: 在迭代 HashMap 的时候同时进行增删, 会引发 ConcurrentModificationExceotion
+    原因: HashMap 采用快速失败的机制, 在迭代的时候检测到结构被修改, 会抛出 ConcurrentModificationExceotion
+</code></pre>
+<h4 id="hashMap-默认是0-75"><a href="#hashMap-默认是0-75" class="headerlink" title="hashMap 默认是0.75"></a>hashMap 默认是0.75</h4><pre><code class="hljs">扩容因子: 
     更小的话 是更容易创建数组, 占用更大的空间, 会频繁的发生扩缩容
     更大的话降低了内存的浪费, 增加查找的插入、删除的复杂度
 0.75 是一个平衡的结果
@@ -1335,15 +1865,6 @@ happens before 规则
     3.1 通过cas 和 synchronized 来保证安全性
     3.1.1 计算hash 值
     3.1.2 如果要插入的位置是个null 节点, 则直接在该位置插入, 如果不是空节点, 则进行链表采用尾插法, 或者是红黑树插入
-</code></pre>
-<h3 id="list"><a href="#list" class="headerlink" title="list"></a>list</h3><pre><code class="hljs">    Arraylist 与 LinkedList 区别?
-是否保证线程安全： ArrayList 和 LinkedList 都是不同步的，也就是不保证线程安全；
-底层数据结构： ArrayList 底层使用的是 Object 数组；LinkedList 底层使用的是 双向链表 数据结构（JDK1.6 之前为循环链表，JDK1.7 取消了循环。注意双向链表和双向循环链表的区别，下面有介绍到！）
-插入和删除是否受元素位置的影响：
-ArrayList 采用数组存储，所以插入和删除元素的时间复杂度受元素位置的影响。 比如：执行add(E e)方法的时候， ArrayList 会默认在将指定的元素追加到此列表的末尾，这种情况时间复杂度就是 O(1)。但是如果要在指定位置 i 插入和删除元素的话（add(int index, E element)），时间复杂度就为 O(n)。因为在进行上述操作的时候集合中第 i 和第 i 个元素之后的(n-i)个元素都要执行向后位/向前移一位的操作。
-LinkedList 采用链表存储，所以在头尾插入或者删除元素不受元素位置的影响（add(E e)、addFirst(E e)、addLast(E e)、removeFirst()、 removeLast()），时间复杂度为 O(1)，如果是要在指定位置 i 插入和删除元素的话（add(int index, E element)，remove(Object o),remove(int index)）， 时间复杂度为 O(n) ，因为需要先移动到指定位置再插入和删除。
-是否支持快速随机访问： LinkedList 不支持高效的随机元素访问，而 ArrayList（实现了 RandomAccess 接口） 支持。快速随机访问就是通过元素的序号快速获取元素对象(对应于get(int index)方法)。
-内存空间占用： ArrayList 的空间浪费主要体现在在 list 列表的结尾会预留一定的容量空间，而 LinkedList 的空间花费则体现在它的每一个元素都需要消耗比 ArrayList 更多的空间（因为要存放直接后继和直接前驱以及数据）。
 </code></pre>
 <h1 id="jvm"><a href="#jvm" class="headerlink" title="jvm"></a>jvm</h1><h3 id="new-一个对象-过程是什么样子的"><a href="#new-一个对象-过程是什么样子的" class="headerlink" title="new 一个对象, 过程是什么样子的"></a>new 一个对象, 过程是什么样子的</h3><pre><code class="hljs">创建对象的过程和类加载的过程是Java程序执行的两个不同阶段。
 
@@ -1393,7 +1914,15 @@ e. 初始化：执行类的静态初始化代码块，对静态变量进行赋�
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-comment">// 在堆中创建字符串对象”ab“</span><br><span class="hljs-comment">// 将字符串对象”ab“的引用保存在字符串常量池中</span><br><span class="hljs-type">String</span> <span class="hljs-variable">aa</span> <span class="hljs-operator">=</span> <span class="hljs-string">&quot;ab&quot;</span>;<br><span class="hljs-comment">// 直接返回字符串常量池中字符串对象”ab“的引用</span><br><span class="hljs-type">String</span> <span class="hljs-variable">bb</span> <span class="hljs-operator">=</span> <span class="hljs-string">&quot;ab&quot;</span>;<br>System.out.println(aa==bb);<span class="hljs-comment">// true</span><br></code></pre></td></tr></table></figure>
 <p>HotSpot 虚拟机中字符串常量池的实现是 <code>src/hotspot/share/classfile/stringTable.cpp</code> ,<code>StringTable</code> 本质上就是一个<code>HashSet&lt;String&gt;</code> ,容量为 <code>StringTableSize</code>（可以通过 <code>-XX:StringTableSize</code> 参数来设置）。<br><strong><code>StringTable</code> 中保存的是字符串对象的引用，字符串对象的引用指向堆中的字符串对象。</strong><br>JDK1.7 之前，字符串常量池存放在永久代。JDK1.7 字符串常量池和静态变量从永久代移动了 Java 堆中。<br><strong>JDK 1.7 为什么要将字符串常量池移动到堆中？</strong><br>主要是因为永久代（方法区实现）的 GC 回收效率太低，只有在整堆收集 (Full GC)的时候才会被执行 GC。Java 程序中通常会有大量的被创建的字符串等待回收，将字符串常量池放到堆中，能够更高效及时地回收字符串内存。</p>
 <h4 id="直接内存"><a href="#直接内存" class="headerlink" title="直接内存"></a>直接内存</h4><p>本机直接内存的分配不会受到 Java 堆的限制，但是，既然是内存就会受到本机总内存大小以及处理器寻址空间的限制。</p>
-<h3 id="创建对象的过程"><a href="#创建对象的过程" class="headerlink" title="创建对象的过程"></a>创建对象的过程</h3><h4 id="类加载机制"><a href="#类加载机制" class="headerlink" title="类加载机制"></a>类加载机制</h4><pre><code class="hljs">创建对象的过程和类加载的过程是Java程序执行的两个不同阶段。
+<h3 id="方法区方法执行过程"><a href="#方法区方法执行过程" class="headerlink" title="方法区方法执行过程"></a>方法区方法执行过程</h3><pre><code class="hljs">1. 解析方法调用: 根据方法区调用找到实际的方法地址
+2. 帧栈创建: JVM 为给方法创建一个帧栈, 用于存储局部变量表、操作数栈、动态连接、方法出口等信息
+3. 执行方法: 执行方法内部的字节码指令, 可能包含局部变量表的读写, 操作数栈的操作, 跳转控制, 对象创建和方法调用等
+4. 返回处理: 方法执行完成后, 可能返回一个结果给调用者, 并清理当前的帧栈
+</code></pre>
+<h3 id="创建对象的过程"><a href="#创建对象的过程" class="headerlink" title="创建对象的过程"></a>创建对象的过程</h3><h3 id="String-s-x3D-new-“abc”-过程"><a href="#String-s-x3D-new-“abc”-过程" class="headerlink" title="String s &#x3D; new (“abc”) 过程"></a>String s &#x3D; new (“abc”) 过程</h3><pre><code class="hljs">1. 如果 &quot;abc&quot; 这个字符串常量不存在, 则创建两个对象, 分别是 abc 这个字符串常量, 
+2. 和 new String 这个实例对象. 如果&quot;abc&quot; 这个字符串常量存在, 则只会创建一个
+</code></pre>
+<h4 id="类加载机制"><a href="#类加载机制" class="headerlink" title="类加载机制"></a>类加载机制</h4><pre><code class="hljs">创建对象的过程和类加载的过程是Java程序执行的两个不同阶段。
 
 创建对象的过程：创建对象是指在程序中通过关键字&quot;new&quot;来实例化一个类，从而在内存中分配一块空间用于存储对象的实例。创建对象的过程包括以下几个步骤：
 a. 类加载：如果该类还没有被加载，首先需要进行类加载，即将类的字节码加载到内存中。
@@ -1414,6 +1943,14 @@ e. 初始化：执行类的静态初始化代码块，对静态变量进行赋�
 tomcat 要打破的原因是
 Tomcat打破双亲委派模式是因为在Web应用中，每个Web应用都是一个独立的Java应用，拥有自己的类加载器，且需要加载各自的类和依赖库。
 tomcat 的父类加载器是StandardClassLoader 会导致类冲突、破坏应用的隔离
+1. 优点:
+    1. 保证类的唯一性
+        通过委托机制, 确保了所有的加载请求都会到启动类加载器, 避免了不同类加载器重复加载相同类的情况
+    2. 保证安全性:
+        由于java 的核心库被启动类加载器加载, 而启动类加载器只加载信任的类路径中的类, 可以防止不可信的类假冒核心类, 增强了系统的安全性
+    3. 支持隔离和层次划分
+        双亲委派支持不同层次的类加载器服务于不同的类加载需求, 如应用程序类加载器加载用户代码, 扩展类加载器加载扩展框架, 启动类加载器加载核心类库,
+    4. 简化了加载流程
 </code></pre>
 <h3 id="oom-怎么排查"><a href="#oom-怎么排查" class="headerlink" title="oom 怎么排查"></a>oom 怎么排查</h3><pre><code class="hljs">1. 使用jmap 去对内存进行dump
 2. 启动的时候增加gc 日志查看
@@ -1593,7 +2130,11 @@ G1 默认是5%
 </code></pre>
 <h3 id="什么时候触发yong-GC"><a href="#什么时候触发yong-GC" class="headerlink" title="什么时候触发yong GC"></a>什么时候触发yong GC</h3><pre><code class="hljs">1. 新对象申请内存的时候, eden区发现内存不足, 则触发yong gc, 如果yong gc 后还是不足, 则直接进入老年代分配, 老年代分配也不足, 触发full gc
 </code></pre>
-<h1 id="spring"><a href="#spring" class="headerlink" title="spring"></a>spring</h1><h2 id="注解"><a href="#注解" class="headerlink" title="注解"></a>注解</h2><pre><code class="hljs">本质上是一个继承了annotation 的特殊接口
+<h1 id="spring"><a href="#spring" class="headerlink" title="spring"></a>spring</h1><h2 id="注解"><a href="#注解" class="headerlink" title="注解"></a>注解</h2><pre><code class="hljs">本质上是一个继承了annotation 的特殊接口; java 中的动态代理机制可以问任意接口生成代理, 因此, 通过继承 Annotation 接口, 可以实现具备动态代理的目标.
+</code></pre>
+<h3 id="作用域"><a href="#作用域" class="headerlink" title="作用域"></a>作用域</h3><pre><code class="hljs">1. 类级别的: 用于指定类的一些属性, 例如类的访问级别, 继承关系等
+2. 方法级别的: 用于描述方法的一些属性, 访问级别, 异常类型等
+3. 字段级别的: 用于指定字段的一些属性: 访问级别, 默认属性
 </code></pre>
 <h2 id="IOC-和-AOP"><a href="#IOC-和-AOP" class="headerlink" title="IOC 和 AOP"></a>IOC 和 AOP</h2><pre><code class="hljs">1. IOC:
   核心是将对象的创建和依赖关系的管理交给 Spring 容器来处理, 开发者无需手动去创建或者管理对象, spring 的IOC 通过DI (依赖注入) 来实现
@@ -1728,8 +2269,27 @@ MANDATORY：必须在已有事务中运行，如果没有事务则抛出异常
 4. ApplicationContextAware 获取bean 对象
 5. ApplicationListener 监听事件的
 6. BeanPostProcessor bean 初始化前后做一些事情
-
-    
+</code></pre>
+<h2 id="spring-的扩展点"><a href="#spring-的扩展点" class="headerlink" title="spring 的扩展点"></a>spring 的扩展点</h2><pre><code class="hljs">1. BeanFactoryPostProcessor：允许在Spring容器实例化bean之前修改bean的定义。常用于修改bean属性或改变bean的作用域 
+2. BeanPostProcessor：可以在bean实例化、配置以及初始化之后对其进行额外处理。常用于代理bean、修改bean属性等 
+3. PropertySource：用于定义不同的属性源，如文件、数据库等，以便在Spring应用中使用
+4. ImportSelector和ImportBeanDefinitionRegistrar：用于根据条件动态注册bean定义，实现配置类的模块化
+5. Spring MVC中的HandlerInterceptor：用于拦截处理请求，可以在请求处理前、处理中和处理后执行特定逻辑
+6. Spring MVC中的ControllerAdvice：用于全局处理控制器的异常、数据绑定和数据校验
+7. Spring Boot的自动配置：通过创建自定义的自动配置类，可以实现对框架和第三方库的自动配置
+8. 自定义注解：创建自定义注解，用于实现特定功能或约定，如权限控制、日志记录等
+</code></pre>
+<h2 id="如何理解spring-boot-约定大于配置"><a href="#如何理解spring-boot-约定大于配置" class="headerlink" title="如何理解spring boot 约定大于配置"></a>如何理解spring boot 约定大于配置</h2><pre><code class="hljs">1. 自动化配置: spring boot 	提供了大量的自动化配置, 通过分析项目的依赖和环境, 自动配置应用程序的行为
+2. 默认配置: spring boot 在没有明确的配置情况下, 会使用默认的配置来初始化应用程序
+3. 约定优于配置: 通过约定好的方式来提供默认行为, 减少开发者做出的考虑
+</code></pre>
+<h2 id="spring-boot-的自动装配原理"><a href="#spring-boot-的自动装配原理" class="headerlink" title="spring boot 的自动装配原理"></a>spring boot 的自动装配原理</h2><pre><code class="hljs">自动装配指的是通过注解或者一些简单的配置可以在springBoot 的帮助下开启和配置各种功能
+</code></pre>
+<h2 id="常用注解"><a href="#常用注解" class="headerlink" title="常用注解"></a>常用注解</h2><pre><code class="hljs">1. AutoWired
+2. Resource
+3. Component
+4. Service
+5. Configuration
 </code></pre>
 <h2 id="Autowired和-Resource"><a href="#Autowired和-Resource" class="headerlink" title="@Autowired和@Resource"></a>@Autowired和@Resource</h2><pre><code class="hljs">相同点: 
     都可以作为属性注入修饰, 在接口只有单一实现类的时候, 两个注解的修饰情况相同
@@ -2137,17 +2697,56 @@ ByteBuf 好处:
             写后去更新缓存
         极端情况下:Write-Behind
 </code></pre>
-<!-- 
-## 为什么需要将网络容器从tomcat 换成Netty
-    1. 实现机制上:
-         serverlet 通过 startAsync 本质上依赖线程池去进行处理, netty天生为异步非阻塞的, 使用事件驱动的方式, 每个EventLoop 可以处理多个IO操作事件,可以极大的降低了线程数和线程切换的开销
-    2. 线程模型:
-        serverlet 3.0异步依赖容器的线程管理, 在并发增加的情况下可能会导致线程的耗尽; netty 中使用少量的worker 线程来处理事件, 减少了上下文的切换, 避免了传统线程池模型的问题.
-    3. IO 模型
-        serverlet 3.0 虽然支持异步处理, 但是底层依赖于阻塞IO模型; netty 使用java NIO 的非阻塞式, 从底层上确保了高并发表现的性能
-    4. 并发高的情况下 tomcat 由于采用的是BIO 加上异步线程的方式去处理的, 会有大量的线程产生, CPU 内存 文件描述符都会发生资源竞争，netty 是通过NIO 方式去做的，使用少量的worker 线程就可以去处理
- -->
-<h1 id="架构设计"><a href="#架构设计" class="headerlink" title="架构设计"></a>架构设计</h1><h2 id="MESI-协议"><a href="#MESI-协议" class="headerlink" title="MESI 协议:"></a>MESI 协议:</h2><pre><code class="hljs">    多核处理器的缓存一致性协议, 用来保证多个处理器之间数据一致性
+<h1 id="架构设计"><a href="#架构设计" class="headerlink" title="架构设计"></a>架构设计</h1><h2 id="分布式解决方案"><a href="#分布式解决方案" class="headerlink" title="分布式解决方案"></a>分布式解决方案</h2><h3 id="2PC-两阶段提交"><a href="#2PC-两阶段提交" class="headerlink" title="2PC( 两阶段提交)"></a>2PC( 两阶段提交)</h3><pre><code class="hljs">1. 分为准备阶段和提交阶段, 准备阶段协调者问各个事物的参与者是否准备好了执行事物, 提交阶段协调者根据反馈情况通知各个参与者进行commit 或者 rollback
+优点: 简单, 开发容易
+缺点: 对资源进行了长时间锁定, 并发度低
+场景: 两个银行进行转账
+</code></pre>
+<h3 id="saga-方案"><a href="#saga-方案" class="headerlink" title="saga 方案"></a>saga 方案</h3><pre><code class="hljs">1. 将长事物拆分成多个独立的局部事物, 并确保在任何一个局部事物失败时, 可以通过补偿来撤销之前已经成功的事物, 从而保证整个系统的一致性
+优点: 
+    1. 通过补偿机制来保证数据的一致性, 适用于长事物或者是复杂流程的业务
+    2. 高可用, 每个服务都是独立的, 
+    3. 容易实现
+缺点:
+    1. 复杂
+    2. 无法保证强一致, 只能保证最终一致
+场景:
+    1. 长事物处理
+    2. 电商交易: 例如电商平台中的订单创建 + 库存扣件 + 支付处理 可以通过saga 方案进行处理
+</code></pre>
+<h3 id="TCC"><a href="#TCC" class="headerlink" title="TCC"></a>TCC</h3><pre><code class="hljs">将大的事物分成三个阶段: 
+Try(尝试): 此阶段各个参与方会执行本地操作并预留资源, 但是不会提交事物, 每个参与方在本地记录下操作所需的信息, 用于后续的确认和取消
+Confirm（确认): 当所有的参与者都操作成功后, 协调者会通知所有的参与者执行Confirm 操作, 提交之前预留的数据, 意味着所有的操作都被确认, 并最终一致
+Cancel（取消）: 如果Try 阶段有一个参与者参与失败,  协调者会通知所有参与者执行cancel 操作, 撤销之前预留的操作, 保证系统的一致性
+优点:
+    1. 数据一致性: TCC 方案提供了一个较为强的保证机制, 确保所有参与者之间的一致性
+    2. 精细控制: 各个参与者可以在Try 阶段预留资源 并根据实际情况选择确认或者取消, 提高了对资源的可控性
+    3. 性能强: 因为允许参与者在本地预留资源, 因此性能更好
+缺点:
+    1. 实现复杂
+    2. 资源锁定: 在Try 阶段, 参与者可能会预留资源, 会导致资源的长时间占用, 影响系统的性能和可用性
+    3. 不是所有的场景都可以进行取消, 有些操作是不可逆的, 例如转账
+    4. 补偿逻辑: 如果cancel 操作未能完全撤销, 可能会导致系统的不一致
+场景: 
+    1. 需要强一致的场景
+    2. 资源预留的情况
+</code></pre>
+<h3 id="3PC-三阶段提交"><a href="#3PC-三阶段提交" class="headerlink" title="3PC(三阶段提交)"></a>3PC(三阶段提交)</h3><pre><code class="hljs">将事物的提交分为三个阶段:
+    1. 准备阶段: 协调者向所有的参与者发出指令询问是否可以提交事物, 每个参与者执行本地操作并预留资源, 但不提交, 参与者返回Yes 或者 No 的响应
+    2. 预提交阶段: 如果所有的参与者在准备阶段都返回Yes, 协调者会发送一个预提交的指令, 参与者在此阶段将状态改为即将提交, 但是没有真正的提交, 保证所有的参与者都准备好提交了
+    3. 提交阶段: 一旦协调者确认所有的参与者都已预准备提交, 他将通知所有的参与者进行真正的提交, 此时所有的参与者完成提交.
+优点:
+    1. 可靠性高: 通过预提交, 3PC 减少了因为网络分区或者协调者故障导致的无法确定提交状态的情况, 提高了系统的一致性和可靠性
+    2. 防止阻塞: 在2PC 阶段, 参与者可能会阻塞, 导致系统无法提交, 在3PC 则通过引入额外的操作来减少阻塞的可能性
+    3. 可用性高: 由于参与者在预提交阶段可以判断是否可以提交, 在某些故障下可以提高可用性
+缺点:
+    1. 复杂
+    2. 性能开销: 增加的预提交会导致额外的网络开销和时间延迟.
+场景: 
+    1. 需要高可靠和一致性的分布式系统, 对于一致性要求高的
+    2. 复杂的分布式事务: 业务流程中需要多个参与者, 3PC 可以提供更好的事物管理
+</code></pre>
+<h2 id="MESI-协议"><a href="#MESI-协议" class="headerlink" title="MESI 协议:"></a>MESI 协议:</h2><pre><code class="hljs">    多核处理器的缓存一致性协议, 用来保证多个处理器之间数据一致性
 </code></pre>
 <h2 id="paxos-算法-zab-协议"><a href="#paxos-算法-zab-协议" class="headerlink" title="paxos 算法,zab 协议"></a>paxos 算法,zab 协议</h2><pre><code class="hljs">    zab 协议: 
         重新选举的算法:
@@ -2207,22 +2806,26 @@ ByteBuf 好处:
 如果下游服务挂了, 如何做到最小资源浪费, 流量半开的机制是什么
 </code></pre>
 <h2 id="限流算法"><a href="#限流算法" class="headerlink" title="限流算法"></a>限流算法</h2><pre><code class="hljs">1. 计数器
-实现方式: 在一个固定的时间内, 维护一个计数器, 记录当前请求的次数, 超过预定的值, 就进行限流
-优点: 简单
-缺点: 窗口边界有突发流量
-假设1min内服务器的负载能力为100，因此一个周期的访问量限制在100，然而在第一个周期的最后5秒和下一个周期的开始5秒时间段内，分别涌入100的访问量，虽然没有超过每个周期的限制量，但是整体上10秒内已达到200的访问量，已远远超过服务器的负载能力，由此可见，计数器算法方式限流对于周期比较长的限流，存在很大的弊端
+    实现方式: 在一个固定的时间内, 维护一个计数器, 记录当前请求的次数, 超过预定的值, 就进行限流
+    优点: 简单
+    缺点: 窗口边界有突发流量
+            假设1min内服务器的负载能力为100，因此一个周期的访问量限制在100，然而在第一个周期的最后5秒和下一个周期的开始5秒时间段内，分别涌入100的访问量，虽然没有超过每个周期的限制量，但是整体上10秒内已达到200的访问量，已远远超过服务器的负载能力，由此可见，计数器算法方式限流对于周期比较长的限流，存在很大的弊端
+    场景: 短期压力不高, 且对限流的精度要求不高, 如限速API
 2. 滑动窗口
-实现方式: 将固定的窗口分割成细小的窗口, 通过不断的滑动来统计某段时间内的流量请求情况,
-优点: 减少临届问题, 限流更加平滑
-缺点: 实现复杂度高, 内存占用高
+    实现方式: 将固定的窗口分割成细小的窗口, 通过不断的滑动来统计某段时间内的流量请求情况,
+    优点: 减少临届问题, 限流更加平滑
+    缺点: 实现复杂度高, 内存占用高
+    场景: 需要精准的控制流量, 并且不能允许短时间内有突发的流量, 例如 金融系统中的风控, 具有高稳定性要求, 防止流量突增
 3. 漏桶
-实现方式: 将请求流量看成是水流, 漏桶以固定的速率漏水, 如果漏桶满了, 超出的流量则被丢弃或者是排队处理
-优点: 可以平滑处理突发流量, 严格限制流量速度
-缺点: 容易导致短时间内的高峰流量被拒绝
+    实现方式: 将请求流量看成是水流, 漏桶以固定的速率漏水, 如果漏桶满了, 超出的流量则被丢弃或者是排队处理
+    优点: 可以平滑处理突发流量, 严格限制流量速度
+    缺点: 容易导致短时间内的高峰流量被拒绝
+    场景: 需要精准控制流量, 且不能接受突发流量的场景, 如实时上传数据等
 4. 令牌痛
-实现方式: 按照固定速率生成令牌, 每次请求需要拿一个令牌才可以被处理, 如果桶内没有令牌, 则进行拒绝
-优点: 相对灵活, 允许在时间范围内处理突发流量, 同时平滑处理长时间的流量
-缺点: 实现复杂
+    实现方式: 按照固定速率生成令牌, 每次请求需要拿一个令牌才可以被处理, 如果桶内没有令牌, 则进行拒绝
+    优点: 相对灵活, 允许在时间范围内处理突发流量, 同时平滑处理长时间的流量
+    缺点: 实现复杂
+    场景: 需要在短期内处理突发流量, 同时要保证系统的平滑运行; 例如高并发下的电商抢购, 秒杀活动运行短时间内的流量高峰
 </code></pre>
 <h2 id="如何避免深度分页"><a href="#如何避免深度分页" class="headerlink" title="如何避免深度分页"></a>如何避免深度分页</h2><pre><code class="hljs">1. 确保排序的列上使用索引
 2. 基于游标的分页, where 条件中增加过滤
@@ -2836,95 +3439,16 @@ mmap
     8. 问题:
         底层技术不是太差? 广度上不够, 需要对各个原理有了解
 </code></pre>
-<!-- ### 注册中心
-#### eureka
-##### eureka 如果实现数据同步
-    1. 多节点部署与复制
-        eureka 集群中的各个节点会相互的同步注册信息和服务信息
-    2. 服务注册和同步的流程
-        1. 服务注册过程: 微服务向eureka 节点发送注册请求
-        2. 增量同步
-            1. 服务注册的时候, 当一个服务实例向其中一个eureka 节点进行注册, 对应的eureka 节点会将该实例信息同步给其他的eureka 节点
-            2. 服务续约. 服务节点定时给eureka 进行心跳请求续约, 每次续约都会触发增量同步
-            3. 服务下线. 
-            4. 服务状态变更
-            2.1 实现方式:
-                通过增量队列来实现的, 当有节点注册、续约、下线、状态变化的时候, 会放到增量队列中,eureka 会定时从增量队列中获取数据, 将需要同步的数据发送给其他节点, 其中防止很长时间都没有被同步, 增量队列中需要携带上时间戳, 可以用来进行触发全量同步
-            自我保护机制, 设置成一个阈值可以判断时因为节点异常了,
-            具体case
-                服务实例向节点 A 注册，A 将该变更添加到自己的增量队列中。
-                节点 A 定期检查增量队列，发现有新注册的服务实例。
-                节点 A 通过增量同步的 API /eureka/v2/apps/delta，将该变更同步给节点 B。
-                节点 B 接收到增量信息后，更新其本地的注册表，保持与节点 A 的数据一致性。
-        3. 全量同步
-            3.1 节点重启: 当有一个节点重启了
-            3.2 增量同步失败: 由于增量同步出现异常, 节点之间注册信息不一致, 触发全量同步. 增量同步失败的原因可能因为网络故障、超时、抖动等
-            3.3 数据检测不一致: 节点会去定时检测其他节点信息和注册表中的数据是否一致, 发现有不一致的, 并且增量失败
-            3.4 全量同步过程:
-                3.4.1 节点向其他节点发送全量同步请求
-                3.4.2 接受其他节点的全量注册信息, 
-                3.4.3 将全量节点更新到本地
-                3.4.4 恢复正常
-        4. 新的节点起来以后怎么做的数据同步
-            全量同步
-        5. 如何通知给服务的消费方
-            5.1 客户端通过定时拉的方式获取,初次时进行全量拉取, 后面是进行增量拉取
-            5.2 拉增量失败后, 会触发拉取全量的
-            5.3 当服务器进入到自我保护机制时, 拉取到的数据可能是旧的
-##### 如何解决eureka	问题: 当客户端很多的时候怎么处理, hash 环 + 虚拟节点
-            如何做到注册方的上下线, 秒级别推送:
-                基于WS 或者是长轮训
-                    WS:
-                        1. 服务消费方在初始化过程中，会先经Session域名查询Session的IP地址列表并缓存到本地，然后再从列表中选择一台Session服务器与之建立 WebSocket长连接，并发送服务订阅请求。
-                        2. Session在收到服务订阅请求后，先会将服务订阅信息和 WebSocket 连接的映射关系存储到本地。后续当Session收到Data推送的服务变更消息时，它会先从上述映射关系中查询该服务对应的变更订阅方（即对应的WebSocket 连接列表），然后将消息通过这些连接推送出去。
-                        3. 在收到服务变更消息后，服务消费方会根据消息的内容更新本地缓存中的服务地址列表
-                上下线的时候, data 节点通知所有的session 节点
-#### zk
-##### zk 选举
-    1. 节点分类
-        leader: 主节点，负责处理写请求，并将事务日志同步到从节点
-        flower: 从节点，接收 Leader 的同步数据，并参与读请求。
-        observer: 观察者节点，不参与选举和投票，但接收 Leader 的同步数据。
-    2. 选举算法
-        Fast Leader Election 参考的点: zxid, myId, 当前数据的完整度和 机器的优先级
-##### zk 写数据的过程
-    1. 客户端发起写的操作, 这个操作只能到leader 节点上去
-    2. leader 收到写请求后, 会生成一个zxId, 通知zxId 是递增的
-    3. leader 会将zxId 封装成一个propersal 进行广播, 基于zab 协议,确保所有flower 接收到
-    4. flower 接受propersal 并进行ACK 响应
-    5. leader 接受ACK, 过半就可以持久化写入
-    6. leader 进行commit, 并通知所有的flower
-    7. flower 收到leader 的commit 后并对自己进行刷新
-    8. leader 确认写完成后并通知客户端
-    通过写请求只能leader 处理、zxId 是递增的、zab 协议来实现一致性
-    P 的话通过法定人数, 过半节点
-##### 如何解决脑裂问题
-    1. 确保奇数个节点
-    2. 网络分区的监控和恢复
-    4. 启用Observer 节点
-    5. 事物的日志和快照定期备份
-    6. Quorums: 当集群中存活节点少于法定人数的时候, 集群不可用
-    7. 冗余通信 -->
-<!-- ### Consul
-    1. 通过WAN Gossip 协议 解决多数据中心的问题
-    WAN Gossip 协议: 通过随机选择节点进行数据交换, 但是传播速度比较慢, 节点可能会有重复的数据通信,
-### 注册中心发布怎么解决
-    一是关闭/启动应用程序前，先拉出服务实例，程序启动成功后，再拉入服务实例；二是客户端负载均衡自动拉出访问异常服务实例。
- -->
-
 <h2 id="美团"><a href="#美团" class="headerlink" title="美团"></a>美团</h2><pre><code class="hljs">1. mysql
     char 和 varchar的区别
         char: 固定长度的字符类型, 定义时需要指定字符长度, 不够的时候会在末尾补足空格, 适合存储固定长度的
         varchar:  可变长度的字符串类型, 存储时需要指定最大长度,存储的时候根据实际长度占用存储空间
     in 和 exist 的区别
-        in 表示左边表达式是否存在于右边, 返回true or false
-        exist 可以返回一行数据
+        in 更加适合直接与一个具体的集合或者子查询结果进行比较
+        exist 更加适用于检查是否存在满足条件的行, 而不关心具体的返回值
         性能上的差异:
-            exists 的性能要比in 好, 尤其是在表比较大的情况下, 因为exist 找到一条后就立刻返回停止查询, in 需要遍历整个子查询
-        使用场景:
-            查询子集合较小并且变动属于低频的, in 更加直观,  当子查询涉及到外部查询的每一行判断的时候,  并且子查询效率较高, exist 更为合适
-        null 值的处理:
-            in 可以正确处理子查询中包含null 的情况, 而exist 不受子查询结果中null  值的影响
+            1. in 如果子查询返回的结果特别大, IN 可能会导致性能问题, 因为他会把所有的值加载到内存当中
+            2. exists 更加关注子查询是否存在行, 一旦子查询返回一行的数据, exist就会停止执行, 因此对于某些查询, 性能会更高
     执行一条sql 请求的过程
         1. 客户端发送请求
             客户端通过网络连接向数据库发送一条sql 语句, 
@@ -3368,7 +3892,7 @@ ResourceLeakDetector 可以用来检测
 
 普通哈希 和 一致性哈希
 </code></pre>
-<p>限流算法:<br>    1. 计数器<br>        实现方式: 在一个固定的时间内, 维护一个计数器, 记录当前请求的次数, 超过预定的值, 就进行限流<br>        优点: 简单<br>        缺点: 窗口边界有突发流量<br>                假设1min内服务器的负载能力为100，因此一个周期的访问量限制在100，然而在第一个周期的最后5秒和下一个周期的开始5秒时间段内，分别涌入100的访问量，虽然没有超过每个周期的限制量，但是整体上10秒内已达到200的访问量，已远远超过服务器的负载能力，由此可见，计数器算法方式限流对于周期比较长的限流，存在很大的弊端<br>    2. 滑动窗口<br>        实现方式: 将固定的窗口分割成细小的窗口, 通过不断的滑动来统计某段时间内的流量请求情况,<br>        优点: 减少临届问题, 限流更加平滑<br>        缺点: 实现复杂度高, 内存占用高<br>    3. 漏桶<br>        实现方式: 将请求流量看成是水流, 漏桶以固定的速率漏水, 如果漏桶满了, 超出的流量则被丢弃或者是排队处理<br>        优点: 可以平滑处理突发流量, 严格限制流量速度<br>        缺点: 容易导致短时间内的高峰流量被拒绝<br>    4. 令牌痛<br>        实现方式: 按照固定速率生成令牌, 每次请求需要拿一个令牌才可以被处理, 如果桶内没有令牌, 则进行拒绝<br>        优点: 相对灵活, 允许在时间范围内处理突发流量, 同时平滑处理长时间的流量<br>        缺点: 实现复杂</p>
+<p>限流算法:<br>    1. 计数器<br>        实现方式: 在一个固定的时间内, 维护一个计数器, 记录当前请求的次数, 超过预定的值, 就进行限流<br>        优点: 简单<br>        缺点: 窗口边界有突发流量<br>                假设1min内服务器的负载能力为100，因此一个周期的访问量限制在100，然而在第一个周期的最后5秒和下一个周期的开始5秒时间段内，分别涌入100的访问量，虽然没有超过每个周期的限制量，但是整体上10秒内已达到200的访问量，已远远超过服务器的负载能力，由此可见，计数器算法方式限流对于周期比较长的限流，存在很大的弊端<br>        场景: 短期压力不高, 且对限流的精度要求不高, 如限速API<br>    2. 滑动窗口<br>        实现方式: 将固定的窗口分割成细小的窗口, 通过不断的滑动来统计某段时间内的流量请求情况,<br>        优点: 减少临届问题, 限流更加平滑<br>        缺点: 实现复杂度高, 内存占用高<br>        场景: 需要精准的控制流量, 并且不能允许短时间内有突发的流量, 例如 金融系统中的风控, 具有高稳定性要求, 防止流量突增<br>    3. 漏桶<br>        实现方式: 将请求流量看成是水流, 漏桶以固定的速率漏水, 如果漏桶满了, 超出的流量则被丢弃或者是排队处理<br>        优点: 可以平滑处理突发流量, 严格限制流量速度<br>        缺点: 容易导致短时间内的高峰流量被拒绝<br>        场景: 需要精准控制流量, 且不能接受突发流量的场景, 如实时上传数据等<br>    4. 令牌痛<br>        实现方式: 按照固定速率生成令牌, 每次请求需要拿一个令牌才可以被处理, 如果桶内没有令牌, 则进行拒绝<br>        优点: 相对灵活, 允许在时间范围内处理突发流量, 同时平滑处理长时间的流量<br>        缺点: 实现复杂<br>        场景: 需要在短期内处理突发流量, 同时要保证系统的平滑运行; 例如高并发下的电商抢购, 秒杀活动运行短时间内的流量高峰</p>
 <h3 id="单元化理解-1"><a href="#单元化理解-1" class="headerlink" title="单元化理解:"></a>单元化理解:</h3><pre><code class="hljs">单元化定义: 一个能完成所有业务操作的自包含集合, 包含了这个业务所需要的所有服务和数据, 每一个单元部署了系统所需要的所有应用, 数据则是按照某种数据维度划分后的一部分
 核心在于水平模式, 每个机房都有完成全站所有业务的能力
 数据分区: 
@@ -3525,21 +4049,7 @@ ByteBuf 好处:
 2. qconfig 通过两者结合
 3. 对于配置的一些集群限流, 配置中心的服务端没有分集群, 但是控台对外restAPI  会根据不同的应用属性, 进行限制
 </code></pre>
-<!-- 
-1. 网关如何提高性能
-    4C 8G
-    请求方式就是一个healthCheck 响应ok 这种的
-    1.1 一开始压测
-        如何解决压不上去的问题
 
-    1.2 发现CPU 一下子就上去了
-    1.3 更换网络框架
-    1.4 更换IO 模型
-2. 配置中心如何提升性能
-3. 用户体验上的???
-4. 单元测试上的
-
-     -->
                 
               </div>
             

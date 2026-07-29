@@ -26,7 +26,7 @@
 <meta property="og:image" content="http://localhost:4000/img/executor.execute.jpg">
 <meta property="og:image" content="http://localhost:4000/img/executor.create.worker.jpg">
 <meta property="article:published_time" content="2022-11-19T14:15:12.734Z">
-<meta property="article:modified_time" content="2024-09-10T07:44:07.571Z">
+<meta property="article:modified_time" content="2024-10-27T07:01:30.392Z">
 <meta property="article:author" content="pc-xie">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:image" content="http://localhost:4000/img/executor.execute.jpg">
@@ -232,7 +232,7 @@
         
         
         
-          116 分钟
+          117 分钟
         
       </span>
     
@@ -346,11 +346,12 @@
 <ul>
 <li><p>shutdown 和 shutdownNow 的区别</p>
 <ul>
-<li>shutdown将运行状态改为shutdown, 并中断所有的空闲线程</li>
+<li>shutdown将运行状态改为shutdown, 当前正在执行和已经提交但是未被执行的任务都会被处理, 会在所有任务执行完成后进行关闭</li>
 <li>shutdownNow 是将状态改为STOP, 中断所有线程, 返回为处理的任务</li>
 <li>一般情况下，建议先调用shutdown()方法，等待已提交的任务执行完成，然后再判断线程池是否已经终止。如果需要尽快停止线程池并放弃尚未执行的任务，可以在一段时间后（如等待一段时间后仍未终止），再调用shutdownNow()方法来强制停止线程池。</li>
 <li>总结：使用shutdown()方法时，线程池会平缓地关闭，允许已提交的任务执行完成；使用shutdownNow()方法时，线程池会立即停止并尝试中断正在执行的任务。根据需求选择合适的方法来关闭线程池。</li>
 </ul>
+<p>shutdown 适合温和的关闭方式, 等待已提交的任务执行完成<br>shutdownNow 是一直强制的关闭方式, 立即中断所有活动的任务, 并返回尚未开始的任务</p>
 </li>
 <li><p>线程内部异常处理<br>  Runnable 去进行submit 提交的:<br>  线程池的方式: 线程池会catch 到异常, 具体是否会抛出给主线程, 需要根据主线程是否实现afterExecute<br>  通过Runnable.run() 的方式则不会感知到异常<br>  Callable 去进行提交的时候, 则可以通过future 返回异常</p>
 </li>
