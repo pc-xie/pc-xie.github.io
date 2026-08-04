@@ -28,7 +28,7 @@
 <meta property="og:image" content="http://localhost:4000/img/jdk/threadState.png">
 <meta property="og:image" content="http://localhost:4000/img/jdk/hashMap_put.png">
 <meta property="article:published_time" content="2024-08-17T05:20:30.839Z">
-<meta property="article:modified_time" content="2024-12-29T14:19:11.227Z">
+<meta property="article:modified_time" content="2026-08-03T14:48:39.851Z">
 <meta property="article:author" content="pc-xie">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:image" content="http://localhost:4000/img/tcp/tcp_start_connection.png">
@@ -234,7 +234,7 @@
         
         
         
-          911 分钟
+          909 分钟
         
       </span>
     
@@ -644,7 +644,7 @@ null 值的处理:
 </code></pre>
 <h3 id="索引"><a href="#索引" class="headerlink" title="索引"></a>索引</h3><h4 id="索引分类"><a href="#索引分类" class="headerlink" title="索引分类"></a>索引分类</h4><ol>
 <li>逻辑功能分类:<br>1.1 普通索引:没有任何约束条件, 用户提高查询的效率<br>1.2 唯一索引: 在普通索引的基础上增加了唯一性约束的条件, 一张表里面可以有多个唯一索引<br>1.3 主键索引: 在唯一索引的基础上增加了不为空的约束条件, 一张表里面最多有一个主键索引</li>
-<li>物理实现分类<br>2.1 聚集索引: 基于表的主键列的索引, 索引的叶子节点存储了实际的数据行, 一张表只能有一个聚集索引, 通常为主键索引<br>2.2 非聚集索引: 叶子节点存储了索引的值和一个指向数据实际存储位置的指针, 一个表可以有多个非聚集索引</li>
+<li>物理实现分类<br>2.1 聚集索引: 基于表的主键列的索引, 索引的叶子节点存储了实际的数据行, 一张表只能有一个聚集索引, 通常为主键索引<br>2.2 非聚集索引: 叶子节点存储了索引列的值 + 主键值(再次通过回表才可以拿到所有的值), 一个表可以有多个非聚集索引</li>
 <li>字段个数<br>3.1 单一索引: 索引列为一个的索引<br>3.2 联合索引: 多个列组合在一起的索引</li>
 </ol>
 <h4 id="什么列适合当主键"><a href="#什么列适合当主键" class="headerlink" title="什么列适合当主键"></a>什么列适合当主键</h4><pre><code class="hljs">聚集索引列: 
@@ -694,64 +694,63 @@ null 值的处理:
 <li>内存友好：B+树的内部节点只存储索引信息，而不存储具体的数据，因此它的内存占用比较小。此外，B+树的叶子节点是顺序存储的，能够利用操作系统的预读特性，从而更加高效地利用内存。</li>
 <li>支持高效的插入和删除：B+树的平衡特性使得它支持高效的插入和删除操作。对于插入操作，B+树只需要在叶子节点上插入新的数据即可。对于删除操作，B+树只需要删除叶子节点上的数据即可。</li>
 </ol>
-<h3 id="数据库回表"><a href="#数据库回表" class="headerlink" title="数据库回表"></a>数据库回表</h3><h4 id="回表定义-如果返回的列不在索引列中-就需要到主键索引或者数据页当中读取对应的数据行"><a href="#回表定义-如果返回的列不在索引列中-就需要到主键索引或者数据页当中读取对应的数据行" class="headerlink" title="回表定义: 如果返回的列不在索引列中,就需要到主键索引或者数据页当中读取对应的数据行"></a>回表定义: 如果返回的列不在索引列中,就需要到主键索引或者数据页当中读取对应的数据行</h4><p>回表会增加I&#x2F;O 开销和数据库的负载, 对数据库性能有负面影响</p>
+<h3 id="数据库回表"><a href="#数据库回表" class="headerlink" title="数据库回表"></a>数据库回表</h3><h4 id="回表"><a href="#回表" class="headerlink" title="回表"></a>回表</h4><p>定义: 在InnoDB 中, 二级索引列村的值是 索引列 + 主键, 如果查询的二级索引列以外的列数据, 需要用主键去主键索引获取完整行, 这个过程叫做回表<br>影响: 会增加I&#x2F;O 开销和数据库的负载, 对数据库性能有负面影响</p>
 <h4 id="如何降低回表"><a href="#如何降低回表" class="headerlink" title="如何降低回表"></a>如何降低回表</h4><ol>
 <li>使用覆盖索引: 指的是索引查询返回了所有的列, 不需要回表既可以返回查询结果, 从而避免回表操作, 提高性能</li>
 <li>合理设计索引: 查询所需的列尽可能包含在索引中, 从而减少回表的次数; 但是索引本身也是需要消耗存储空间和进行维护</li>
-<li>使用查询缓存: 查询缓存指的是查询结果被写入磁盘前, 将查询结果缓存到内存当中, 下一次查询直接从内存当中去进行获取,避免回表的操作</li>
 <li>优化查询语句: 尽可能将查询条件放在索引列上, 从而减少回表的次数</li>
 </ol>
 <h4 id="为什么用B-树"><a href="#为什么用B-树" class="headerlink" title="为什么用B+树"></a>为什么用B+树</h4><pre><code class="hljs">B+树
 支持高效的搜索、稳定的搜索效率,支持范围查找、内存占用比较低
-        ## 索引各个场景
-        有5个字段 a,b,c,d,e,f,g,h 
-        (a,b,c) 是一个联合索引, (d,e)是一个联合索引
-        1. 创建联合索引(a,b,c)
-        符合最左匹配原则 走索引
-        explain select * from not_dice.testPerson where a = &quot;1&quot;;                               
-        索引
+    ## 索引各个场景
+    有5个字段 a,b,c,d,e,f,g,h 
+    (a,b,c) 是一个联合索引, (d,e)是一个联合索引
+    1. 创建联合索引(a,b,c)
+    符合最左匹配原则 走索引
+    explain select * from not_dice.testPerson where a = &quot;1&quot;;                               
+    索引
 
-        explain select * from not_dice.testPerson where b = &quot;1&quot;;
-        全表
-        explain select * from not_dice.testPerson where c = &quot;1&quot;;
-        全表
+    explain select * from not_dice.testPerson where b = &quot;1&quot;;
+    全表
+    explain select * from not_dice.testPerson where c = &quot;1&quot;;
+    全表
 
-        explain select * from not_dice.testPerson where a = &quot;1&quot; and b = &quot;1&quot;;
-        索引
-        explain select * from not_dice.testPerson where b = &quot;1&quot; and a = &quot;1&quot;;
-        索引
+    explain select * from not_dice.testPerson where a = &quot;1&quot; and b = &quot;1&quot;;
+    索引
+    explain select * from not_dice.testPerson where b = &quot;1&quot; and a = &quot;1&quot;;
+    索引
 
-        explain select * from not_dice.testPerson where a = &quot;1&quot; and c = &quot;1&quot;;
-        索引下推
-        explain select * from not_dice.testPerson where c = &quot;1&quot; and a = &quot;1&quot;;
-        索引
+    explain select * from not_dice.testPerson where a = &quot;1&quot; and c = &quot;1&quot;;
+    索引下推
+    explain select * from not_dice.testPerson where c = &quot;1&quot; and a = &quot;1&quot;;
+    索引下推
 
-        explain SELECT * FROM not_dice.testPerson where  c  = &quot;1&quot; and b = &quot;1&quot;;
-        进行全表扫描了
-        explain select * from not_dice.testPerson where a = &quot;1&quot; and b = &quot;1&quot; and c = &quot;1&quot;;
-        索引
-        explain select * from not_dice.testPerson where b = &quot;1&quot; and a = &quot;1&quot; and c = &quot;1&quot;;
-        索引
-        explain select * from not_dice.testPerson where c = &quot;1&quot; and b = &quot;1&quot; and a = &quot;1&quot;;
-        索引
-        explain select * from not_dice.testPerson where a = &quot;1&quot; and c = &quot;1&quot; and b = &quot;1&quot;;
-        索引
+    explain SELECT * FROM not_dice.testPerson where  c  = &quot;1&quot; and b = &quot;1&quot;;
+    进行全表扫描了
+    explain select * from not_dice.testPerson where a = &quot;1&quot; and b = &quot;1&quot; and c = &quot;1&quot;;
+    索引
+    explain select * from not_dice.testPerson where b = &quot;1&quot; and a = &quot;1&quot; and c = &quot;1&quot;;
+    索引
+    explain select * from not_dice.testPerson where c = &quot;1&quot; and b = &quot;1&quot; and a = &quot;1&quot;;
+    索引
+    explain select * from not_dice.testPerson where a = &quot;1&quot; and c = &quot;1&quot; and b = &quot;1&quot;;
+    索引
 
-        explain select * from not_dice.testPerson where a = &quot;1&quot; and c = &quot;1&quot; and b = &quot;1&quot; and d = &quot;1&quot;;
-        索引
+    explain select * from not_dice.testPerson where a = &quot;1&quot; and c = &quot;1&quot; and b = &quot;1&quot; and d = &quot;1&quot;;
+    索引
 
-        explain select * from not_dice.testPerson where c = &quot;1&quot; and b = &quot;1&quot; and d = &quot;1&quot;;
-        走d_f的索引
-        explain select * from not_dice.testPerson where c = &quot;1&quot; and b = &quot;1&quot; and f = &quot;1&quot;;
-        全表
+    explain select * from not_dice.testPerson where c = &quot;1&quot; and b = &quot;1&quot; and d = &quot;1&quot;;
+    走d_e的索引
+    explain select * from not_dice.testPerson where c = &quot;1&quot; and b = &quot;1&quot; and f = &quot;1&quot;;
+    全表
 </code></pre>
 <h3 id="索引下推应用范围"><a href="#索引下推应用范围" class="headerlink" title="索引下推应用范围"></a>索引下推应用范围</h3><pre><code class="hljs">1. 适用于执行计划是range, ref, eq_ref等
-2. 对于Innodb 表, 非聚集索引, 索引下推可以减少全行读取次数, 从而减少IO
-3. 子查询不能使用索引下推
-4. 存储过程不能使用索引下推
+2. InndoDB 仅对二级索引使用 ICP， 减少全行读取次数, 从而减少IO
+3. 条件中引用子查询不能使用索引下推
+4. 条件中引用存储过程不能使用索引下推
+条件指的where 跟的条件
 </code></pre>
-<h3 id="索引下推使用场景"><a href="#索引下推使用场景" class="headerlink" title="索引下推使用场景"></a>索引下推使用场景</h3><pre><code class="hljs">1. 联合索引
-2. 部分索引列的过滤
+<h3 id="索引下推使用场景"><a href="#索引下推使用场景" class="headerlink" title="索引下推使用场景"></a>索引下推使用场景</h3><pre><code class="hljs">联合索引下, 定位只用了部份列, 其余仍在该索引的条件, 用ICP在回表前进行过滤
 </code></pre>
 <h4 id="explain-中各个参数的作用"><a href="#explain-中各个参数的作用" class="headerlink" title="explain 中各个参数的作用"></a>explain 中各个参数的作用</h4><pre><code class="hljs">type: 连接类型从高效到低效依次为 system &gt; const &gt; eq_ref &gt; ref &gt; range &gt; index &gt; ALL
 key: 查询使用到的索引, 如果为null 则说明没有用到索引
@@ -762,50 +761,37 @@ key: 索引
 Extra: 查询的额外信息
 </code></pre>
 <h4 id="慢sql"><a href="#慢sql" class="headerlink" title="慢sql"></a>慢sql</h4><pre><code class="hljs">慢sql 怎么定位  怎么优化sql 
-    查看数据库的慢sql日志
-    explain 去进行查询
+    1. 查看数据库的慢sql日志
+    2. explain 查看是否利用了索引、扫描行数
+    3. 区分: 是否为SQL问题、索引问题、数据量问题、锁并发问题
 优化sql:
-    1. 优化数据库 和 数据表
-        如果单表数据量超过了千万, 考虑将大表拆分成小表
-        引入redis 等缓存
-    2. 查询优化, 每次查询的时候只需要返回需要的列, 或者是进行分页优化
-    3. 使用 explain 查看执行计划
-    4. 使用索引
-    5. select 的时候只选择需要的列
-    6. 优化where 条件, 如避免使用子函数
-    7. 优化join、group by 和 order by
-        join 的时候确保on 条件上有索引, 减少表的连接
-        order by 和 group by 上有索引
-        order by 和 group by 先用where 条件对数据去进行过滤, 减少数据集的大小
+    1. 从SQL 上: 只查询需要的列, where 可以走索引, 避免索引列上的函数, 合理分页
+    2. 从索引上: 合适单列、联合索引，覆盖索引减少回表, JOIN / 条件排序尽量命中索引
+    3. JOIN / 排序分组: ON 有索引, 先 WHERE 缩小集；
+    4: 表与架构: 冷热分离, 不够在进行份表; 增加热点缓存
 </code></pre>
 <h3 id="事物"><a href="#事物" class="headerlink" title="事物"></a>事物</h3><h4 id="事物的四大特性"><a href="#事物的四大特性" class="headerlink" title="事物的四大特性"></a>事物的四大特性</h4><pre><code class="hljs">A 原子性: 事物时最小的执行单位, 不允许分割, 事物的原子性动作要么都执行成功, 要么都执行失败
-    通过undo log 来保证 回滚日志   
+    InooDB 通过undo log 回滚来保证原子型   
 C 一致性: 事物之行前后, 数据保持一致
     持久性+原子性+隔离性
 I 隔离性: 并发访问数据库, 一个事物的执行不被其他事物所干扰
-    通过 MVCC（多版本并发控制） 或锁机制
+    InnnoDB 通过 MVCC（多版本并发控制） 和 锁机制来保证
 D 持久性: 一个事物提交以后, 他对数据库中的数据改变是持久的
-    redo log （重做日志）可以实现事物的持久性
+    InnoDB 通过 redo log （重做日志）可以实现事物的持久性
 </code></pre>
 <h4 id="事物隔离级别"><a href="#事物隔离级别" class="headerlink" title="事物隔离级别"></a>事物隔离级别</h4><pre><code class="hljs">读未提交 允许读取到未提交的事物, 可能导致脏读、不可重复读、幻读
 读已提交 允许读取到事物已经提交的数据, 可以防止脏读, 可能导致不可重复读、幻读
     在每次执行的时候读取数据的read view
-可重复读 对于多次读取的数据是一致的, 可以防止脏读、不可以重复读, 可能导致幻读
-    在同一个事物内, 读取的是同一个read view
-    防止幻读 指的是在整个事物读取的read view 是同一个
-    无法避免由于新增和删除导致带来的变化
-    第一个事物进行了查询
-    然后第二个事物插入了一条数据, 此时第一个事物去进行查询的时候, 返回的数据条数和前面是一样的. 
+可重复读 事物内读取快照用的是同一个readView;  可以防止脏读、不可重复读
+     快照读(select * from ...): InnoDB 通过读取的是同一个readView 避免读取到新插入的数据
+     当前读(update /select  for update): 读取最新的版本 + 通过Next-Key 锁来避免别人插入进来, 
+
 串行化   事物的最高级别, 所有事物都是要串行的去执行, 可以防止脏读、幻读、不可重复读
 
 脏读: 读取到其他未提交事物的数据											
 不可重复读:  对于同一条数据, 在同一个事物中前后读区结果不一致						
 幻读: 在同一个事物中, 对于一个范围内的数据进行多次多去, 发现返回的数据结果行数不一致	
 mysql 默认是可重复读				
-</code></pre>
-<h4 id="可重复读为什么不能解决幻读"><a href="#可重复读为什么不能解决幻读" class="headerlink" title="可重复读为什么不能解决幻读"></a>可重复读为什么不能解决幻读</h4><pre><code class="hljs">读已提交: 事物中只能读取到其他已提交的数据
-    通过在语句执行之前生成一个read view, 因此可以保证每次读取的时候可以读取到其他事物提交后的数据
-可重复读 是通过在启动事物时生成一个read view, 整个事物期间都在用这个read view, 因此没办法防止幻读, 因为整个事物期间基于的视图时一样的
 </code></pre>
 <h5 id="日志"><a href="#日志" class="headerlink" title="日志"></a>日志</h5><pre><code class="hljs">redo log: 事物的持久性
 undo log: 实现了事物的原子性, 用于事物的回滚
@@ -1450,7 +1436,7 @@ ExtensionLoader 原理
     7.1 清理资源: 对象生命周期结束时, 确保资源可以正确被释放
     7.2. 默认实现
 </code></pre>
-<h3 id="SLEEP-和-WAIT-的区别"><a href="#SLEEP-和-WAIT-的区别" class="headerlink" title="SLEEP  和 WAIT  的区别"></a>SLEEP  和 WAIT  的区别</h3><pre><code class="hljs">1. sleep 没有释放锁, wait 释放锁
+<h3 id="SLEEP-和-WAIT-的区别"><a href="#SLEEP-和-WAIT-的区别" class="headerlink" title="SLEEP  和 WAIT  的区别"></a>SLEEP  和 WAIT  的区别</h3><pre><code class="hljs">1. wait 释放锁, sleep 没有释放锁
 2. wait 用于线程交互, sleep 用于暂停
 3. wait() 方法被调用后, 线程不会自动苏醒, 需要用其他线程调用notify() 或者是 notifyAll() 方法, sleep 执行完成后, 线程会自动苏醒, 或者可以使用wait(timeOut) 可以让线程苏醒
 4. sleep 时 Thread  类中的静态方法, wait 是object 本地方法
