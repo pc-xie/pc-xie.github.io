@@ -28,7 +28,7 @@
 <meta property="og:image" content="http://localhost:4000/img/jdk/threadState.png">
 <meta property="og:image" content="http://localhost:4000/img/jdk/hashMap_put.png">
 <meta property="article:published_time" content="2024-08-17T05:20:30.839Z">
-<meta property="article:modified_time" content="2026-08-10T15:29:45.701Z">
+<meta property="article:modified_time" content="2026-09-14T05:12:38.989Z">
 <meta property="article:author" content="pc-xie">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:image" content="http://localhost:4000/img/tcp/tcp_start_connection.png">
@@ -223,7 +223,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          110k 字
+          111k 字
         
       </span>
     
@@ -234,7 +234,7 @@
         
         
         
-          918 分钟
+          926 分钟
         
       </span>
     
@@ -2691,6 +2691,7 @@ ByteBuf 好处:
             缺点
         加上补偿机制
         分布式锁
+
     读多写少的情况下:
         Cache-Aside 结合数据库日志做补偿
     写多读少的情况下, 并且对于一致性要求比较高的情况下
@@ -2698,6 +2699,12 @@ ByteBuf 好处:
             写后去更新缓存
         极端情况下:Write-Behind
 </code></pre>
+<h3 id="读多写少"><a href="#读多写少" class="headerlink" title="读多写少"></a>读多写少</h3><p>如果是读多写少的场景，我一般会优先选择 Cache-Aside，也就是读请求先查缓存，缓存没命中再查数据库并回填；写请求先更新数据库，再删除缓存。因为在读多写少的情况下，系统的主要矛盾不是写入吞吐，而是读性能和缓存命中率，所以最适合用缓存把大部分读流量挡在数据库前面。写操作相对少，允许在写入时多做一点缓存失效控制，来换整体读性能。</p>
+<p>这里我会选择 &#x3D;&#x3D;&#x3D;&#x3D; 更新数据库，再删除缓存 &#x3D;&#x3D;&#x3D;&#x3D; ，而不是直接更新缓存。因为缓存很多时候不只是单字段数据，可能是聚合结果或者经过业务加工的数据，直接更新缓存实现复杂、维护成本高，而且并发下更容易写错。删除缓存更简单，也更安全，让后续读请求按数据库最新结果重新构建缓存。</p>
+<p>当然，这种方案在高并发下不是强一致，只能做到最终一致。比如并发读写时，可能会出现旧值短暂回填到缓存的情况。对于读多写少场景，这种短暂不一致一般是可以接受的，再配合合理 TTL、延迟双删、删除失败重试或者异步补偿机制，通常就能把问题控制在业务可接受范围内</p>
+<h3 id="写多度少"><a href="#写多度少" class="headerlink" title="写多度少"></a>写多度少</h3><p>如果是写多读少的场景，我不会默认优先把缓存放在核心路径上，而是会先看这个缓存到底有没有必要。因为这类场景下，读请求本来就不多，缓存带来的收益有限；但写请求很多的话，缓存会频繁失效或者频繁更新，反而会增加系统复杂度和一致性成本。也就是说，缓存的维护成本可能会大于它带来的收益。</p>
+<p>如果只是一般性的写多读少场景，我更倾向于弱化缓存，甚至直接以数据库或者专门的存储模型为主，避免把系统做成“既要频繁写库，又要频繁维护缓存”的双重负担。<br>如果业务上仍然需要缓存，而且对一致性要求比较高，那我会更倾向于用 write-through 这类方式，也就是写请求在更新数据库的同时更新缓存，或者通过统一写路径来保证数据库和缓存的更新顺序一致。再配合分布式锁、串行化更新或者 MQ 异步补偿，去降低并发写场景下的数据覆盖问题。</p>
+<p>如果是极端写多、允许一定延迟落库的场景，也可以考虑 write-behind，也就是先写缓存，再异步批量刷数据库。这种方式吞吐会更高，但它牺牲的是一致性和故障恢复难度，所以只适合少数对实时一致性要求没那么高、但对写性能要求很高的场景。</p>
 <h1 id="架构设计"><a href="#架构设计" class="headerlink" title="架构设计"></a>架构设计</h1><h2 id="分布式解决方案"><a href="#分布式解决方案" class="headerlink" title="分布式解决方案"></a>分布式解决方案</h2><h3 id="2PC-两阶段提交"><a href="#2PC-两阶段提交" class="headerlink" title="2PC( 两阶段提交)"></a>2PC( 两阶段提交)</h3><pre><code class="hljs">1. 分为准备阶段和提交阶段, 准备阶段协调者问各个事物的参与者是否准备好了执行事物, 提交阶段协调者根据反馈情况通知各个参与者进行commit 或者 rollback
 优点: 简单, 开发容易
 缺点: 对资源进行了长时间锁定, 并发度低

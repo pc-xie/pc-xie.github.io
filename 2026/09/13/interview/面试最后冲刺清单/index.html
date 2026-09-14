@@ -1,0 +1,747 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
+  <link rel="icon" href="/img/fluid.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="pc-xie">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="面试最后冲刺清单使用方式这份文档不是完整题库，而是面试前最后过一遍的风险题清单。 重点目标有三个：  统一口径，避免数字和表述前后不一致 补齐风险题，尤其是 MQ、带人、Owner、一致性 所有回答都尽量落回基建、稳定性、核心链路、技术 Owner   一、最容易失分的 15 个问题1. 你在项目里怎么体现技术 Owner？我的体现主要有三点。第一，我不是只接收需求做实现，而是会先识别主链路的核心">
+<meta property="og:type" content="article">
+<meta property="og:title" content="面试最后冲刺清单">
+<meta property="og:url" content="http://localhost:4000/2026/09/13/interview/%E9%9D%A2%E8%AF%95%E6%9C%80%E5%90%8E%E5%86%B2%E5%88%BA%E6%B8%85%E5%8D%95/index.html">
+<meta property="og:site_name" content="pc-xie">
+<meta property="og:description" content="面试最后冲刺清单使用方式这份文档不是完整题库，而是面试前最后过一遍的风险题清单。 重点目标有三个：  统一口径，避免数字和表述前后不一致 补齐风险题，尤其是 MQ、带人、Owner、一致性 所有回答都尽量落回基建、稳定性、核心链路、技术 Owner   一、最容易失分的 15 个问题1. 你在项目里怎么体现技术 Owner？我的体现主要有三点。第一，我不是只接收需求做实现，而是会先识别主链路的核心">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2026-09-13T14:20:33.060Z">
+<meta property="article:modified_time" content="2026-09-13T14:20:33.060Z">
+<meta property="article:author" content="pc-xie">
+<meta name="twitter:card" content="summary_large_image">
+  
+  
+  
+  <title>面试最后冲刺清单 - pc-xie</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"localhost","root":"/","version":"1.9.3","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Fluid</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="面试最后冲刺清单"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2026-09-13 22:20" pubdate>
+          2026年9月13日 晚上
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          4k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          34 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">面试最后冲刺清单</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h1 id="面试最后冲刺清单"><a href="#面试最后冲刺清单" class="headerlink" title="面试最后冲刺清单"></a>面试最后冲刺清单</h1><h2 id="使用方式"><a href="#使用方式" class="headerlink" title="使用方式"></a>使用方式</h2><p>这份文档不是完整题库，而是面试前最后过一遍的风险题清单。</p>
+<p>重点目标有三个：</p>
+<ol>
+<li>统一口径，避免数字和表述前后不一致</li>
+<li>补齐风险题，尤其是 MQ、带人、Owner、一致性</li>
+<li>所有回答都尽量落回基建、稳定性、核心链路、技术 Owner</li>
+</ol>
+<hr>
+<h2 id="一、最容易失分的-15-个问题"><a href="#一、最容易失分的-15-个问题" class="headerlink" title="一、最容易失分的 15 个问题"></a>一、最容易失分的 15 个问题</h2><h3 id="1-你在项目里怎么体现技术-Owner？"><a href="#1-你在项目里怎么体现技术-Owner？" class="headerlink" title="1. 你在项目里怎么体现技术 Owner？"></a>1. 你在项目里怎么体现技术 Owner？</h3><p>我的体现主要有三点。<br>第一，我不是只接收需求做实现，而是会先识别主链路的核心瓶颈，比如网关里是线程模型和故障扩散问题，聚合链路里是串行调用、资源争抢和下游抖动问题。<br>第二，我会负责关键方案取舍，比如并行还是串行、线程池是否隔离、是否引入 Semaphore、什么时候做缓存兜底、什么时候做灰度。<br>第三，我会把方案一直跟到灰度、上线、指标验证和后续调优，确保结果闭环，而不是停留在设计层面。</p>
+<h3 id="2-你没有正式带过团队，怎么证明自己有-TL-潜力？"><a href="#2-你没有正式带过团队，怎么证明自己有-TL-潜力？" class="headerlink" title="2. 你没有正式带过团队，怎么证明自己有 TL 潜力？"></a>2. 你没有正式带过团队，怎么证明自己有 TL 潜力？</h3><p>我目前没有正式带过完整团队，这点我会坦诚说明。<br>但我有过虚线带实习生、带新人，以及在项目里承担方案设计、任务拆分、Code Review 和问题兜底的经历。<br>所以从行政管理角度看，我经验还不完整；但从技术 owner 和项目推进角度看，我已经在承担一部分类似 TL 的职责。</p>
+<h3 id="3-你怎么带实习生或者新人？"><a href="#3-你怎么带实习生或者新人？" class="headerlink" title="3. 你怎么带实习生或者新人？"></a>3. 你怎么带实习生或者新人？</h3><p>我带实习生时，重点不是直接分配任务，而是先把背景、目标和边界讲清楚，再把任务拆到他能承接的粒度。<br>中间我会定期看实现思路和阶段结果，避免方向偏掉。<br>最后通过 Code Review 帮他把代码结构、异常处理、日志和测试这些质量问题收口。</p>
+<h3 id="4-你怎么做-Code-Review？"><a href="#4-你怎么做-Code-Review？" class="headerlink" title="4. 你怎么做 Code Review？"></a>4. 你怎么做 Code Review？</h3><p>我做 Code Review 主要看五个点：主流程是否清晰、边界条件是否完整、异常处理是否收口、日志和监控是否足够、变更是否会影响线上稳定性。<br>如果是核心链路，我还会特别关注资源释放、超时处理、并发安全和灰度风险。<br>我的习惯是不只是看功能对不对，也会看后续维护成本和线上风险。</p>
+<h3 id="5-你做过哪些复盘或者稳定性治理？"><a href="#5-你做过哪些复盘或者稳定性治理？" class="headerlink" title="5. 你做过哪些复盘或者稳定性治理？"></a>5. 你做过哪些复盘或者稳定性治理？</h3><p>我做稳定性治理，不是只在事故后修问题，而是把一些能力前置和体系化。<br>比如线程池隔离、Semaphore 并发配额、差异化超时、分级熔断、缓存兜底、探针恢复、灰度发布、链路追踪和关键指标监控，这些都属于长期治理手段。<br>如果线上出现问题，我会按照先止血、再定位、再补长期机制的思路去做。</p>
+<h3 id="6-你没做过-MQ，怎么回答？"><a href="#6-你没做过-MQ，怎么回答？" class="headerlink" title="6. 你没做过 MQ，怎么回答？"></a>6. 你没做过 MQ，怎么回答？</h3><p>我没有主导过 MQ 基础设施或者消息平台本身的建设，这不是我最强的方向。<br>但我对 MQ 的典型问题有系统理解，比如异步解耦、削峰填谷、重复消费、幂等、积压、顺序性和最终一致性。<br>如果岗位里会涉及，我不会把它包装成自己的核心亮点，但我有信心结合已有的高并发和稳定性经验比较快补上。</p>
+<h3 id="7-MQ-主要解决什么问题？"><a href="#7-MQ-主要解决什么问题？" class="headerlink" title="7. MQ 主要解决什么问题？"></a>7. MQ 主要解决什么问题？</h3><p>MQ 主要解决三个问题：异步解耦、削峰填谷和最终一致性。<br>它适合把一些不要求同步完成的链路拆开，降低上下游耦合，并在流量高峰时平滑处理请求。<br>代价是会引入重复消费、积压、顺序性和延迟这些新的问题，所以本质上是用系统复杂度换解耦能力和抗峰值能力。</p>
+<h3 id="8-为什么会重复消费？幂等怎么做？"><a href="#8-为什么会重复消费？幂等怎么做？" class="headerlink" title="8. 为什么会重复消费？幂等怎么做？"></a>8. 为什么会重复消费？幂等怎么做？</h3><p>重复消费通常是因为生产确认、Broker 重试或者消费端处理失败重投导致的。<br>所以工程上很少追求绝对不重复，而是要求消费端具备幂等性。<br>常见做法是使用业务唯一 ID、防重表、唯一索引、Redis 去重或者状态机来保证重复执行不会产生副作用。</p>
+<h3 id="9-消息积压怎么处理？"><a href="#9-消息积压怎么处理？" class="headerlink" title="9. 消息积压怎么处理？"></a>9. 消息积压怎么处理？</h3><p>先判断是短期突发流量，还是消费能力长期不足。<br>如果是短期积压，可以临时扩容消费者、提高并发消费能力、优化消费速度。<br>如果是持续积压，就要检查消费逻辑是否过重、下游依赖是否变慢、消息体是否过大，以及 topic 或 partition 设计是否合理。</p>
+<h3 id="10-缓存和数据库一致性怎么保证？"><a href="#10-缓存和数据库一致性怎么保证？" class="headerlink" title="10. 缓存和数据库一致性怎么保证？"></a>10. 缓存和数据库一致性怎么保证？</h3><p>常见场景下我会优先用更新数据库、删除缓存的思路，而不是直接更新缓存。<br>因为缓存很多时候是聚合结果或者派生数据，直接更新缓存的复杂度和出错概率都更高。<br>如果对一致性要求更高，还需要结合延迟双删、重试、消息通知或者补偿机制来降低并发读写带来的脏数据风险。</p>
+<h3 id="11-Redis-高可用怎么理解？"><a href="#11-Redis-高可用怎么理解？" class="headerlink" title="11. Redis 高可用怎么理解？"></a>11. Redis 高可用怎么理解？</h3><p>Redis 高可用一般从主从复制、哨兵和集群三个层面理解。<br>主从复制解决读扩展和基础容灾，哨兵负责主观下线、客观下线、故障转移和新主选举，集群则进一步解决容量扩展和分片问题。<br>真正上线时还要关注脑裂、复制延迟、热点 key 和持久化策略。</p>
+<h3 id="12-MySQL-主从和事务隔离怎么答？"><a href="#12-MySQL-主从和事务隔离怎么答？" class="headerlink" title="12. MySQL 主从和事务隔离怎么答？"></a>12. MySQL 主从和事务隔离怎么答？</h3><p>MySQL 主从主要是主库写 binlog，从库拉取并重放 relay log，从而保持数据复制。<br>事务隔离级别要掌握读未提交、读已提交、可重复读和串行化。<br>如果被问幻读，核心点是 InnoDB 在可重复读下会通过 MVCC 和 next-key lock 去降低问题。</p>
+<h3 id="13-为什么你适合这个基建岗位？"><a href="#13-为什么你适合这个基建岗位？" class="headerlink" title="13. 为什么你适合这个基建岗位？"></a>13. 为什么你适合这个基建岗位？</h3><p>因为我过去几年的经历主线很一致，都是围绕核心基础链路做高并发、高可用、稳定性和性能治理。<br>我做过网关、配置中心和多下游聚合链路，这些和岗位里提到的网关、注册配置中心、稳定性平台、容量与性能都高度相关。<br>我既能讲方案，也能讲落地和线上效果，这点和这个岗位要求比较匹配。</p>
+<h3 id="14-为什么想换工作？"><a href="#14-为什么想换工作？" class="headerlink" title="14. 为什么想换工作？"></a>14. 为什么想换工作？</h3><p>我换工作的核心原因，是希望继续往基础架构和技术中台方向深入发展，承担更完整的技术 Owner 职责。<br>我过去的经历让我比较明确自己更适合做核心基础系统，而不是纯业务功能开发。<br>所以我更看重的是岗位能否让我继续在网关、配置中心、稳定性治理这些方向做深。</p>
+<h3 id="15-你最大的短板是什么？"><a href="#15-你最大的短板是什么？" class="headerlink" title="15. 你最大的短板是什么？"></a>15. 你最大的短板是什么？</h3><p>如果说短板，我会比较坦诚地说两点。<br>第一，我没有正式带过一个完整团队，更多是虚线带人和项目推动；<br>第二，MQ 不是我过去最核心的方向。<br>但我不会回避这两点，一方面我已经在项目里承担了部分技术 owner 职责，另一方面 MQ 涉及的很多问题和我已有的高并发、隔离、稳定性思路是相通的。</p>
+<hr>
+<h2 id="二、风险项统一口径"><a href="#二、风险项统一口径" class="headerlink" title="二、风险项统一口径"></a>二、风险项统一口径</h2><h3 id="1-带人经验"><a href="#1-带人经验" class="headerlink" title="1. 带人经验"></a>1. 带人经验</h3><p>统一说法：</p>
+<p>我没有正式带过完整团队，但有过虚线带实习生、带新人，以及做方案拆分、Code Review 和问题兜底的经历。</p>
+<p>不要说：</p>
+<ul>
+<li>我带过团队</li>
+<li>我有完整 TL 经验</li>
+</ul>
+<h3 id="2-MQ-经验"><a href="#2-MQ-经验" class="headerlink" title="2. MQ 经验"></a>2. MQ 经验</h3><p>统一说法：</p>
+<p>我没有主导过 MQ 基础设施建设，但对异步解耦、幂等、重复消费、积压、顺序性和最终一致性有系统理解。</p>
+<p>不要说：</p>
+<ul>
+<li>我对 Kafka &#x2F; RocketMQ 很熟，只是没机会做</li>
+<li>MQ 是我的强项</li>
+</ul>
+<h3 id="3-Owner-经验"><a href="#3-Owner-经验" class="headerlink" title="3. Owner 经验"></a>3. Owner 经验</h3><p>统一说法：</p>
+<p>我的 Owner 体现在问题识别、方案取舍、灰度验证、上线落地和结果闭环上，不只是模块开发。</p>
+<p>不要说：</p>
+<ul>
+<li>我就是这条线的技术 Owner</li>
+</ul>
+<p>如果没有很强证据，建议说：</p>
+<p>我在逐步承担技术 Owner 的职责。</p>
+<h3 id="4-数字口径统一"><a href="#4-数字口径统一" class="headerlink" title="4. 数字口径统一"></a>4. 数字口径统一</h3><p>传音：</p>
+<ul>
+<li>聚合链路 P99：统一成 <code>10 秒降到 1 秒以内</code></li>
+<li>Young GC：统一成 <code>2 秒降到 200ms</code></li>
+<li>配置生效：统一成 <code>5 分钟压到秒级</code></li>
+</ul>
+<p>汇付：</p>
+<ul>
+<li>单机性能：统一成 <code>提升 5 倍</code></li>
+<li>配置故障率：统一成 <code>下降 70%</code></li>
+<li>排查效率：统一成 <code>分钟级到秒级</code></li>
+</ul>
+<p>携程：</p>
+<ul>
+<li>DB 配置推送：统一成 <code>分钟级压到 3 秒内</code></li>
+<li>Full GC：统一成 <code>消除</code></li>
+<li>Young GC：统一成 <code>2 秒降到 10ms</code></li>
+</ul>
+<hr>
+<h2 id="三、每题一句标准答法"><a href="#三、每题一句标准答法" class="headerlink" title="三、每题一句标准答法"></a>三、每题一句标准答法</h2><h3 id="1-为什么线程池隔离之后还要-Semaphore？"><a href="#1-为什么线程池隔离之后还要-Semaphore？" class="headerlink" title="1. 为什么线程池隔离之后还要 Semaphore？"></a>1. 为什么线程池隔离之后还要 Semaphore？</h3><p>线程池解决的是服务内部线程资源隔离，Semaphore 解决的是对下游的并发请求量控制，两者一个保护自己，一个保护依赖。</p>
+<h3 id="2-异步-IO、线程池、Semaphore-三者关系是什么？"><a href="#2-异步-IO、线程池、Semaphore-三者关系是什么？" class="headerlink" title="2. 异步 IO、线程池、Semaphore 三者关系是什么？"></a>2. 异步 IO、线程池、Semaphore 三者关系是什么？</h3><p>线程池隔离内部资源，异步 IO 提升线程利用率，Semaphore 保护下游依赖，三者一起构成多层防护。</p>
+<h3 id="3-为什么-GC-优化不先调-JVM-参数？"><a href="#3-为什么-GC-优化不先调-JVM-参数？" class="headerlink" title="3. 为什么 GC 优化不先调 JVM 参数？"></a>3. 为什么 GC 优化不先调 JVM 参数？</h3><p>因为调参数只能延后问题，真正的根因是对象分配模型和装配方式，所以要先从代码结构和对象生命周期上解决。</p>
+<h3 id="4-分级熔断和缓存的取舍是什么？"><a href="#4-分级熔断和缓存的取舍是什么？" class="headerlink" title="4. 分级熔断和缓存的取舍是什么？"></a>4. 分级熔断和缓存的取舍是什么？</h3><p>本质上是牺牲一部分实时性和实现复杂度，换下游异常时的整体可用性和收益稳定性。</p>
+<h3 id="5-为什么选-ZK-不选-Eureka？"><a href="#5-为什么选-ZK-不选-Eureka？" class="headerlink" title="5. 为什么选 ZK 不选 Eureka？"></a>5. 为什么选 ZK 不选 Eureka？</h3><p>因为网关依赖的服务注册和配置元数据对一致性要求更高，错误视图的代价很大，所以我们更倾向选择偏 CP 的 ZK。</p>
+<h3 id="6-为什么网关要从-Tomcat-切到-Netty？"><a href="#6-为什么网关要从-Tomcat-切到-Netty？" class="headerlink" title="6. 为什么网关要从 Tomcat 切到 Netty？"></a>6. 为什么网关要从 Tomcat 切到 Netty？</h3><p>因为网关是典型的 I&#x2F;O 密集型系统，瓶颈在阻塞等待和线程占用，Netty 更适合高并发网络转发场景。</p>
+<h3 id="7-为什么并行聚合不是简单的串行改并行？"><a href="#7-为什么并行聚合不是简单的串行改并行？" class="headerlink" title="7. 为什么并行聚合不是简单的串行改并行？"></a>7. 为什么并行聚合不是简单的串行改并行？</h3><p>因为真正要解决的不只是耗时叠加，还有资源争抢、故障扩散、下游保护和整体稳定性问题。</p>
+<h3 id="8-为什么你说自己适合基建？"><a href="#8-为什么你说自己适合基建？" class="headerlink" title="8. 为什么你说自己适合基建？"></a>8. 为什么你说自己适合基建？</h3><p>因为我长期做的都是核心基础链路，像网关、配置中心和高并发聚合链路，这些经历和基建岗位要求的方向高度一致。</p>
+<hr>
+<h2 id="四、反问面试官与接话"><a href="#四、反问面试官与接话" class="headerlink" title="四、反问面试官与接话"></a>四、反问面试官与接话</h2><h3 id="推荐反问"><a href="#推荐反问" class="headerlink" title="推荐反问"></a>推荐反问</h3><ol>
+<li>您怎么看这个岗位上表现比较好的同学？通常他们最突出的特质或者能力是什么？</li>
+<li>如果我加入这个岗位，您觉得前期最可能遇到的挑战是什么？</li>
+<li>如果我有机会加入，您会希望我在前 3 个月优先解决哪些问题，或者做到什么程度？</li>
+</ol>
+<h3 id="接话模板"><a href="#接话模板" class="headerlink" title="接话模板"></a>接话模板</h3><h4 id="对方说优秀员工要有-Owner-意识"><a href="#对方说优秀员工要有-Owner-意识" class="headerlink" title="对方说优秀员工要有 Owner 意识"></a>对方说优秀员工要有 Owner 意识</h4><p>这个和我自己的工作习惯还挺一致的，我过去做网关和聚合链路时，也比较习惯从方案、风险到上线效果一起跟到底，而不只是做某一个模块。</p>
+<h4 id="对方说前期挑战是历史系统复杂"><a href="#对方说前期挑战是历史系统复杂" class="headerlink" title="对方说前期挑战是历史系统复杂"></a>对方说前期挑战是历史系统复杂</h4><p>这个我能理解，我之前做网关和配置中心时也遇到过类似情况，很多挑战不只是技术实现本身，还包括历史约束和线上风险，我一般会先抓主链路和关键瓶颈。</p>
+<h4 id="对方说-3-个月希望先解决某个问题"><a href="#对方说-3-个月希望先解决某个问题" class="headerlink" title="对方说 3 个月希望先解决某个问题"></a>对方说 3 个月希望先解决某个问题</h4><p>明白，这样我大概能理解这个岗位的优先级了。如果能先把核心问题和阶段目标对齐清楚，我进入之后会更容易快速聚焦并尽快把价值做出来。</p>
+<hr>
+<h2 id="五、面试前-10-分钟速记"><a href="#五、面试前-10-分钟速记" class="headerlink" title="五、面试前 10 分钟速记"></a>五、面试前 10 分钟速记</h2><h3 id="自我介绍主线"><a href="#自我介绍主线" class="headerlink" title="自我介绍主线"></a>自我介绍主线</h3><p>我是做基础架构和技术中台的，主线是网关、配置中心、稳定性治理和核心链路性能优化。</p>
+<h3 id="三段经历关键词"><a href="#三段经历关键词" class="headerlink" title="三段经历关键词"></a>三段经历关键词</h3><p>传音：</p>
+<ul>
+<li>收益核心链路</li>
+<li>并行聚合</li>
+<li>线程池隔离</li>
+<li>异步 IO</li>
+<li>Semaphore</li>
+<li>熔断缓存</li>
+<li>GC 优化</li>
+</ul>
+<p>汇付：</p>
+<ul>
+<li>API 网关</li>
+<li>Tomcat -&gt; Netty</li>
+<li>服务隔离</li>
+<li>灰度</li>
+<li>链路追踪</li>
+<li>单机性能 5 倍</li>
+</ul>
+<p>携程：</p>
+<ul>
+<li>QConfig</li>
+<li>长轮询</li>
+<li>单元化</li>
+<li>异地多活</li>
+<li>推送性能</li>
+<li>Full GC 消除</li>
+</ul>
+<h3 id="四个风险提醒"><a href="#四个风险提醒" class="headerlink" title="四个风险提醒"></a>四个风险提醒</h3><ol>
+<li>不要把没做过 MQ 说成做过</li>
+<li>不要把虚线带人说成正式 TL</li>
+<li>不要让数字前后不一致</li>
+<li>所有回答尽量回到基建、稳定性、核心链路、Owner</li>
+</ol>
+<h3 id="一句收尾"><a href="#一句收尾" class="headerlink" title="一句收尾"></a>一句收尾</h3><p>我最擅长的不是某一个中间件本身，而是围绕核心链路做问题识别、方案设计、稳定性治理和线上效果闭环。</p>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E8%87%AA%E6%88%91%E4%BB%8B%E7%BB%8D/" class="category-chain-item">自我介绍</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>面试最后冲刺清单</div>
+      <div>http://localhost:4000/2026/09/13/interview/面试最后冲刺清单/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>pc-xie</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2026年9月13日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2026/09/13/interview/%E9%9D%A2%E8%AF%95%E8%A1%A5%E5%85%85%E5%87%86%E5%A4%87/" title="基础架构补充">
+                        <span class="hidden-mobile">基础架构补充</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>
