@@ -26,7 +26,7 @@
 <meta property="og:image" content="http://localhost:4000/img/executor.execute.jpg">
 <meta property="og:image" content="http://localhost:4000/img/executor.create.worker.jpg">
 <meta property="article:published_time" content="2022-11-19T14:15:12.734Z">
-<meta property="article:modified_time" content="2024-10-27T07:01:30.392Z">
+<meta property="article:modified_time" content="2026-09-17T07:50:10.043Z">
 <meta property="article:author" content="pc-xie">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:image" content="http://localhost:4000/img/executor.execute.jpg">
@@ -221,7 +221,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          14k 字
+          18k 字
         
       </span>
     
@@ -232,7 +232,7 @@
         
         
         
-          117 分钟
+          148 分钟
         
       </span>
     
@@ -363,6 +363,85 @@
 <li><p><strong>使用<code>submit()</code>提交任务</strong>：对于通过<code>submit()</code>提交的任务，如果在任务执行中发生异常，这个异常不会直接打印出来。相反，异常会被封装在由<code>submit()</code>返回的<code>Future</code>对象中。当调用<code>Future.get()</code>方法时，可以捕获到一个<code>ExecutionException</code>。在这种情况下，线程不会因为异常而终止，它会继续存在于线程池中，准备执行后续的任务。</p>
 </li>
 </ul>
+<h2 id="线程池种类"><a href="#线程池种类" class="headerlink" title="线程池种类"></a>线程池种类</h2><h3 id="ScheduledThreadPool"><a href="#ScheduledThreadPool" class="headerlink" title="ScheduledThreadPool"></a>ScheduledThreadPool</h3><pre><code class="hljs">定时线程池。支持延迟执行和周期执行，适合定时任务、轮询、补偿任务。本质上是支持调度能力的线程池
+</code></pre>
+<h3 id="FixedThreadPool"><a href="#FixedThreadPool" class="headerlink" title="FixedThreadPool"></a>FixedThreadPool</h3><pre><code class="hljs">固定线程数线程池。核心线程数和最大线程数相同，适合比较稳定的任务处理场景。风险点是默认使用无界队列 LinkedBlockingQueue，任务堆积时可能导致 OOM。
+</code></pre>
+<h3 id="CachedThreadPool"><a href="#CachedThreadPool" class="headerlink" title="CachedThreadPool"></a>CachedThreadPool</h3><pre><code class="hljs">可缓存线程池。线程数理论上几乎无限，空闲线程会回收，适合大量短时异步任务。风险点是默认使用 SynchronousQueue，高并发下可能快速创建大量线程，容易把 CPU 和内存打满。
+</code></pre>
+<h3 id="SingleThreadExecutor"><a href="#SingleThreadExecutor" class="headerlink" title="SingleThreadExecutor"></a>SingleThreadExecutor</h3><pre><code class="hljs">单线程线程池。始终只有一个工作线程，适合串行执行、顺序性要求高的场景。风险点是吞吐能力低，前面任务慢会阻塞后续任务。
+</code></pre>
+<h2 id="面试"><a href="#面试" class="headerlink" title="面试"></a>面试</h2><h3 id="什么是线程池？为什么要用线程池？"><a href="#什么是线程池？为什么要用线程池？" class="headerlink" title="什么是线程池？为什么要用线程池？"></a>什么是线程池？为什么要用线程池？</h3><p>线程池本质上是对线程这种系统资源的复用和统一管理。如果每来一个任务就创建一个线程，线程创建和销毁的成本会很高，而且线程数失控时会带来上下文切换、内存占用和系统负载飙升的问题。线程池的价值主要有三点：第一，复用线程，降低创建销毁成本；第二，控制并发度，防止资源被打满；第三，便于统一做队列、拒绝策略、监控和治理</p>
+<h3 id="核心参数"><a href="#核心参数" class="headerlink" title="核心参数"></a>核心参数</h3><p>  corePoolSize 核心线程数，<br>  maximumPoolSize 最大线程数，<br>  keepAliveTime 非核心线程空闲存活时间，<br>  unit 时间单位，<br>  workQueue 任务队列，<br>  threadFactory 线程工厂，<br>  RejectedExecutionHandler 拒绝策略</p>
+<h3 id="线程池执行任务的流程是什么"><a href="#线程池执行任务的流程是什么" class="headerlink" title="线程池执行任务的流程是什么"></a>线程池执行任务的流程是什么</h3><ol>
+<li>如果运行中的线程数小于核心线程数，优先创建核心线程执行任务；</li>
+<li>如果核心线程都在忙，就先尝试把任务放进阻塞队列；</li>
+<li>如果队列满了，并且当前线程数还没到最大线程数，就创建非核心线程处理；</li>
+<li>如果队列也满了，线程数也到上限了，就触发拒绝策略。<br>所以线程池不是一上来就不断创建线程，而是在线程数和队列之间做平衡。</li>
+</ol>
+<h3 id="常见阻塞队列有哪些？怎么理解"><a href="#常见阻塞队列有哪些？怎么理解" class="headerlink" title="常见阻塞队列有哪些？怎么理解"></a>常见阻塞队列有哪些？怎么理解</h3><p>  ArrayBlockingQueue：有界数组队列，容量固定，适合明确控制堆积量；<br>  LinkedBlockingQueue：链表队列，默认容量很大，如果不手动设上限容易堆积；<br>  SynchronousQueue：不存储元素，来一个任务必须立刻交给线程处理，常见于 CachedThreadPool；<br>  PriorityBlockingQueue：支持优先级。<br>  生产里我更偏向有界队列，因为这样才能真正控制风险。</p>
+<h3 id="常见拒绝策略"><a href="#常见拒绝策略" class="headerlink" title="常见拒绝策略"></a>常见拒绝策略</h3><pre><code class="hljs">AbortPolicy：直接抛异常，默认策略；
+CallerRunsPolicy：由提交任务的线程自己执行，能起到反压效果；
+DiscardPolicy：直接丢弃，不报错；
+DiscardOldestPolicy：丢弃队列里最老的任务，再尝试提交当前任务。
+如果是核心链路，我通常不会默认静默丢弃，而是结合业务场景选择抛错、降级或者记录告警
+</code></pre>
+<h3 id="如何监控线程池是否健康"><a href="#如何监控线程池是否健康" class="headerlink" title="如何监控线程池是否健康"></a>如何监控线程池是否健康</h3><h4 id="线程池和并发治理重点监控"><a href="#线程池和并发治理重点监控" class="headerlink" title="线程池和并发治理重点监控"></a>线程池和并发治理重点监控</h4><pre><code class="hljs">线程池监控我一般会分成六类来看。
+第一类是资源类指标，比如 poolSize、activeCount、maximumPoolSize，主要看线程资源用了多少；
+第二类是队列类指标，比如 queue.size 和 remainingCapacity，主要看任务有没有堆积；
+第三类是吞吐类指标，比如 taskCount 和 completedTaskCount，看处理能力是否跟得上提交速度；
+第四类是异常类指标，比如拒绝次数、异常数和超时数，判断线程池是不是已经扛不住；
+第五类是时延类指标，比如任务执行耗时和排队耗时，用来区分慢点是在执行还是在排队；
+第六类是饱和度指标，比如线程饱和度、队列饱和度和拒绝率，这类指标更适合直接判断线程池当前的健康状态
+
+- 线程活跃度 = activeCount / poolSize
+- 线程饱和度 = activeCount / maximumPoolSize
+- 队列饱和度 = queue.size / 队列总容量
+- 拒绝率 = rejectedCount / taskCount
+</code></pre>
+<!-- 
+说明：下面默认 `executor` 表示 `ThreadPoolExecutor` 实例。
+
+| 层面 | 指标 | 作用 | 计算方式 / 来源 |
+| --- | --- | --- | --- |
+| 线程池资源 | `active / max` | 看线程池饱和度 | `executor.getActiveCount() / executor.getMaximumPoolSize()` |
+| 线程池资源 | `queue.size` | 看任务积压 | `executor.getQueue().size()` |
+| 线程池资源 | `queue.remaining` | 看队列余量 | `executor.getQueue().remainingCapacity()` |
+| 线程池资源 | `rejected` | 看线程池是否开始丢任务 | 自定义 `RejectedExecutionHandler` 计数 |
+| 线程池资源 | `task.exec` | 看任务占线程多久 | `beforeExecute` 记开始时间，`afterExecute` 记结束时间 |
+| 下游并发控制 | `sem.usage` | 看并发配额是否打满 | `used = totalPermits - availablePermits`，`usage = used / totalPermits` |
+| 下游并发控制 | `sem.rejected` | 看是否触发快速失败 | `tryAcquire()` 失败时计数 |
+| 异步回调质量 | `callback.success` | 看回调成功数 | 成功回调埋点计数 |
+| 异步回调质量 | `callback.timeout` | 看回调超时数 | 超时分支埋点计数 |
+| 异步回调质量 | `callback.exception` | 看回调异常数 | 异常分支埋点计数 |
+| 下游质量 | `downstream.rt` | 看各广告源 RT 和长尾 | `cost = endTime - startTime`，按 source 聚合 `P95/P99` |
+| 聚合链路结果 | `aggregate.success.ratio` | 看最终聚合成功率 | `成功请求数 / 总请求数` |
+| 业务结果 | `exposure` | 看曝光是否受影响 | 业务埋点统计 |
+| 业务结果 | `fill.rate` | 看广告填充效果 | `有广告返回请求数 / 广告请求总数` |
+ -->
+
+<h4 id="这个项目里最该盯的-5-个指标"><a href="#这个项目里最该盯的-5-个指标" class="headerlink" title="这个项目里最该盯的 5 个指标"></a>这个项目里最该盯的 5 个指标</h4><ol>
+<li><code>线程池利用率</code><br>这是最直接的饱和度指标，能最快看出某一类三方是不是把线程资源吃满了。</li>
+<li><code>队列堆积</code><br>线程池没拒绝不代表没问题，队列持续增长往往是 RT 恶化前最早的信号。</li>
+<li><code>rejected + sem.rejected</code><br>一个代表本机资源打满，一个代表下游保护生效，这两个指标能快速区分问题是在内部还是外部依赖。</li>
+<li><code>pool.task.exec + downstream.rt</code><br>两个指标要结合看，才能判断是线程真正忙于业务计算，还是下游广告源慢导致整体链路变长。</li>
+<li><code>callback.timeout + aggregate.success.ratio</code><br>异步化之后必须盯回调超时和最终聚合成功率，否则线程池指标看着正常，结果链路可能已经在悄悄降级。</li>
+</ol>
+<h3 id="线程池参数怎么定"><a href="#线程池参数怎么定" class="headerlink" title="线程池参数怎么定"></a>线程池参数怎么定</h3><p>我一般不会拍脑袋定线程池参数，而是先用 Little’s Law 算一个理论并发基线，再结合任务类型、队列策略、超时设置、机器资源和压测结果去做调整。公式可以理解成：</p>
+<p><code>并发数 = QPS × 平均线程占用时间</code></p>
+<p>比如单机 QPS 是 4500，平均线程占用时间是 10ms，那么理论并发基线就是 <code>4500 × 0.01 = 45</code>。但这个 45 只是起点，不是最终线程数。最终还要看任务是 CPU 密集还是 IO 密集、是否允许排队、队列容量多大、有没有超时和快速失败，以及高峰流量下的抖动情况。我的习惯是先算理论值，再加冗余，再通过压测和监控验证，最后确定 <code>corePoolSize</code>、<code>maximumPoolSize</code> 和 <code>queue</code> 的组合。</p>
+<p>CPU密集型：corePoolSize &#x3D; CPU核数 + 1（避免过多线程竞争CPU）<br>IO密集型：corePoolSize &#x3D; CPU核数 x 2（或更高，具体看IO等待时间）</p>
+<h3 id="为什么不建议直接用-Executors"><a href="#为什么不建议直接用-Executors" class="headerlink" title="为什么不建议直接用 Executors"></a>为什么不建议直接用 Executors</h3><p>因为 <code>Executors</code> 提供的快捷工厂方法很多默认参数在生产环境不安全。比如 <code>FixedThreadPool</code> 和 <code>SingleThreadExecutor</code> 默认使用无界 <code>LinkedBlockingQueue</code>，任务堆积时可能导致 OOM；<code>CachedThreadPool</code> 的最大线程数接近无上限，高并发下可能快速创建大量线程，把 CPU 和内存打满。所以生产环境更推荐直接 new <code>ThreadPoolExecutor</code>，显式指定线程数、队列容量、线程工厂和拒绝策略，让线程池行为可控。</p>
+<h3 id="有界队列和无界队列怎么选"><a href="#有界队列和无界队列怎么选" class="headerlink" title="有界队列和无界队列怎么选"></a>有界队列和无界队列怎么选</h3><p>生产环境我更偏向有界队列。无界队列的好处是短期内不容易触发拒绝，但代价是任务可能无限堆积，导致 RT 变长、内存上涨，而且很多时候 <code>maximumPoolSize</code> 也失去意义。有界队列虽然会更早暴露容量问题，但它能把风险限制住，逼着系统通过拒绝、降级、限流或者扩容来处理问题。我的理解是，无界队列是在隐藏问题，有界队列是在控制问题。</p>
+<h3 id="线程池里的任务互相等待会出什么问题"><a href="#线程池里的任务互相等待会出什么问题" class="headerlink" title="线程池里的任务互相等待会出什么问题"></a>线程池里的任务互相等待会出什么问题</h3><p>可能直接导致线程池进行假死<br>这是线程池里非常典型的风险。如果一个任务提交到线程池后，又同步等待同一个线程池里的其他任务结果，比如在任务里调用 <code>Future.get()</code><br>&#x3D;&#x3D;&#x3D;&#x3D;就可能出现线程饥饿甚至假死。因为线程都被前面的任务占住了，后面的依赖任务没有线程执行，前面的任务又一直在等后面的结果，最后整个线程池卡住。<br>解决思路一般有三种：第一，避免同池同步等待；第二，拆线程池做隔离；第三，改成异步编排或者设置超时，避免无限等待。</p>
+<h3 id="为什么线程池隔离很重要"><a href="#为什么线程池隔离很重要" class="headerlink" title="为什么线程池隔离很重要"></a>为什么线程池隔离很重要</h3><p>因为不同业务、不同下游的耗时模型和风险完全不一样。如果所有任务共用一个线程池，一个慢接口或者异常下游就可能把线程全部占满，最终拖垮整条链路。线程池隔离本质上是资源隔离，把故障影响范围限制在局部。比如高频短任务和低频慢任务应该拆开，不同三方依赖也应该拆开。线程池解决的不只是并发执行问题，更重要的是控制故障扩散。</p>
+<h3 id="execute-和-submit-的区别，以及异常怎么处理"><a href="#execute-和-submit-的区别，以及异常怎么处理" class="headerlink" title="execute 和 submit 的区别，以及异常怎么处理"></a>execute 和 submit 的区别，以及异常怎么处理</h3><p><code>execute()</code> 只接收 <code>Runnable</code>，没有返回值；<br><code>submit()</code> 可以提交 <code>Runnable</code> 或 <code>Callable</code>，会返回 <code>Future</code>，适合需要拿结果、取消任务或感知异常的场景。</p>
+<p>异常处理上，两者差别很大：</p>
+<ol>
+<li><code>execute()</code> 提交的任务如果抛异常，如果异常没有进行补货, 那会直接导致当前的worker 进行退出, 线程池感知这个worker 是异常结束的, 如果线程池还需要维持核心线程出或者队列里面还有任务, 那会重新补一个线程, 确保整体的处理能力不被长期削弱。</li>
+<li><code>submit()</code> 提交的任务如果抛异常，异常不会直接抛到调用方，而是被封装进 <code>Future</code>，只有在调用 <code>get()</code> 时才会拿到 <code>ExecutionException</code>，如果没有调用get 的时候异常会被吞掉</li>
+</ol>
+<p>所以如果只是 fire-and-forget 类型任务，可以用 <code>execute()</code>；如果要拿结果或者感知任务失败，用 <code>submit()</code> 更合适。但不管哪种方式，生产里都不能只依赖默认行为，最好在任务内部做好异常收口、日志和监控。</p>
 
                 
               </div>
