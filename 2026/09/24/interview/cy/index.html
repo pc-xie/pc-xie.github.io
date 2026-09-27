@@ -1,0 +1,713 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
+  <link rel="icon" href="/img/fluid.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="pc-xie">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="好，以下是全景清单——按背景规模 → 五个方案 → 成果 → CTO横切 → 个人组织，共 9 大类约 95 个问题，每个附最终答复要点。标 ⚠️ 的是需要真实数据&#x2F;事实确认后才能启用的。  一、背景与规模（开场5分钟必问）Q1. 平台是什么？聚合的是什么内容？广告物料聚合（简历”内容聚合与分发”&#x3D;广告场景）。若实际含非广告内容源，口径需统一。 Q2. 规模全景？7亿累计设备、">
+<meta property="og:type" content="article">
+<meta property="og:title" content="pc-xie">
+<meta property="og:url" content="http://localhost:4000/2026/09/24/interview/cy/index.html">
+<meta property="og:site_name" content="pc-xie">
+<meta property="og:description" content="好，以下是全景清单——按背景规模 → 五个方案 → 成果 → CTO横切 → 个人组织，共 9 大类约 95 个问题，每个附最终答复要点。标 ⚠️ 的是需要真实数据&#x2F;事实确认后才能启用的。  一、背景与规模（开场5分钟必问）Q1. 平台是什么？聚合的是什么内容？广告物料聚合（简历”内容聚合与分发”&#x3D;广告场景）。若实际含非广告内容源，口径需统一。 Q2. 规模全景？7亿累计设备、">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2026-09-24T07:11:42.806Z">
+<meta property="article:modified_time" content="2026-09-24T07:11:42.807Z">
+<meta property="article:author" content="pc-xie">
+<meta name="twitter:card" content="summary_large_image">
+  
+  
+  
+  <title>pc-xie</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"localhost","root":"/","version":"1.9.3","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Fluid</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text=""></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2026-09-24 15:11" pubdate>
+          2026年9月24日 下午
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          9k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          76 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none"></h1>
+            
+            
+              <div class="markdown-body">
+                
+                <p>好，以下是全景清单——按<strong>背景规模 → 五个方案 → 成果 → CTO横切 → 个人</strong>组织，共 9 大类约 95 个问题，每个附最终答复要点。标 ⚠️ 的是需要真实数据&#x2F;事实确认后才能启用的。</p>
+<hr>
+<h1 id="一、背景与规模（开场5分钟必问）"><a href="#一、背景与规模（开场5分钟必问）" class="headerlink" title="一、背景与规模（开场5分钟必问）"></a>一、背景与规模（开场5分钟必问）</h1><p><strong>Q1. 平台是什么？聚合的是什么内容？</strong><br>广告物料聚合（简历”内容聚合与分发”&#x3D;广告场景）。若实际含非广告内容源，口径需统一。</p>
+<p><strong>Q2. 规模全景？</strong><br>7亿累计设备、2亿DAU、日请求30亿（人均15次）、二十余家三方、按地区路由、单请求平均扇出5路、下游调用150亿次&#x2F;天、平均QPS 3.5万、高峰约8万、单Pod峰值设计900 QPS、约90 Pod。⚠️ 确认真实Pod数。</p>
+<p><strong>Q3. DAU&#x2F;设备&#x3D;29%，偏高怎么解释？</strong><br>系统级场景（桌面+负一屏），统计的是<strong>当日活跃设备</strong>非账号（无需登录）；用户当天碰手机即计入。29%偏保守。</p>
+<p><strong>Q4. 为什么从静态预下发升级实时聚合？</strong><br>业务要实时性：素材和策略实时生效；静态模式要等下次拉取，运营调整错过流量窗口。</p>
+<p><strong>Q5. 老链路10秒P99怎么来的？</strong><br><strong>999线口径</strong>：串行+单路超时2s，5路全超时&#x3D;10s。0.1%请求全超时≈下游每天故障1~2分钟。⚠️ 硬前提：捞治理前999线真实值。</p>
+<p><strong>Q6. 常态耗时多少？</strong><br>双峰分布：常态串行5路约200<del>500ms（下游单路P50约10ms、P80约50ms、20%在100</del>200ms）；故障时超时叠加打满10s。<strong>问题是长尾不是均值。</strong></p>
+<p><strong>Q7. 为什么老链路单路超时敢设2秒？</strong><br>串行模型没有总预算概念，只能给每路宽松超时保填充率——这正好反证并行化的价值（有总预算后单路才敢收紧到800ms）。</p>
+<hr>
+<h1 id="二、方案一：多下游并行聚合"><a href="#二、方案一：多下游并行聚合" class="headerlink" title="二、方案一：多下游并行聚合"></a>二、方案一：多下游并行聚合</h1><p><strong>Q8. 并行链路完整流程？</strong><br>①按地区&#x2F;广告源配置解析扇出列表（平均~5路）→②按A&#x2F;B&#x2F;C路由到对应线程池+Semaphore→③并行提交（tryAcquire→Netty异步调用→成功填单元&#x2F;失败走熔断兜底→finally release）→④Tomcat线程join等待，整体预算2s→⑤聚合组装返回。</p>
+<p><strong>Q9. 为什么总耗时能收敛？</strong><br>T &#x3D; T1+T2+…（串行累加）→ T &#x3D; max(T1,…,Tn)（并行取最慢）+调度开销。</p>
+<p><strong>Q10. 最慢一路怎么办？</strong><br>三层限制：①单路超时上限截断（C类800ms）；②熔断状态机识别持续慢的三方，L2后改由缓存供给，慢路退出关键路径；③聚合层允许该单元缺失。最坏&#x3D;该单元缺失，整体RT不拖。</p>
+<p><strong>Q11. 总预算在哪？</strong><br>整体2s（Tomcat线程allOf&#x2F;join上限），预算内分单路150&#x2F;500&#x2F;800ms。并行取max不超预算；快速失败腾挪预算。讲述顺序：先总预算再单路。</p>
+<p><strong>Q12. 单路超时的依据？</strong><br>按各路实测RT的P99+余量；且受2s总预算约束。</p>
+<p><strong>Q13. 并行靠什么执行？和异步IO什么关系？</strong><br>线程池负责任务提交和回调装配（线程占用约10ms），Netty负责网络IO，Tomcat线程只等待。三层分工：<strong>异步IO解决等待、线程池解决隔离、Semaphore保护下游</strong>。</p>
+<p><strong>Q14. 为什么不用WebFlux全链路响应式？</strong><br>存量同步架构，全链路改造成本高、调试追踪复杂、团队心智负担大；选”异步IO+有界线程池”渐进式方案。</p>
+<p><strong>Q15. 为什么不做预计算&#x2F;静态化？</strong><br>否决的是全量静态化：维度组合爆炸、时效性不可控、存储和一致性成本高。缓存兜底是同维度、TTL有界的降级——<strong>有界降级 vs 无界降级</strong>。</p>
+<p><strong>Q16. 单路失败缺单元，端侧怎么渲染？</strong><br>响应按单元列表返回，缺哪个单元端侧少渲染哪个位置。治理前整请求超时&#x3D;整个广告位无展示；治理后缺一其余正常、1秒内返回。⚠️ 与端侧确认缺单元位置是留白还是端侧本地兜底。</p>
+<p><strong>Q17. 有没有默认素材兜底？</strong><br>没有，主动取舍：期望收益&#x3D;曝光×CTR×单次价值，错维度素材CTR≈0、期望收益≈0，还拖累三方质量分（eCPM&#x2F;配额），展示不如不展示。缓存兜底是另一层（同维度有界陈旧，收益仍正）。</p>
+<hr>
+<h1 id="三、方案二：资源分级与可观测（线程池）"><a href="#三、方案二：资源分级与可观测（线程池）" class="headerlink" title="三、方案二：资源分级与可观测（线程池）"></a>三、方案二：资源分级与可观测（线程池）</h1><p><strong>Q18. 为什么分A&#x2F;B&#x2F;C三类线程池？</strong><br>三方流量特征差异大（A高频短RT追求吞吐、B中等、C长RT长尾明显）。共用池时C类慢请求耗尽线程拖垮A&#x2F;B——<strong>单点故障扩散</strong>。隔离后故障影响限制在自有资源池。</p>
+<p><strong>Q19. 20家三方怎么装进3个池？</strong><br>按各家实测RT&#x2F;流量归入A&#x2F;B&#x2F;C档；同档多家共享池内资源由档级Semaphore约束；高危单家有独立Semaphore。</p>
+<p><strong>Q20. 为什么不是每家一个池？</strong><br>拆太细资源碎片化、空闲与饥饿并存；20家&#x3D;20个池参数无法维护。三档是隔离效果和资源利用率的平衡点。</p>
+<p><strong>Q21. 线程池参数怎么定的？（核心题，全推导）</strong><br>Little’s Law：单Pod入口900 QPS×扇出5&#x3D;4500任务&#x2F;s；线程占用约10ms（实测）→理论并发4500×0.01&#x3D;<strong>45</strong>；按流量占比分档（A 50%&#x2F;B 28%&#x2F;C 22%）→各档并发基线→叠加冗余系数→参数表：A core64&#x2F;max128&#x2F;queue500、B 32&#x2F;64&#x2F;500、C 32&#x2F;64&#x2F;200。</p>
+<p><strong>Q22. 实测RT和规划RT为什么不一样？</strong><br>两套口径：<strong>实测</strong>（P50≈10ms&#x2F;P80≈50ms，用于描述和Tomcat测算）；<strong>规划</strong>（各档实测P99×放大系数&#x3D;A 150ms&#x2F;B 300ms&#x2F;C 500ms，用于线程池&#x2F;Semaphore测算）。容量规划刻意悲观是标准做法。⚠️ 捞各档实测P99，验证放大系数1.5~2倍。</p>
+<p><strong>Q23. 放大系数和1.8冗余系数重复吗？</strong><br>不重复：放大系数应对<strong>RT抖动</strong>（时间维度），冗余系数应对<strong>流量突增</strong>（流量维度），相乘才是完整安全边界。</p>
+<p><strong>Q24. Semaphore怎么定的？（必须现场演算）</strong><br>在途并发&#x3D;路QPS×规划RT×1.8：A 2250×0.15×1.8≈600、B 1260×0.3×1.8≈700、C 990×0.5×1.8≈900。⚠️ 三个值用同一公式，面试前重算一遍。</p>
+<p><strong>Q25. 为什么需要Semaphore，线程池不够吗？</strong><br>线程池隔离<strong>本机线程</strong>，管不住<strong>对外并发</strong>——流量突增或下游RT拉长时请求无界堆积压垮三方。Semaphore限制单Pod对单方的最大在途并发，超阈值快速失败，阻断雪崩链路。</p>
+<p><strong>Q26. 监控了什么？</strong><br>activeCount&#x2F;poolSize&#x2F;queue.size&#x2F;queue.remaining&#x2F;completedTaskCount&#x2F;rejected&#x2F;活跃度&#x2F;队列使用率&#x2F;任务执行耗时&#x2F;Semaphore使用率和拒绝数&#x2F;下游RT。⚠️ 确认监控列表与实现一致。</p>
+<p><strong>Q27. 监控之后的闭环是什么？</strong><br>两个消费方：①告警（拒绝率&#x2F;队列使用率超阈值人工介入）；②参数校准（定期基于历史监控重算容量参数，热更新下发）。不做全自动调参——参数与下游商务配额挂钩，自动调风险大于收益。</p>
+<p><strong>Q28. 拒绝策略？拒绝后怎么办？</strong><br>快速失败（abort），不重试。拒绝&#x3D;该路失败→缓存兜底→miss跳过该单元，与超时&#x2F;熔断<strong>共用同一套单元级兜底</strong>，触发源不同而已。</p>
+<p><strong>Q29. 为什么不重试？</strong><br>下游已慢到打满池时重试&#x3D;加压加速雪崩；2s预算内重试无展示窗口；快速失败让资源的期望收益更高。</p>
+<p><strong>Q30. 为什么不做部署级隔离（一家一个服务）？</strong><br>①架构不可行：单请求扇出多家，拆服务&#x3D;跨服务编排多一跳RPC，违背RT收敛；②成本：20+服务运维爆炸，进程内三档达到同等故障域语义；③故障模式是慢调用&#x2F;抖动非进程宕机，线程池+Sem+超时+熔断四层已覆盖。</p>
+<p><strong>Q31. 「动态绑定线程池」什么意思？</strong><br>条件式：能解释为”新三方&#x2F;新规则经配置热更新绑定资源档、免发布”则留；否则简历改”按流量特征分级隔离”。</p>
+<p><strong>Q32. 线程池共享内存&#x2F;GC的盲区？</strong><br>盲区真实存在：GC已被对象模型治理（2s→200ms）；带宽有容量上限。若未来出现进程级争抢，演进方向是按档拆Pod——渐进路径不是起点。</p>
+<hr>
+<h1 id="四、方案三：异步IO与对象复用（含GC）"><a href="#四、方案三：异步IO与对象复用（含GC）" class="headerlink" title="四、方案三：异步IO与对象复用（含GC）"></a>四、方案三：异步IO与对象复用（含GC）</h1><p><strong>Q33. 为什么改Netty异步？</strong><br>同步阻塞模型下业务线程卡在IO等待：入口900 QPS扇出后下游4600 QPS，下游一抖线程池即耗尽。异步后业务线程只提交+装配（10ms），少量线程支撑大量在途请求。</p>
+<p><strong>Q34. 为什么不用线程池就够了、还要Netty？（反过来也要答）</strong><br>同步HTTP Client线程占用&#x3D;整个RT（100~500ms）；Netty把IO等待从线程上剥离。4500任务&#x2F;s×0.5s&#x3D;2250并发线程（不可能），×0.01s&#x3D;45（可行）——这是异步化的收益来源。</p>
+<p><strong>Q35. 为什么还要线程池，EventLoop不能跑业务吗？</strong><br>不能：业务逻辑和EventLoop耦合，下游处理波动会占住EventLoop，影响同线程所有连接；且EventLoop无法做A&#x2F;B&#x2F;C业务隔离。<strong>异步IO解决等待，线程池解决隔离，两者不可互替。</strong></p>
+<p><strong>Q36. Tomcat线程join等待2s，异步化省了什么？</strong><br>省的不是Tomcat等待线程（空等便宜），而是<strong>工作线程不被网络IO占用</strong>。Tomcat层只做等待+响应组装，本身很轻。</p>
+<p><strong>Q37. Tomcat线程数够吗？（算给他看）</strong><br>实测加权RT≈50ms（50%×10+30%×50+20%×150）→900×0.05&#x3D;45个，峰值冗余后约135&lt;默认200。极端抖动靠Semaphore快速失败缩短线程占用时长。⚠️ 确认max-threads实际配置。</p>
+<p><strong>Q38. 异步回调有什么坑？</strong><br>超时未触发导致内存泄漏、回调异常遗漏、上下文（traceId）丢失、EventLoop阻塞。应对：统一超时收口、回调埋点监控成功&#x2F;超时&#x2F;异常、上下文透传、每三方独立连接池。</p>
+<p><strong>Q39. 连接池怎么管理的？</strong><br>每三方独立池；<strong>连接数上界&#x3D;Semaphore许可数</strong>（拿到许可才发起调用，在途请求数就是连接数上界），结构上无暴涨可能；keep-alive复用；超时&#x2F;取消finally释放，监控活跃&#x2F;空闲连接数。</p>
+<p><strong>Q40. 对象复用怎么做的？</strong><br>请求内复用模板骨架：一次请求一份模板骨架，5路完成后统一填充，请求结束释放。无跨请求共享、无线程逃逸，安全性由作用域保证。⚠️ 简历措辞改为”减少对象分配&#x2F;原地填充”，避免”对象池”联想。</p>
+<p><strong>Q41. 为什么不用对象池？</strong><br>池化有归还、重置、泄漏复杂度；请求内复用的安全性由作用域天然保证，无脏数据问题。</p>
+<p><strong>Q42. GC问题怎么排查的？（方法论题）</strong><br>先定性：Old区稳定排除泄漏→压力在Young区分配过快。再定位：Arthas&#x2F;async-profiler alloc事件火焰图→热点SerializationUtils.clone+JSON反序列化装配→根因是并行化后多路结果同时存在、每任务克隆模板，临时对象激增。✅ 答”先定性再定位、工具组合”是加分点。</p>
+<p><strong>Q43. 为什么不调JVM参数？</strong><br>调大堆&#x2F;改GC参数只延后问题不是根治；从对象模型入手（模板只读、去clone、contextHolder、任务结束后统一填充），请求内只留一份骨架+一份下游引用，中间对象降90%+。</p>
+<p><strong>Q44. GC成果口径？</strong><br>Young GC Pause峰值2s→200ms。⚠️ 全材料删掉”10毫秒”残留；确认峰值还是均值并统一。</p>
+<p><strong>Q45. 还能再降吗？为什么停在200ms？</strong><br>分配速率已降90%+，剩余是反序列化固有开销；200ms峰值频次低、与2s预算兼容、对P99无实质影响；再降&#x3D;ZGC&#x2F;池化，投入产出不划算，ZGC做过预研作为储备。</p>
+<p><strong>Q46. GC停顿正好打到请求里怎么办？</strong><br>单路800ms预算内叠加一次GC停顿仍不破2s总预算；GC随机发生，5路同时受阻概率极低。</p>
+<hr>
+<h1 id="五、方案四：分级熔断与缓存降级"><a href="#五、方案四：分级熔断与缓存降级" class="headerlink" title="五、方案四：分级熔断与缓存降级"></a>五、方案四：分级熔断与缓存降级</h1><p><strong>Q47. 为什么要熔断？</strong><br>下游异常不代表请求必须失败。不熔断&#x3D;可用性完全交给下游；统一熔断一刀切误伤；只做缓存不熔断扛不住持续放大；返回空业务不可接受。</p>
+<p><strong>Q48. 状态机怎么设计的？</strong><br>10s滑动窗口（10×1s桶）统计失败率，四级：L0&lt;20%正常转发；L1 20<del>50%仍转发+成功写Redis备底仓；L2 50</del>80%仍转发+失败读缓存、miss跳过；L3&gt;80%强熔断主流量读缓存+每秒5探针。恢复：连续窗口errorRate&lt;10%→5%→20%→50%→80%→100%阶梯放量回L0。</p>
+<p><strong>Q49. 阈值20&#x2F;50&#x2F;80依据？</strong><br>以填充率损失+下游保护反推：20%以下大概率毛刺、转发期望收益最高；20<del>50%波动实质伤收益、备底仓；50</del>80%实时转发期望收益已低于缓存兜底；&gt;80%继续打只放大故障。初版按逻辑定、上线按各家故障数据校准。⚠️ “校准过”没做过就删。</p>
+<p><strong>Q50. 窗口为什么10秒？</strong><br>灵敏度与抗抖动的权衡：太短少量突增误判，太长感知慢。10s能平滑毛刺又能较快捕捉持续恶化，适配素材调用RT特征。</p>
+<p><strong>Q51. 窗口怎么实现的？</strong><br>分桶环形数组（10个1s桶），桶内successCount&#x2F;failCount原子计数（LongAdder），滑动时淘汰过期桶，计算时聚合近10桶。分桶避免单大窗口内存开销。</p>
+<p><strong>Q52. 低基数保护？</strong><br>窗口总请求&lt;100不参与调档，防少量随机失败误触发。⚠️ 预埋：长尾三方流量小可能永不熔断→”长尾故障影响面小，阈值优先保证不误伤，异常靠人工巡检和SLA通告”。</p>
+<p><strong>Q53. L1为什么写缓存？</strong><br>轻微异常时下游还能返回正常内容，此时把成功结果写入Redis是为更高级别异常<strong>备底仓</strong>——分级熔断的核心思路是”恶化前备货”。</p>
+<p><strong>Q54. 缓存key维度？</strong><br>providerId+国家+语言+品牌——保证兜底素材与请求场景匹配（相关性是底线）。⚠️ 简历”地域机型”：品牌归一机型（确认）或改简历。</p>
+<p><strong>Q55. TTL多少、怎么定的？</strong><br>按三方分别配置（2~3小时），运营根据各三方素材有效期设定，走配置热更新下发；到期即miss走跳过。保证陈旧度硬上限。<strong>有界降级的”界”就在这里。</strong></p>
+<p><strong>Q56. 突发故障缓存是空的怎么办？（设计边界题）</strong><br>真实边界——缓存冷启动竞态：按需预热意味着突发故障跳过L1时底仓为空，高QPS下大量请求在首次回写前到达全部miss→跳过单元。这就是故障时段填充率80%的构成（受影响请求占比×首窗口miss率，与路数无关）。改进方向：高风险三方常写、必保单元默认物料、single-flight。</p>
+<p><strong>Q57. 为什么不平时常写缓存？</strong><br>全维度组合常写&#x3D;存储爆炸+大量缓存等不到读就过期。当时取舍是按需预热、用命中率换成本——事后看突发场景付了约20个点填充率代价。</p>
+<p><strong>Q58. 为什么不用默认素材？</strong><br>期望收益&#x3D;曝光×CTR×单次价值；错维度素材CTR≈0期望收益≈0，还拖累三方质量分（eCPM&#x2F;配额），净期望≤0。缓存兜底是同维度有界降级（质量打折收益仍正），默认素材是无界降级（相关性尽失）——<strong>相关性保不住就宁可不展示</strong>。</p>
+<p><strong>Q59. miss跳过和返回空的区别？</strong><br>统一口径：跳过该单元&#x3D;该单元返回空，请求正常返回、其他单元正常。</p>
+<p><strong>Q60. 为什么阶梯恢复、比例怎么定的？</strong><br>渐进验证下游恢复能力：小流量观察，失败率回升立刻停止放量回退缓存；5档（5&#x2F;20&#x2F;50&#x2F;80&#x2F;100）是经验节奏+下游承压能力的平衡。⚠️ 全材料统一成5档。</p>
+<p><strong>Q61. 恢复阈值为什么&lt;10%而L1是20%？</strong><br>迟滞（hysteresis）设计：进入和退出阈值不同防止状态在边界抖动、频繁切换。</p>
+<p><strong>Q62. 单机熔断还是集群？</strong><br>单Pod本地决策。三理由：①故障域——协调中心是单点；②恢复错峰——全局统一切回&#x3D;恢复浪涌打垮下游，独立探针+阶梯放量天然错峰；③Pod流量同构，去中心化结论趋同。</p>
+<p><strong>Q63. 有的Pod摘了有的没摘，压力不均？</strong><br>恰好是期望行为——感知滞后的Pod多承担一点，感知灵敏的已切缓存，总量上保护的是下游。</p>
+<p><strong>Q64. 为什么自研不用Sentinel&#x2F;Hystrix？</strong><br>①业务语义绑定：L1触发缓存预热、L3联动探针恢复+阶梯放量、与Semaphore&#x2F;缓存联动，通用熔断器只给开关；②复用已有滑动窗口统计（本来就在跑RT&#x2F;成功率监控），核心逻辑一百多行。</p>
+<p><strong>Q65. 窗口统计的并发安全？</strong><br>分桶+桶内原子计数（LongAdder），聚合时读近10桶快照。</p>
+<p><strong>Q66. 同key并发miss为什么不合并回源（single-flight）？</strong><br>故障窗口内该key请求绝大多数失败（下游已挂），合并价值有限；更适合下游变慢未挂的场景。作为优化方向提及。</p>
+<hr>
+<h1 id="六、方案五：配置监听机制"><a href="#六、方案五：配置监听机制" class="headerlink" title="六、方案五：配置监听机制"></a>六、方案五：配置监听机制</h1><p><strong>Q67. 热更新机制？</strong><br>事件通知+主动拉取+定时轮询兜底：运营变更落库→更新配置中心版本文件→服务端监听事件→主动拉取最新配置写本地；保留5分钟轮询兜底防事件丢失。正常秒级感知，事件丢了有兜底。</p>
+<p><strong>Q68. 为什么不用Nacos&#x2F;Apollo？</strong><br>配置量级小（二十余家参数+路由），变更频率分钟级；Nacos集群部署+一致性协议是过度设计。轻量版几十行代码零外部依赖。</p>
+<p><strong>Q69. 事件丢失&#x2F;监听异常怎么办？</strong><br>定时轮询兜底——不完美依赖事件机制，可靠性有保证。</p>
+<p><strong>Q70. 错误配置怎么防？</strong><br>三道：发布前格式+规则校验（不过发不出去，防护前置）；版本号机制（保留最近版本，回滚&#x3D;重发旧版本，同链路秒级生效）；审计日志+生效监控。</p>
+<p><strong>Q71. 「治理规则近实时生效」指什么？</strong><br>条件式：若TTL&#x2F;熔断阈值&#x2F;路由&#x2F;配额都走热更新→”治理规则&#x3D;配置化治理参数，线上调参免发版”；若只有业务配置→简历改”业务配置近实时生效”。</p>
+<p><strong>Q72. 各实例配置不一致怎么办？</strong><br>版本号+生效状态校验，发现实例不一致告警。</p>
+<p><strong>Q73. 5000万怎么算的？</strong><br>窗口法：旧机制实例5分钟轮询+时间点错峰，全集群生效最长两周期≈10分钟陈旧窗口；高峰8万QPS×600s≈4800万≈5000万次。用高峰因为运营变更在工作时段高峰。业务放大：5000万用户每天只访问一次（DAU的1&#x2F;4），命中陈旧&#x3D;一整天陈旧。⚠️ 确认埋点口径。</p>
+<p><strong>Q74. 新接一家三方的成本？</strong><br>主要是配置工作：路由表加条目、归入资源档、设超时和Semaphore配额——周级改代码缩短到天内。核心框架与三方解耦。⚠️ 确认是否真免代码。</p>
+<hr>
+<h1 id="七、项目成果"><a href="#七、项目成果" class="headerlink" title="七、项目成果"></a>七、项目成果</h1><p><strong>Q75. P99成果口径？</strong><br>双线唯一口径：P99从X秒降至<strong>1秒左右</strong>、999线从<strong>10秒降至2秒以内</strong>（整体预算2s）。预算和实际的关系主动讲。⚠️ X为治理前P99真实值（大概率4~8s）。</p>
+<p><strong>Q76. GC成果？</strong><br>Young GC Pause峰值2秒→200毫秒。</p>
+<p><strong>Q77. 配置生效成果？</strong><br>5分钟→秒级；单次变更陈旧配置下发从约5000万次→接近0。</p>
+<p><strong>Q78. 业务收益是什么？（CTO必问）</strong><br>填充率三件套：正常≥95%、治理前故障≈0、治理后保底80%——<strong>故障即归零→故障保住八成</strong>，填充率&#x3D;广告收入。端侧从转圈10秒到1秒内响应。5000万日一次用户从”当天归零”到”保住八成”。⚠️ 有真实曝光&#x2F;收入数据更佳。</p>
+<hr>
+<h1 id="八、CTO横切问题"><a href="#八、CTO横切问题" class="headerlink" title="八、CTO横切问题"></a>八、CTO横切问题</h1><p><strong>Q79. 为什么必须服务端实时聚合？端侧缓存不行吗？</strong><br>实时聚合保<strong>定向精度</strong>（地域&#x2F;语言&#x2F;品牌匹配），这是eCPM的基础；端侧缓存和静态化都丢这个。</p>
+<p><strong>Q80. 架构下一步演进？</strong><br>按三方收益&#x2F;时效敏感度<strong>分层</strong>：低收益高风险的转近线预计算（分钟级缓存供给），高收益保实时。是现有分级体系的延伸，缓存兜底已是雏形。</p>
+<p><strong>Q81. 成本账？</strong><br>净账是省的远多于花的：线程利用率提升→同等流量更少Pod（并行前线程被IO空占，现在单线程支撑更多在途请求）；新增成本是Redis+Netty运维，量级远小于省下的机器。⚠️ 找运维要优化前后Pod数。</p>
+<p><strong>Q82. 平台化沉淀？</strong><br>治理框架（线程池分级&#x2F;Semaphore&#x2F;状态机&#x2F;热更新）与具体三方解耦，其他多下游聚合业务线可复用；新接入配置化。</p>
+<p><strong>Q83. 有没有考虑流量质量分对商业关系的影响？</strong><br>有——这是不做默认素材的核心论据：低相关展示拉低eCPM，三方会降配额和单价，长期损失大于单次曝光收益。</p>
+<hr>
+<h1 id="九、个人与团队"><a href="#九、个人与团队" class="headerlink" title="九、个人与团队"></a>九、个人与团队</h1><p><strong>Q84. 团队多大？你负责什么？</strong><br>⚠️ 需自定：几人团队、你独立负责的部分（聚合链路设计&#x2F;容量模型&#x2F;熔断状态机&#x2F;GC治理）、哪些是协作（端侧渲染、下游对接）。用STAR细节证明”主导”：线程池参数是你压测算的、阈值是你定的。</p>
+<p><strong>Q85. 这个项目最难的点是什么？</strong><br>不说技术点，说判断点：异步化落地方案的选择（存量约束下的渐进改造）、容量模型的建立（从拍参数到Little’s Law）、以及”知道系统哪里没兜住”（冷缓存窗口）并给出演进路线。</p>
+<hr>
+<h1 id="执行清单（非话术，面试前必做）"><a href="#执行清单（非话术，面试前必做）" class="headerlink" title="执行清单（非话术，面试前必做）"></a>执行清单（非话术，面试前必做）</h1><p><strong>捞数据（6项）</strong>：①治理前P99+999线（硬前提）②下游超时率 ③Redis命中率 ④A&#x2F;B&#x2F;C实测P99 ⑤Tomcat max-threads ⑥Pod数&#x2F;正常时段填充率&#x2F;真实TTL</p>
+<p><strong>改简历（6处）</strong>：数十路→二十余家；”动态绑定””治理规则”两词按Q31&#x2F;Q71处理；”地域机型”按Q54处理；GC删10ms残留；恢复阶梯统一5档；成果段改双线口径</p>
+<p><strong>确认事实（4项）</strong>：新接入是否免代码（Q74）&#x2F;机器数净账（Q81）&#x2F;端侧缺单元渲染（Q16）&#x2F;“校准过”类表述（Q49）</p>
+<p>这 95 个问题全部有答案后，你唯一要做的就是熟练度和数据校准。需要的话，我可以再压成一页「速查卡」版本。</p>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div></div>
+      <div>http://localhost:4000/2026/09/24/interview/cy/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>pc-xie</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2026年9月24日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2026/09/24/interview/%E6%80%BB%E7%9B%91%E9%9D%A2%E8%A1%A5%E5%85%85%E6%B8%85%E5%8D%95/" title="总监面补充清单">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">总监面补充清单</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2026/09/23/interview/%E6%96%B9%E6%A1%88%E5%AF%B9%E6%AF%94/" title="方案对比">
+                        <span class="hidden-mobile">方案对比</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>
