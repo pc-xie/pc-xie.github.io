@@ -1,0 +1,788 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
+  <link rel="icon" href="/img/fluid.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="pc-xie">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="传统网关面试重点与补强清单基于你当前简历内容整理，重点是帮助你把“做过网关”升级成“对网关有完整体系化认知”。 面试官会重点追问的 20 个问题1. 为什么要把 Tomcat 换成 Netty？ 阻塞模型在高并发和突发流量下，线程和连接资源容易成为瓶颈。 Netty 的事件驱动和异步 IO 能提升连接利用率和单机吞吐。 迁移的核心不是“换框架”，而是把同步阻塞转成异步转发链路。  2. 单机性能提">
+<meta property="og:type" content="article">
+<meta property="og:title" content="传统网关面试重点与补强清单">
+<meta property="og:url" content="http://localhost:4000/2026/09/29/interview/%E4%BC%A0%E7%BB%9F%E7%BD%91%E5%85%B3%E9%9D%A2%E8%AF%95%E9%87%8D%E7%82%B9%E4%B8%8E%E8%A1%A5%E5%BC%BA%E6%B8%85%E5%8D%95/index.html">
+<meta property="og:site_name" content="pc-xie">
+<meta property="og:description" content="传统网关面试重点与补强清单基于你当前简历内容整理，重点是帮助你把“做过网关”升级成“对网关有完整体系化认知”。 面试官会重点追问的 20 个问题1. 为什么要把 Tomcat 换成 Netty？ 阻塞模型在高并发和突发流量下，线程和连接资源容易成为瓶颈。 Netty 的事件驱动和异步 IO 能提升连接利用率和单机吞吐。 迁移的核心不是“换框架”，而是把同步阻塞转成异步转发链路。  2. 单机性能提">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2026-09-29T13:30:00.000Z">
+<meta property="article:modified_time" content="2026-09-29T06:17:14.334Z">
+<meta property="article:author" content="pc-xie">
+<meta property="article:tag" content="interview">
+<meta property="article:tag" content="gateway">
+<meta name="twitter:card" content="summary_large_image">
+  
+  
+  
+  <title>传统网关面试重点与补强清单 - pc-xie</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"localhost","root":"/","version":"1.9.3","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Fluid</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="传统网关面试重点与补强清单"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2026-09-29 21:30" pubdate>
+          2026年9月29日 晚上
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          2.8k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          24 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">传统网关面试重点与补强清单</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h1 id="传统网关面试重点与补强清单"><a href="#传统网关面试重点与补强清单" class="headerlink" title="传统网关面试重点与补强清单"></a>传统网关面试重点与补强清单</h1><p>基于你当前简历内容整理，重点是帮助你把“做过网关”升级成“对网关有完整体系化认知”。</p>
+<h2 id="面试官会重点追问的-20-个问题"><a href="#面试官会重点追问的-20-个问题" class="headerlink" title="面试官会重点追问的 20 个问题"></a>面试官会重点追问的 20 个问题</h2><h3 id="1-为什么要把-Tomcat-换成-Netty？"><a href="#1-为什么要把-Tomcat-换成-Netty？" class="headerlink" title="1. 为什么要把 Tomcat 换成 Netty？"></a>1. 为什么要把 Tomcat 换成 Netty？</h3><ul>
+<li>阻塞模型在高并发和突发流量下，线程和连接资源容易成为瓶颈。</li>
+<li>Netty 的事件驱动和异步 IO 能提升连接利用率和单机吞吐。</li>
+<li>迁移的核心不是“换框架”，而是把同步阻塞转成异步转发链路。</li>
+</ul>
+<h3 id="2-单机性能提升-5-倍，这个口径是怎么测出来的？"><a href="#2-单机性能提升-5-倍，这个口径是怎么测出来的？" class="headerlink" title="2. 单机性能提升 5 倍，这个口径是怎么测出来的？"></a>2. 单机性能提升 5 倍，这个口径是怎么测出来的？</h3><ul>
+<li>压测场景、请求模型、并发度、硬件资源、限流策略都要一致。</li>
+<li>说明是吞吐提升、RT 下降，还是在同等 RT 下的可承载量提升。</li>
+<li>面试官会很看重你有没有严谨的结果口径。</li>
+</ul>
+<h3 id="3-网关的路由规则怎么设计？"><a href="#3-网关的路由规则怎么设计？" class="headerlink" title="3. 网关的路由规则怎么设计？"></a>3. 网关的路由规则怎么设计？</h3><ul>
+<li>按域名、Path、Header、租户、环境或业务标签路由。</li>
+<li>静态规则加动态配置结合。</li>
+<li>要能讲清路由变更如何生效、如何灰度、如何回滚。</li>
+</ul>
+<h3 id="4-服务发现和本地路由缓存怎么配合？"><a href="#4-服务发现和本地路由缓存怎么配合？" class="headerlink" title="4. 服务发现和本地路由缓存怎么配合？"></a>4. 服务发现和本地路由缓存怎么配合？</h3><ul>
+<li>注册中心是事实源，本地缓存是性能手段。</li>
+<li>注册中心波动时，网关要能用本地快照兜底。</li>
+<li>路由缓存要有过期、刷新和异常回退机制。</li>
+</ul>
+<h3 id="5-下游超时时，网关如何保护自己？"><a href="#5-下游超时时，网关如何保护自己？" class="headerlink" title="5. 下游超时时，网关如何保护自己？"></a>5. 下游超时时，网关如何保护自己？</h3><ul>
+<li>设置连接超时、读超时、整体超时预算。</li>
+<li>线程池隔离、连接池隔离、防止慢调用拖垮主链路。</li>
+<li>必要时做熔断和降级，避免雪崩扩散。</li>
+</ul>
+<h3 id="6-限流、熔断、降级三者的边界是什么？"><a href="#6-限流、熔断、降级三者的边界是什么？" class="headerlink" title="6. 限流、熔断、降级三者的边界是什么？"></a>6. 限流、熔断、降级三者的边界是什么？</h3><ul>
+<li>限流是控制流量进入速度。</li>
+<li>熔断是发现下游异常后主动断流，避免持续打坏链路。</li>
+<li>降级是即使不能正常走完整链路，也要返回兜底结果或部分可用能力。</li>
+</ul>
+<h3 id="7-单机限流和集群限流分别解决什么问题？"><a href="#7-单机限流和集群限流分别解决什么问题？" class="headerlink" title="7. 单机限流和集群限流分别解决什么问题？"></a>7. 单机限流和集群限流分别解决什么问题？</h3><ul>
+<li>单机限流保护本机线程池、连接池和 CPU。</li>
+<li>集群限流控制租户、接口、业务级共享配额。</li>
+<li>两者不能互相替代，只能组合使用。</li>
+</ul>
+<h3 id="8-为什么要把大集群拆成小集群？"><a href="#8-为什么要把大集群拆成小集群？" class="headerlink" title="8. 为什么要把大集群拆成小集群？"></a>8. 为什么要把大集群拆成小集群？</h3><ul>
+<li>避免不同业务相互抢占资源。</li>
+<li>降低局部故障的影响半径。</li>
+<li>代价是资源利用率和运维复杂度上升，需要解释 tradeoff。</li>
+</ul>
+<h3 id="9-配置灰度和流量灰度分别解决什么问题？"><a href="#9-配置灰度和流量灰度分别解决什么问题？" class="headerlink" title="9. 配置灰度和流量灰度分别解决什么问题？"></a>9. 配置灰度和流量灰度分别解决什么问题？</h3><ul>
+<li>配置灰度用于验证规则正确性和配置变更风险。</li>
+<li>流量灰度用于验证链路行为和性能影响。</li>
+<li>两者结合才能降低生产变更风险。</li>
+</ul>
+<h3 id="10-TransactionId-是怎么生成、透传和使用的？"><a href="#10-TransactionId-是怎么生成、透传和使用的？" class="headerlink" title="10. TransactionId 是怎么生成、透传和使用的？"></a>10. TransactionId 是怎么生成、透传和使用的？</h3><ul>
+<li>请求进入网关时生成全局 ID。</li>
+<li>在线程切换、异步回调、下游转发时透传。</li>
+<li>用于把访问日志、异常日志、下游调用、监控事件串起来。</li>
+</ul>
+<h3 id="11-异步链路里怎么做上下文传递？"><a href="#11-异步链路里怎么做上下文传递？" class="headerlink" title="11. 异步链路里怎么做上下文传递？"></a>11. 异步链路里怎么做上下文传递？</h3><ul>
+<li>不能依赖 ThreadLocal 天然透传。</li>
+<li>需要显式传递上下文，或在异步框架中做包装。</li>
+<li>这是 Netty 异步模型里很容易被追问的实现细节。</li>
+</ul>
+<h3 id="12-线程池为什么要隔离？怎么分？"><a href="#12-线程池为什么要隔离？怎么分？" class="headerlink" title="12. 线程池为什么要隔离？怎么分？"></a>12. 线程池为什么要隔离？怎么分？</h3><ul>
+<li>不同下游、不同行为、不同 SLA 的请求不能共用一套线程资源。</li>
+<li>可以按业务优先级、QPS、时延特征、失败影响面做分档。</li>
+<li>线程池不是越多越好，关键是隔离收益大于切换成本。</li>
+</ul>
+<h3 id="13-如何评估线程池和连接池大小？"><a href="#13-如何评估线程池和连接池大小？" class="headerlink" title="13. 如何评估线程池和连接池大小？"></a>13. 如何评估线程池和连接池大小？</h3><ul>
+<li>看下游 RT、峰值 QPS、超时设置和调用模型。</li>
+<li>结合压测验证，不靠拍脑袋。</li>
+<li>要预留抖动空间，但不能无限放大资源。</li>
+</ul>
+<h3 id="14-如果注册中心或配置中心故障，网关怎么办？"><a href="#14-如果注册中心或配置中心故障，网关怎么办？" class="headerlink" title="14. 如果注册中心或配置中心故障，网关怎么办？"></a>14. 如果注册中心或配置中心故障，网关怎么办？</h3><ul>
+<li>注册中心故障时依赖本地缓存和快照。</li>
+<li>配置中心故障时要保证上一次有效配置可用。</li>
+<li>核心目标是让网关进入“只读稳态”，而不是跟着一起失效。</li>
+</ul>
+<h3 id="15-网关如何做高可用和跨机房容灾？"><a href="#15-网关如何做高可用和跨机房容灾？" class="headerlink" title="15. 网关如何做高可用和跨机房容灾？"></a>15. 网关如何做高可用和跨机房容灾？</h3><ul>
+<li>实例无状态化、集群部署、多机房部署。</li>
+<li>机房级故障切流、路由切换、流量回切。</li>
+<li>配置和注册信息的一致性与收敛速度很关键。</li>
+</ul>
+<h3 id="16-网关如何做可观测性？"><a href="#16-网关如何做可观测性？" class="headerlink" title="16. 网关如何做可观测性？"></a>16. 网关如何做可观测性？</h3><ul>
+<li>指标：QPS、P99、错误率、超时率、连接池使用率、线程池拒绝数。</li>
+<li>日志：访问日志、转发日志、异常日志、灰度命中日志。</li>
+<li>Trace：请求进入、路由决策、下游调用、返回和异常链路。</li>
+</ul>
+<h3 id="17-某个接口-RT-突然飙升，你怎么排查？"><a href="#17-某个接口-RT-突然飙升，你怎么排查？" class="headerlink" title="17. 某个接口 RT 突然飙升，你怎么排查？"></a>17. 某个接口 RT 突然飙升，你怎么排查？</h3><ul>
+<li>先看是全局还是局部，是某租户、某接口还是某机房。</li>
+<li>再看网关自身资源、路由命中、下游 RT、错误率、连接池和线程池。</li>
+<li>最后根据 TransactionId 下钻到单请求链路。</li>
+</ul>
+<h3 id="18-你如何做网关压测？"><a href="#18-你如何做网关压测？" class="headerlink" title="18. 你如何做网关压测？"></a>18. 你如何做网关压测？</h3><ul>
+<li>压测要模拟真实路由规则、真实 Header、真实连接模型。</li>
+<li>区分冷启动、稳态、突刺流量。</li>
+<li>不只看 QPS，还要看 P99、超时率、线程池、连接池和 GC。</li>
+</ul>
+<h3 id="19-网关的安全能力你做过哪些？"><a href="#19-网关的安全能力你做过哪些？" class="headerlink" title="19. 网关的安全能力你做过哪些？"></a>19. 网关的安全能力你做过哪些？</h3><ul>
+<li>至少要能讲 API Key、签名、鉴权、黑白名单、防重放、接口防刷。</li>
+<li>这是你简历当前相对偏弱的一块，需要主动补。</li>
+</ul>
+<h3 id="20-如果迁移到-AI-网关，你认为传统网关哪些能力能直接复用？"><a href="#20-如果迁移到-AI-网关，你认为传统网关哪些能力能直接复用？" class="headerlink" title="20. 如果迁移到 AI 网关，你认为传统网关哪些能力能直接复用？"></a>20. 如果迁移到 AI 网关，你认为传统网关哪些能力能直接复用？</h3><ul>
+<li>统一接入、鉴权、限流、隔离、熔断、灰度、链路追踪、容灾。</li>
+<li>需要新增的是 Token、成本、账单、多模型适配和流式响应治理。</li>
+</ul>
+<h2 id="结合你简历的优势点"><a href="#结合你简历的优势点" class="headerlink" title="结合你简历的优势点"></a>结合你简历的优势点</h2><ul>
+<li>汇付网关经历非常适合作为主代表作，尤其是 <code>Tomcat -&gt; Netty</code>、集群隔离、灰度和链路埋点。</li>
+<li>传音经历能补强高依赖下游、异步聚合、线程池隔离、熔断缓存降级。</li>
+<li>携程经历能补强配置中心、异地多活、故障切换和核心基础设施稳定性。</li>
+<li>三段经历串起来，已经形成了“核心链路 + 高并发 + 稳定性治理”的连续主线。</li>
+</ul>
+<h2 id="结合你简历的风险点"><a href="#结合你简历的风险点" class="headerlink" title="结合你简历的风险点"></a>结合你简历的风险点</h2><ul>
+<li>鉴权和权限模型写得偏少，容易被质疑“更多偏转发和稳定性，不够偏接入安全”。</li>
+<li>路由决策细节没有展开，容易被追问“到底怎么从请求映射到下游”。</li>
+<li>限流体系没有系统化展开，目前更多突出隔离、熔断和异步化。</li>
+<li>Netty 改造写了结果，但线程模型、上下文透传、超时预算这些实现细节还需要准备。</li>
+<li>传统网关到 AI 网关的迁移点，需要你主动讲清楚，不然面试官会把你归类为“只做过普通网关”。</li>
+</ul>
+<h2 id="你需要重点补强的内容"><a href="#你需要重点补强的内容" class="headerlink" title="你需要重点补强的内容"></a>你需要重点补强的内容</h2><h3 id="1-鉴权与权限模型"><a href="#1-鉴权与权限模型" class="headerlink" title="1. 鉴权与权限模型"></a>1. 鉴权与权限模型</h3><ul>
+<li>API Key、签名、时间戳、防重放。</li>
+<li>租户、应用、接口三级权限控制。</li>
+<li>黑白名单和风控策略。</li>
+</ul>
+<h3 id="2-路由决策与服务发现"><a href="#2-路由决策与服务发现" class="headerlink" title="2. 路由决策与服务发现"></a>2. 路由决策与服务发现</h3><ul>
+<li>Path&#x2F;Header&#x2F;租户&#x2F;标签路由。</li>
+<li>注册中心、本地缓存、故障快照。</li>
+<li>动态规则发布、灰度和回滚。</li>
+</ul>
+<h3 id="3-限流体系化表达"><a href="#3-限流体系化表达" class="headerlink" title="3. 限流体系化表达"></a>3. 限流体系化表达</h3><ul>
+<li>单机限流、集群限流、接口级限流、租户级限流。</li>
+<li>令牌桶、滑动窗口、并发数控制。</li>
+<li>限流命中后的行为是拒绝、排队还是降级。</li>
+</ul>
+<h3 id="4-网关内部线程模型"><a href="#4-网关内部线程模型" class="headerlink" title="4. 网关内部线程模型"></a>4. 网关内部线程模型</h3><ul>
+<li>IO 线程和业务线程的边界。</li>
+<li>为什么不能在 EventLoop 里做重逻辑。</li>
+<li>线程池隔离的策略和容量评估。</li>
+</ul>
+<h3 id="5-流式响应与-SSE"><a href="#5-流式响应与-SSE" class="headerlink" title="5. 流式响应与 SSE"></a>5. 流式响应与 SSE</h3><ul>
+<li>长连接管理、取消传播、首包时间、整体超时。</li>
+<li>流式场景下的重试和 fallback 边界。</li>
+<li>这部分是传统网关迁移 AI 网关时的关键加分项。</li>
+</ul>
+<h3 id="6-计费平台基础认知"><a href="#6-计费平台基础认知" class="headerlink" title="6. 计费平台基础认知"></a>6. 计费平台基础认知</h3><ul>
+<li>即使岗位重点是网关，也要补 Token、配额、预算、账单四层关系。</li>
+<li>面试时不能只会讲网关转发，还要能讲“转发之后怎么计量和控成本”。</li>
+</ul>
+<h2 id="面试时推荐的话术"><a href="#面试时推荐的话术" class="headerlink" title="面试时推荐的话术"></a>面试时推荐的话术</h2><p>你可以这样概括自己的网关能力：</p>
+<p>“我过去在网关和核心链路方向，主要积累的是统一接入、异步转发、流量治理、隔离熔断、灰度发布和全链路观测这些能力。汇付那段经历里，我重点做了 Netty 异步化改造、集群隔离和链路埋点，解决的是高并发场景下的吞吐、稳定性和故障定位问题。对我来说，如果迁移到 AI 网关，我需要新增补齐的主要是多模型适配、Token 计量、成本控制和流式治理，但底层网关能力是共通的。” </p>
+<h2 id="最后建议"><a href="#最后建议" class="headerlink" title="最后建议"></a>最后建议</h2><ul>
+<li>自我介绍里，汇付网关一定是主线。</li>
+<li>面试回答里，不要只讲“做了什么”，还要讲“为什么这样做”和“代价是什么”。</li>
+<li>所有结果型数据，都要准备好统计口径。</li>
+<li>传统网关题答完后，主动往 AI 网关迁移一层，会比被动等面试官问更好。</li>
+</ul>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/interview/" class="category-chain-item">interview</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/interview/">#interview</a>
+      
+        <a href="/tags/gateway/">#gateway</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>传统网关面试重点与补强清单</div>
+      <div>http://localhost:4000/2026/09/29/interview/传统网关面试重点与补强清单/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>pc-xie</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2026年9月29日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2026/09/29/interview/AI%E6%A8%A1%E5%9E%8B%E7%BD%91%E5%85%B3%E5%8F%8A%E8%AE%A1%E8%B4%B9%E5%B9%B3%E5%8F%B0%E9%9D%A2%E8%AF%95%E9%A2%98/" title="AI模型网关及计费平台面试题">
+                        <span class="hidden-mobile">AI模型网关及计费平台面试题</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>

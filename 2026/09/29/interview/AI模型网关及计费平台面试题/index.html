@@ -1,0 +1,1233 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
+  <link rel="icon" href="/img/fluid.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="pc-xie">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="AI模型网关及计费平台面试题基于你现有的传统网关、聚合链路、配置中心经历整理。重点不是证明你“已经完整做过 AI 商业化平台”，而是证明你能把已有的网关与稳定性能力迁移到 AI 模型网关和计费平台。 一面高频题1. 传统 API 网关和 AI 模型网关最大的区别是什么？回答要点  传统 API 网关更偏流量接入与治理，核心是鉴权、限流、路由、熔断、灰度和可观测性。 AI 模型网关在这些基础上，还要">
+<meta property="og:type" content="article">
+<meta property="og:title" content="AI模型网关及计费平台面试题">
+<meta property="og:url" content="http://localhost:4000/2026/09/29/interview/AI%E6%A8%A1%E5%9E%8B%E7%BD%91%E5%85%B3%E5%8F%8A%E8%AE%A1%E8%B4%B9%E5%B9%B3%E5%8F%B0%E9%9D%A2%E8%AF%95%E9%A2%98/index.html">
+<meta property="og:site_name" content="pc-xie">
+<meta property="og:description" content="AI模型网关及计费平台面试题基于你现有的传统网关、聚合链路、配置中心经历整理。重点不是证明你“已经完整做过 AI 商业化平台”，而是证明你能把已有的网关与稳定性能力迁移到 AI 模型网关和计费平台。 一面高频题1. 传统 API 网关和 AI 模型网关最大的区别是什么？回答要点  传统 API 网关更偏流量接入与治理，核心是鉴权、限流、路由、熔断、灰度和可观测性。 AI 模型网关在这些基础上，还要">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2026-09-29T13:00:00.000Z">
+<meta property="article:modified_time" content="2026-10-06T11:35:02.672Z">
+<meta property="article:author" content="pc-xie">
+<meta property="article:tag" content="interview">
+<meta property="article:tag" content="gateway">
+<meta property="article:tag" content="ai">
+<meta name="twitter:card" content="summary_large_image">
+  
+  
+  
+  <title>AI模型网关及计费平台面试题 - pc-xie</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"localhost","root":"/","version":"1.9.3","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Fluid</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="AI模型网关及计费平台面试题"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2026-09-29 21:00" pubdate>
+          2026年9月29日 晚上
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          16k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          135 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">AI模型网关及计费平台面试题</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h1 id="AI模型网关及计费平台面试题"><a href="#AI模型网关及计费平台面试题" class="headerlink" title="AI模型网关及计费平台面试题"></a>AI模型网关及计费平台面试题</h1><p>基于你现有的传统网关、聚合链路、配置中心经历整理。重点不是证明你“已经完整做过 AI 商业化平台”，而是证明你能把已有的网关与稳定性能力迁移到 AI 模型网关和计费平台。</p>
+<h2 id="一面高频题"><a href="#一面高频题" class="headerlink" title="一面高频题"></a>一面高频题</h2><h3 id="1-传统-API-网关和-AI-模型网关最大的区别是什么？"><a href="#1-传统-API-网关和-AI-模型网关最大的区别是什么？" class="headerlink" title="1. 传统 API 网关和 AI 模型网关最大的区别是什么？"></a>1. 传统 API 网关和 AI 模型网关最大的区别是什么？</h3><p><strong>回答要点</strong></p>
+<ul>
+<li>传统 API 网关更偏流量接入与治理，核心是鉴权、限流、路由、熔断、灰度和可观测性。</li>
+<li>AI 模型网关在这些基础上，还要解决模型路由、Token 计量、成本控制、多租户配额、账单和 AI 特有安全治理。</li>
+<li>本质上是“传统网关能力 + 模型路由 + Token&#x2F;成本治理”。</li>
+</ul>
+<p><strong>追问</strong></p>
+<ul>
+<li>用户都指定模型了，为什么还需要模型路由？</li>
+<li>AI 网关里哪些能力和传统网关完全共通，哪些是新增的？</li>
+<li>流式响应场景下，和传统 HTTP 转发最大的差异在哪里？</li>
+</ul>
+<p><strong>追问参考答案</strong></p>
+<ul>
+<li>用户都指定模型了，为什么还需要模型路由？<br>默认场景下确实是按用户指定模型直通，但网关仍然要处理 provider 路由、区域路由、版本映射和异常 fallback。也就是说，用户指定的是逻辑模型时，网关仍可能映射到具体 provider；即使指定了物理模型，网关也要决定请求发到哪个可用节点或区域。</li>
+<li>AI 网关里哪些能力和传统网关完全共通，哪些是新增的？<br>共通能力是鉴权、限流、隔离、熔断降级、灰度、全链路监控和容灾。新增能力主要是模型路由、Token 计量、成本归集、租户预算、账单，以及 prompt&#x2F;response 相关的安全治理。</li>
+<li>流式响应场景下，和传统 HTTP 转发最大的差异在哪里？<br>最大差异是响应不是一次性返回，而是长连接持续输出。这样会影响超时控制、连接占用、计量时机、重试策略和取消传播。传统 HTTP 更像请求结束后统一结算，流式响应则需要边传输边跟踪状态。</li>
+</ul>
+<p><strong>继续追问</strong></p>
+<ul>
+<li>如果用户强指定某个模型，但这个模型故障，你是直接报错还是自动降级？</li>
+<li>AI 网关里的安全治理你会放在网关内做，还是做成旁路能力？</li>
+<li>你如何向业务解释“模型路由”和“普通服务路由”的本质区别？</li>
+</ul>
+<p><strong>继续追问参考答案</strong></p>
+<ul>
+<li>如果用户强指定某个模型，但这个模型故障，你是直接报错还是自动降级？<br>默认应遵守接口契约。如果租户或接口明确要求强指定模型，我会优先报错，并返回可识别的错误码；只有业务显式开启“高可用优先”策略时，才允许降级到同档模型。</li>
+<li>AI 网关里的安全治理你会放在网关内做，还是做成旁路能力？<br>轻量、强实时的能力适合内置在网关里，比如基础鉴权、黑白名单、简单敏感词拦截；复杂审核、DLP、内容审计更适合旁路服务化，这样便于迭代规则，也避免把重逻辑压进主链路。</li>
+<li>你如何向业务解释“模型路由”和“普通服务路由”的本质区别？<br>普通服务路由主要解决“请求发给哪个实例”；模型路由还要同时考虑能力、成本、时延、可用性和 provider 差异，本质上是在“选服务”之外再做一层“选模型策略”。</li>
+</ul>
+<hr>
+<h3 id="2-如果让你设计一个-AI-模型网关，你会拆成哪些核心模块？"><a href="#2-如果让你设计一个-AI-模型网关，你会拆成哪些核心模块？" class="headerlink" title="2. 如果让你设计一个 AI 模型网关，你会拆成哪些核心模块？"></a>2. 如果让你设计一个 AI 模型网关，你会拆成哪些核心模块？</h3><p><strong>回答要点</strong></p>
+<ul>
+<li>接入层：统一 API 协议、认证、租户识别、模型权限。</li>
+<li>流量治理层：限流、并发控制、线程池隔离、熔断、降级、超时、重试。</li>
+<li>路由层：模型选择、provider 路由、异常 fallback、灰度。</li>
+<li>计量计费层：Token usage、成本归集、配额、预算、账单。</li>
+<li>可观测性层：请求日志、Trace、指标、成本分析、异常告警。</li>
+</ul>
+<p><strong>追问</strong></p>
+<ul>
+<li>网关和计费平台是同步耦合还是异步解耦？</li>
+<li>哪些数据需要强一致，哪些可以最终一致？</li>
+<li>如果先做 MVP，第一版必须保留哪些模块？</li>
+</ul>
+<p><strong>追问参考答案</strong></p>
+<ul>
+<li>网关和计费平台是同步耦合还是异步解耦？<br>我的倾向是准入校验同步、计量和出账异步。也就是说，请求进入时网关需要同步判断租户权限、余额、预算和配额；调用完成后的 usage 落库、成本计算、账单汇总可以异步处理，这样既控制风险，也不会把计费平台变成转发链路上的强依赖。</li>
+<li>哪些数据需要强一致，哪些可以最终一致？<br>强一致的数据包括准入权限、租户配额、冻结额度、价格版本命中。最终一致的数据包括 usage 事件归档、账单聚合、成本分析报表和运营视图。因为前者直接影响能否放行，后者更多是统计和结算。</li>
+<li>如果先做 MVP，第一版必须保留哪些模块？<br>我会保留统一接入、鉴权、基础路由、限流、日志、usage 采集、简单价格表和预算校验。高级路由、复杂账单、对账平台、运营后台可以后置。</li>
+</ul>
+<p><strong>继续追问</strong></p>
+<ul>
+<li>如果计费平台异步消费延迟很高，网关如何避免预算超发？</li>
+<li>第一版你会不会做多 provider fallback，为什么？</li>
+<li>如果业务侧要求先上线再补计费，你会怎么压这个风险？</li>
+</ul>
+<p><strong>继续追问参考答案</strong></p>
+<ul>
+<li>如果计费平台异步消费延迟很高，网关如何避免预算超发？<br>我会在网关侧维护租户预算的近实时缓存和预冻结余额，请求准入优先看本地快照和冻结额度，异步链路只负责最终结算和修正，避免完全依赖异步消费进度。</li>
+<li>第一版你会不会做多 provider fallback，为什么？<br>第一版只会做最基础的 fallback，而且范围受控。因为多 provider fallback 会同时拉高协议适配、计量和账单复杂度，如果底层 usage 和路由没跑稳，过早做复杂 fallback 风险很高。</li>
+<li>如果业务侧要求先上线再补计费，你会怎么压这个风险？<br>至少要先补 usage 事件采集和价格版本记录，即使暂时不正式出账，也要保证调用可追踪、可回放，否则后续补计费会非常被动。</li>
+</ul>
+<hr>
+<h3 id="3-用户指定模型时，网关还会动态切换模型吗？"><a href="#3-用户指定模型时，网关还会动态切换模型吗？" class="headerlink" title="3. 用户指定模型时，网关还会动态切换模型吗？"></a>3. 用户指定模型时，网关还会动态切换模型吗？</h3><p><strong>回答要点</strong></p>
+<ul>
+<li>一般分三种场景：用户显式指定物理模型、用户指定能力等级、异常时 fallback。</li>
+<li>如果接口契约承诺的是具体模型，网关默认不应随意替换。</li>
+<li>如果契约承诺的是能力等级或高可用优先，网关可以做逻辑模型到物理模型的映射。</li>
+<li>provider 故障、超时、限流时，可以按策略切换备选模型。</li>
+</ul>
+<p><strong>追问</strong></p>
+<ul>
+<li>什么情况下允许 fallback，什么情况下不允许？</li>
+<li>如果切换到备选模型，结果质量波动怎么和业务约定？</li>
+<li>fallback 后账单怎么记？</li>
+</ul>
+<p><strong>追问参考答案</strong></p>
+<ul>
+<li>什么情况下允许 fallback，什么情况下不允许？<br>超时、provider 限流、临时性 5xx、区域故障这些可用性问题适合 fallback。鉴权失败、参数不合法、业务强依赖指定模型输出格式、合规要求必须使用特定模型的场景不适合 fallback。</li>
+<li>如果切换到备选模型，结果质量波动怎么和业务约定？<br>需要在产品契约里提前定义能力等级，例如标准模型、高质量模型、低成本模型。业务接的是能力档而不是底层型号，这样发生 fallback 时，只要落在同一能力档范围内，行为是可接受的。</li>
+<li>fallback 后账单怎么记？<br>账单要按实际调用链路记账。主模型如果已经产生了 usage，也要记入成本；备选模型成功后再记其实际 usage。最终账单需要能看出主调用和 fallback 调用的分摊。</li>
+</ul>
+<p><strong>继续追问</strong></p>
+<ul>
+<li>fallback 过程中如何避免同一个请求被重复扣费两次？</li>
+<li>如果 fallback 成功但质量下降，是否需要对租户做价格补偿？</li>
+<li>你如何设计“允许 fallback”和“禁止 fallback”的租户级配置？</li>
+</ul>
+<p><strong>继续追问参考答案</strong></p>
+<ul>
+<li>fallback 过程中如何避免同一个请求被重复扣费两次？<br>账单侧要以 requestId 加 subCallId 做幂等归集，清楚区分主调用和 fallback 调用。重复扣费不是指两个 provider 都有成本，而是不能把同一次 subCall 重复记账。</li>
+<li>如果 fallback 成功但质量下降，是否需要对租户做价格补偿？<br>如果平台承诺的是能力档而不是具体模型，一般不需要补偿；如果租户购买的是特定高阶模型能力，而 fallback 降到了低一档模型，就应该结合合同或 SLA 做差价补偿。</li>
+<li>你如何设计“允许 fallback”和“禁止 fallback”的租户级配置？<br>我会把它做成租户级和接口级的策略开关，至少包含是否允许 fallback、允许的模型档位范围、是否跨 provider、是否影响计费这几个维度。</li>
+</ul>
+<hr>
+<h3 id="4-Token-用量怎么采集？预估和实际结算分别怎么做？"><a href="#4-Token-用量怎么采集？预估和实际结算分别怎么做？" class="headerlink" title="4. Token 用量怎么采集？预估和实际结算分别怎么做？"></a>4. Token 用量怎么采集？预估和实际结算分别怎么做？</h3><p><strong>回答要点</strong></p>
+<ul>
+<li>调用前通过目标模型对应的 tokenizer 预估 input token。</li>
+<li>如果请求中包含 <code>max_tokens</code> 或 <code>max_output_tokens</code>，可估算本次最大消耗。</li>
+<li>调用后以下游 provider 返回的 usage 为准，区分 input 和 output token。</li>
+<li>预估用于准入、限额和预算控制，实际 usage 用于结算和账单。</li>
+</ul>
+<p><strong>追问</strong></p>
+<ul>
+<li>为什么不能只按字符数粗估 token？</li>
+<li>不同 provider 的 token 统计口径不一致时怎么办？</li>
+<li>如果下游没有返回 usage 怎么办？</li>
+</ul>
+<p><strong>追问参考答案</strong></p>
+<ul>
+<li>为什么不能只按字符数粗估 token？<br>因为 token 和字符不是线性对应的。中英文、代码、JSON、标点、特殊符号都会影响分词结果，而且不同模型 tokenizer 不一样，所以字符数只能做非常粗的估算，不适合计费和配额控制。</li>
+<li>不同 provider 的 token 统计口径不一致时怎么办？<br>我会在网关内部建立统一 usage 模型，对外统一成 input、output、cache、其他附加消耗等字段。provider 的原始 usage 保留原文，同时通过适配层转换为平台统一口径，避免直接把差异暴露到计费层。</li>
+<li>如果下游没有返回 usage 怎么办？<br>第一优先级是本地用目标模型 tokenizer 做兜底估算，并标记为 estimate；第二是通过日志或流式字节数做近似补偿；第三是把这类 provider 标记成弱可信 provider，在财务口径上单独区分，必要时限制其用于正式计费。</li>
+</ul>
+<p><strong>继续追问</strong></p>
+<ul>
+<li>如果本地估算和 provider usage 经常偏差很大，你怎么校准？</li>
+<li>Embedding、图像、语音这类非纯文本模型如何统一计量？</li>
+<li>usage 采集失败后，账单是延迟出还是按估算先出？</li>
+</ul>
+<p><strong>继续追问参考答案</strong></p>
+<ul>
+<li>如果本地估算和 provider usage 经常偏差很大，你怎么校准？<br>我会按模型和 provider 维度做误差分析，找出稳定偏差区间，再调整预估系数。预估的目标是准入控制，不是替代最终结算，所以核心是把误差控制在可接受范围内。</li>
+<li>Embedding、图像、语音这类非纯文本模型如何统一计量？<br>平台内部要统一成 usage 抽象，但不强行统一到 token 一个单位。比如文本按 token，图像按张数或像素档，语音按时长，最终都映射到标准 usage 事件和成本事件。</li>
+<li>usage 采集失败后，账单是延迟出还是按估算先出？<br>我更倾向延迟出账，优先保证准确性。只有在业务要求极高实时账单展示时，才用估算值先展示为“预计费用”，待实际 usage 回来后再校正。</li>
+</ul>
+<hr>
+<h3 id="5-扣费是先扣还是后扣？"><a href="#5-扣费是先扣还是后扣？" class="headerlink" title="5. 扣费是先扣还是后扣？"></a>5. 扣费是先扣还是后扣？</h3><p><strong>回答要点</strong></p>
+<ul>
+<li>一般不是二选一，而是“先校验&#x2F;预占，再按实际 usage 结算”。</li>
+<li>请求进入时先做余额、预算、额度校验，必要时冻结部分额度。</li>
+<li>调用结束后按实际 token 和模型单价计算，多退少补。</li>
+<li>这样能避免平台垫资，同时保证扣费尽量准确。</li>
+</ul>
+<p><strong>追问</strong></p>
+<ul>
+<li>预冻结额度怎么计算？</li>
+<li>如果请求已经发给模型，用户余额突然不足怎么办？</li>
+<li>流式响应中途断开时怎么扣费？</li>
+</ul>
+<p><strong>追问参考答案</strong></p>
+<ul>
+<li>预冻结额度怎么计算？<br>通常按 <code>预估 input token + max_output_tokens</code> 乘以模型单价，再加一层风险系数。如果模型输出波动很大，可以按租户历史分位值做更保守的冻结策略。</li>
+<li>如果请求已经发给模型，用户余额突然不足怎么办？<br>一般不会等到中tu才发现，因为请求发出前要先做额度校验和预冻结。如果是并发竞争导致的瞬时超用，可以允许少量透支并落审计，同时快速回收后续请求准入。</li>
+<li>流式响应中 tu 断开时怎么扣费？<br>应该按实际已产生 usage 结算，而不是按 max_tokens 全额扣。对于流式场景，要记录中tu已输出的 token 数；如果拿不到精确 usage，就按 provider 返回的最终 usage 或本地累计值结算。</li>
+</ul>
+<p><strong>继续追问</strong></p>
+<ul>
+<li>如果用户主动取消请求，是否还收输出 token 的钱？</li>
+<li>预冻结过多导致用户体验差，怎么优化？</li>
+<li>你会允许企业月结客户跳过预冻结吗？</li>
+</ul>
+<p><strong>继续追问参考答案</strong></p>
+<ul>
+<li>如果用户主动取消请求，是否还收输出 token 的钱？<br>一般按实际已产生的 usage 收费。用户主动取消不代表模型侧没有成本，特别是已经生成的 output token 和已消耗的 input token 通常都应计费。</li>
+<li>预冻结过多导致用户体验差，怎么优化？<br>可以按模型历史分位值、租户历史行为和 max_tokens 做更精细的预冻结，而不是统一按最坏值冻结；同时完成后快速解冻，减少资金占用体感。</li>
+<li>你会允许企业月结客户跳过预冻结吗？<br>可以，但前提是有授信、预算和风控控制。月结客户可以弱化冻结，但不能取消准入控制，至少要保留预算阈值和异常成本告警。</li>
+</ul>
+<hr>
+<h3 id="6-多租户配额怎么设计？"><a href="#6-多租户配额怎么设计？" class="headerlink" title="6. 多租户配额怎么设计？"></a>6. 多租户配额怎么设计？</h3><p><strong>回答要点</strong></p>
+<ul>
+<li>至少要做平台级、租户级、应用级、模型级四层控制。</li>
+<li>指标不只是 QPS，还包括 RPM、TPM、并发数、日&#x2F;月预算、模型预算。</li>
+<li>维度一般是 <code>tenant + app + user + model + provider</code>。</li>
+<li>超额策略可以是拒绝、排队、降级到低成本模型，或者触发人工审核。</li>
+</ul>
+<p><strong>追问</strong></p>
+<ul>
+<li>免费套餐和付费套餐的配额有什么差异？</li>
+<li>配额超限后是立即拒绝还是允许部分透支？</li>
+<li>租户升级套餐后，额度是实时生效还是次日生效？</li>
+</ul>
+<p><strong>追问参考答案</strong></p>
+<ul>
+<li>免费套餐和付费套餐的配额有什么差异？<br>免费套餐一般限制更严格，比如更低的 RPM&#x2F;TPM、更小的最大输出 token、更少的高价模型权限，并且通常没有透支能力。付费套餐可以放宽吞吐、并发和模型权限，同时支持预算告警和更细粒度报表。</li>
+<li>配额超限后是立即拒绝还是允许部分透支？<br>这取决于租户等级。普通租户我倾向于直接拒绝或降级，高价值租户可以有限透支，但要有透支上限、风控和告警，不能变成无限制的信用额度。</li>
+<li>租户升级套餐后，额度是实时生效还是次日生效？<br>如果平台侧强调即时体验，通常是实时生效；如果涉及复杂账期或财务结算，也可以部分能力实时、账务口径次日生效。我的倾向是配额实时生效、账单口径按变更时间点分段计费。</li>
+</ul>
+<p><strong>继续追问</strong></p>
+<ul>
+<li>你如何防止一个租户内部某个应用抢占全部额度？</li>
+<li>套餐降级时，已消费但未出账的部分怎么处理？</li>
+<li>如果不同模型价格差异很大，套餐额度是统一 token 口径还是统一金额口径？</li>
+</ul>
+<p><strong>继续追问参考答案</strong></p>
+<ul>
+<li>你如何防止一个租户内部某个应用抢占全部额度？<br>需要在租户总额度下再拆应用级子额度，或者做权重限流和共享池加保底池机制，避免单个 app 把租户整体资源吃满。</li>
+<li>套餐降级时，已消费但未出账的部分怎么处理？<br>已消费部分仍按实际发生时的套餐和价格规则结算，降级只影响后续请求，不回溯改历史 usage 对应的计费规则。</li>
+<li>如果不同模型价格差异很大，套餐额度是统一 token 口径还是统一金额口径？<br>我更倾向统一金额口径，token 只适合作为底层 usage 单位。因为不同模型 token 的单价不同，统一 token 口径容易掩盖真实成本。</li>
+</ul>
+<hr>
+<h3 id="7-AI-网关为什么要做集群限流？怎么做全局限流？"><a href="#7-AI-网关为什么要做集群限流？怎么做全局限流？" class="headerlink" title="7. AI 网关为什么要做集群限流？怎么做全局限流？"></a>7. AI 网关为什么要做集群限流？怎么做全局限流？</h3><p><strong>回答要点</strong></p>
+<ul>
+<li>AI 网关通常是多实例部署，只做单机限流会导致租户配额、模型预算、TPM 统计失真。</li>
+<li>单机限流用于保护节点本身，例如线程池、连接池、并发数。</li>
+<li>集群限流用于租户级 RPM&#x2F;TPM、模型预算、provider 调用上限等全局共享额度。</li>
+<li>方案上可选中心 token server、Redis 分布式计数、配额分片，本地保护和全局限流通常要结合使用。</li>
+</ul>
+<p><strong>追问</strong></p>
+<ul>
+<li>和 Sentinel 的集群限流相比，AI 网关多了什么复杂性？</li>
+<li>全局限流如何避免 Redis 热点？</li>
+<li>TPM 限流和 QPS 限流的实现差异是什么？</li>
+</ul>
+<p><strong>追问参考答案</strong></p>
+<ul>
+<li>和 Sentinel 的集群限流相比，AI 网关多了什么复杂性？<br>Sentinel 更偏请求数、QPS、并发这些传统流量维度。AI 网关除了请求数，还要控制 TPM、预算、模型级限额和租户级成本，这意味着限流判断不再只是“放不放请求”，还要结合 usage 预估和成本。</li>
+<li>全局限流如何避免 Redis 热点？<br>可以按租户、模型做 key 分片，热点租户单独拆桶；也可以用本地配额预分发减少每次请求都打 Redis；另外窗口不要过细，避免高频写放大。</li>
+<li>TPM 限流和 QPS 限流的实现差异是什么？<br>QPS 是请求数限流，请求进入时就能判断。TPM 需要结合本次请求可能消耗的 token 数，因此准入时要先预估，完成后再回写实际 usage，对系统要求更高。</li>
+</ul>
+<p><strong>继续追问</strong></p>
+<ul>
+<li>如果 TPM 使用预估值做限流，实际值偏差很大怎么办？</li>
+<li>限流规则按租户、模型、provider 多维组合后，规则爆炸怎么管理？</li>
+<li>你更倾向中心 token server 还是本地配额分片，为什么？</li>
+</ul>
+<p><strong>继续追问参考答案</strong></p>
+<ul>
+<li>如果 TPM 使用预估值做限流，实际值偏差很大怎么办？<br>会先用预估值做前置限流，再用实际值做回补和校正。对高误差模型可以设置更保守的安全系数，或者缩短刷新周期，减少配额漂移。</li>
+<li>限流规则按租户、模型、provider 多维组合后，规则爆炸怎么管理？<br>不能全量手写规则，应该做继承和覆盖机制，比如全局默认、租户级覆盖、模型级附加限制，同时配规则模板和优先级体系。</li>
+<li>你更倾向中心 token server 还是本地配额分片，为什么？<br>如果更强调精度和规则统一，我会偏中心 token server；如果吞吐和稳定性压力更大，我会偏本地配额分片。工程上通常是两者结合，本地快路径加中心校准。</li>
+</ul>
+<hr>
+<h3 id="8-模型调用失败时，如何做重试、熔断、降级和-fallback？"><a href="#8-模型调用失败时，如何做重试、熔断、降级和-fallback？" class="headerlink" title="8. 模型调用失败时，如何做重试、熔断、降级和 fallback？"></a>8. 模型调用失败时，如何做重试、熔断、降级和 fallback？</h3><p><strong>回答要点</strong></p>
+<ul>
+<li>要按错误类型分类处理：超时、临时性 5xx、限流错误可考虑重试或 fallback。</li>
+<li>鉴权错误、参数错误、内容安全拦截这类确定性错误不应盲目重试。</li>
+<li>顺序上通常是先隔离，再熔断，再降级，最后 fallback。</li>
+<li>流式请求一旦已经开始输出 token，透明重试要非常谨慎。</li>
+</ul>
+<p><strong>追问</strong></p>
+<ul>
+<li>哪些错误适合切换 provider，哪些不适合？</li>
+<li>fallback 到备选模型时，如何保证能力等级不偏差太大？</li>
+<li>熔断恢复策略怎么做？</li>
+</ul>
+<p><strong>追问参考答案</strong></p>
+<ul>
+<li>哪些错误适合切换 provider，哪些不适合？<br>超时、连接失败、区域不可用、provider 限流、临时 5xx 适合切换。参数错误、鉴权失败、内容被风控拦截、业务明确依赖某个模型输出格式时，不适合切换 provider。</li>
+<li>fallback 到备选模型时，如何保证能力等级不偏差太大？<br>需要事先维护模型能力标签和候选集合，例如高质量推理档、标准聊天档、低成本档。fallback 只在同档或相邻档之间切换，避免从强推理模型直接掉到低成本弱模型。</li>
+<li>熔断恢复策略怎么做？<br>可以采用半开探测机制。熔断后先放少量探针流量，如果成功率和时延恢复正常，再逐步放开；否则继续熔断，避免抖动。</li>
+</ul>
+<p><strong>继续追问</strong></p>
+<ul>
+<li>对流式请求，什么时候判定“可以 fallback”，什么时候只能直接失败？</li>
+<li>重试和 fallback 的顺序你怎么定？</li>
+<li>provider 局部恢复时，如何避免流量瞬间回切造成二次抖动？</li>
+</ul>
+<p><strong>继续追问参考答案</strong></p>
+<ul>
+<li>对流式请求，什么时候判定“可以 fallback”，什么时候只能直接失败？<br>如果请求在首包前就失败，通常还可以 fallback；一旦已经开始稳定输出 token，再透明 fallback 往往会造成语义不一致，这时更适合直接失败或由上层重新发起请求。</li>
+<li>重试和 fallback 的顺序你怎么定？<br>同 provider 内的瞬时错误可以先轻量重试一次，连续失败或明显 provider 级故障再 fallback。不能无限重试，否则只会放大时延和成本。</li>
+<li>provider 局部恢复时，如何避免流量瞬间回切造成二次抖动？<br>要做半开探针和渐进放量，先放少量流量验证稳定性，再逐步恢复权重，而不是一次性全量切回。</li>
+</ul>
+<hr>
+<h3 id="9-如果某个租户成本突然飙升，网关如何发现和止损？"><a href="#9-如果某个租户成本突然飙升，网关如何发现和止损？" class="headerlink" title="9. 如果某个租户成本突然飙升，网关如何发现和止损？"></a>9. 如果某个租户成本突然飙升，网关如何发现和止损？</h3><p><strong>回答要点</strong></p>
+<ul>
+<li>监控上要按租户、应用、模型、provider 维度采集请求量、token、成本、错误率、延迟。</li>
+<li>常见原因包括流量突增、prompt 变长、输出 token 失控、高价模型占比上升、重试&#x2F;fallback 过多。</li>
+<li>止损手段包括限制高成本模型、下调最大输出 token、降级模型、触发审核、超预算熔断。</li>
+<li>核心是回答三个问题：谁花的、为什么变贵、怎么自动止损。</li>
+</ul>
+<p><strong>追问</strong></p>
+<ul>
+<li>成本告警阈值怎么设？</li>
+<li>如果是 prompt 被业务错误放大，怎么快速定位？</li>
+<li>止损策略会不会影响重要租户的 SLA？</li>
+</ul>
+<p><strong>追问参考答案</strong></p>
+<ul>
+<li>成本告警阈值怎么设？<br>可以结合绝对值和环比&#x2F;同比两类阈值。比如日预算使用率达到 70%、90% 告警；或者一小时成本较近七天同时间段上涨 3 倍告警，这样既能覆盖大客户，也能发现异常突增。</li>
+<li>如果是 prompt 被业务错误放大，怎么快速定位？<br>要在日志里保留 prompt 长度、模板版本、应用来源、模型名、输出 token 上限等元数据。看到成本突增后，可以先按租户和应用聚合，再按 prompt 模板或发布版本定位异常来源。</li>
+<li>止损策略会不会影响重要租户的 SLA？<br>会，所以止损要分级。高价值租户不能直接一刀切，可以先降模型、降 max_tokens、启用人工确认；普通租户可以更激进地限流或熔断。</li>
+</ul>
+<p><strong>继续追问</strong></p>
+<ul>
+<li>如果成本暴涨来自 fallback 链路本身，你怎么识别？</li>
+<li>是否需要对不同租户设置不同告警模型？</li>
+<li>你如何平衡“止损及时”和“误伤业务”？</li>
+</ul>
+<p><strong>继续追问参考答案</strong></p>
+<ul>
+<li>如果成本暴涨来自 fallback 链路本身，你怎么识别？<br>需要按 requestId 统计 fallback 次数、主调用成本和备调用成本，结合 provider 错误率一起看。如果某类请求 fallback 率和单位成本同时升高，就能快速定位到 fallback 链路。</li>
+<li>是否需要对不同租户设置不同告警模型？<br>需要。大客户、小客户、免费租户和内部租户的正常波动差异很大，统一阈值容易误报或漏报，最好按租户等级和历史基线做分层告警。</li>
+<li>你如何平衡“止损及时”和“误伤业务”？<br>关键是分级。先做提醒、降输出、降模型，再到限流和熔断，尽量把止损动作做成渐进式，而不是一上来就硬切断。</li>
+</ul>
+<hr>
+<h3 id="10-你会如何设计-AI-网关的可观测性？"><a href="#10-你会如何设计-AI-网关的可观测性？" class="headerlink" title="10. 你会如何设计 AI 网关的可观测性？"></a>10. 你会如何设计 AI 网关的可观测性？</h3><p><strong>回答要点</strong></p>
+<ul>
+<li>至少打通 requestId、tenant、app、model、provider、latency、TTFB、usage、cost、fallback chain、error code。</li>
+<li>日志、指标、Trace 要能串起来，支持从账单追溯到具体请求。</li>
+<li>除了稳定性指标，还要有成本指标和模型质量相关指标。</li>
+<li>这部分可沿用你在汇付做 TransactionId、全链路埋点的经验。</li>
+</ul>
+<p><strong>追问</strong></p>
+<ul>
+<li>requestId 如何在异步、流式和 fallback 场景下保持一致？</li>
+<li>账单侧如何反查原始调用链路？</li>
+<li>成本和延迟指标冲突时，优先看哪个？</li>
+</ul>
+<p><strong>追问参考答案</strong></p>
+<ul>
+<li>requestId 如何在异步、流式和 fallback 场景下保持一致？<br>我会给每个外部请求分配一个全局 requestId，再给每次 provider 调用生成 subCallId。主 requestId 保持不变，fallback、重试、流式分段都挂在同一个主 requestId 下，这样既能统一追踪，又能看到子调用细节。</li>
+<li>账单侧如何反查原始调用链路？<br>账单记录中必须保存 requestId、tenant、model、provider、usageEventId、priceVersionId 等关键索引。这样从账单可以反查 usage 事件，再反查网关日志和 Trace。</li>
+<li>成本和延迟指标冲突时，优先看哪个？<br>要看场景。面向核心在线业务，优先保证成功率和时延；面向可容忍延迟的离线或非核心场景，可以优先优化成本。工程上不应该只选一边，而是通过模型分层和租户策略把权衡前置。</li>
+</ul>
+<p><strong>继续追问</strong></p>
+<ul>
+<li>如果 Trace 量太大，如何控制观测成本？</li>
+<li>你会如何设计“账单异常一键回溯”的排障链路？</li>
+<li>在多 provider、流式输出场景下，哪些指标最容易失真？</li>
+</ul>
+<p><strong>继续追问参考答案</strong></p>
+<ul>
+<li>如果 Trace 量太大，如何控制观测成本？<br>可以做分层采样，核心租户、异常请求、长尾高成本请求全量采，普通成功请求按比例采样，同时把成本相关关键字段沉淀到指标和日志里，减少对全量 Trace 的依赖。</li>
+<li>你会如何设计“账单异常一键回溯”的排障链路？<br>从账单记录出发，先查 usageEventId 和 requestId，再定位到网关请求日志、provider 子调用记录、价格版本和结算结果，这样能从账单一路反查到原始请求。</li>
+<li>在多 provider、流式输出场景下，哪些指标最容易失真？<br>最容易失真的是 output token、首包时间、完整时延和中途取消率。因为流式输出天然是分段的，不同 provider 对完成时机和 usage 回传时机也不完全一致。</li>
+</ul>
+<h2 id="总监面高频题"><a href="#总监面高频题" class="headerlink" title="总监面高频题"></a>总监面高频题</h2><h3 id="1-你为什么能从传统网关切到-AI-模型网关及计费平台？"><a href="#1-你为什么能从传统网关切到-AI-模型网关及计费平台？" class="headerlink" title="1. 你为什么能从传统网关切到 AI 模型网关及计费平台？"></a>1. 你为什么能从传统网关切到 AI 模型网关及计费平台？</h3><p><strong>回答要点</strong></p>
+<ul>
+<li>传统网关和 AI 网关在鉴权、限流、隔离、灰度、可观测性、容灾上有大量共性。</li>
+<li>你的汇付网关经历证明了你做过核心链路架构演进和稳定性治理。</li>
+<li>传音经历证明你能处理高依赖下游、并行聚合、异步化、熔断降级。</li>
+<li>需要补齐的是 Token、账单、配额、模型路由，但这些是可在现有网关能力上叠加的。</li>
+</ul>
+<p><strong>追问</strong></p>
+<ul>
+<li>你最大的短板是什么？准备怎么补？</li>
+<li>为什么不直接找一个已经完整做过 AI 商业化平台的人？</li>
+<li>你过去的哪段经历和 AI 网关最像？</li>
+</ul>
+<p><strong>追问参考答案</strong></p>
+<ul>
+<li>你最大的短板是什么？准备怎么补？<br>我的短板不是传统网关能力，而是完整的商业化计费链路落地经验相对少。补法是把它拆成计量、计费、账单、对账四块，先补系统设计和规则建模，再结合实际业务快速落地。</li>
+<li>为什么不直接找一个已经完整做过 AI 商业化平台的人？<br>因为这个岗位不只是计费，还需要非常扎实的网关底座能力。我的优势在于核心链路治理、高并发、异步化、隔离、灰度、观测这些 AI 网关的底盘能力很强，再叠加计费规则是更自然的路径。</li>
+<li>你过去的哪段经历和 AI 网关最像？<br>最像的是汇付网关。因为它本身就是统一流量入口，涉及鉴权、路由、限流、灰度、链路埋点和稳定性治理，这和 AI 网关的底层治理模型最接近。</li>
+</ul>
+<p><strong>继续追问</strong></p>
+<ul>
+<li>如果入职后三个月还没把计费平台跑顺，你怎么证明自己在产生价值？</li>
+<li>你如何向团队证明自己不是只会讲传统网关？</li>
+<li>你的迁移学习计划会优先补哪三块？</li>
+</ul>
+<p><strong>继续追问参考答案</strong></p>
+<ul>
+<li>如果入职后三个月还没把计费平台跑顺，你怎么证明自己在产生价值？<br>我会先把网关底座、链路观测、usage 事件、基础配额这些关键基础设施搭起来，这些本身就是平台成型的前提，也能直接降低后续计费平台落地风险。</li>
+<li>你如何向团队证明自己不是只会讲传统网关？<br>最直接的方法是把传统网关经验翻译成 AI 场景的落地设计，比如 usage 采集、预算控制、模型 fallback、流式超时和账单链路，而不是只停留在概念层。</li>
+<li>你的迁移学习计划会优先补哪三块？<br>第一是 Token 和 usage 计量，第二是计费&#x2F;账单&#x2F;对账链路，第三是多 provider 模型抽象和流式协议处理。</li>
+</ul>
+<hr>
+<h3 id="2-如果让你从-0-到-1-设计-AI-模型网关及计费平台，前三个月你怎么做？"><a href="#2-如果让你从-0-到-1-设计-AI-模型网关及计费平台，前三个月你怎么做？" class="headerlink" title="2. 如果让你从 0 到 1 设计 AI 模型网关及计费平台，前三个月你怎么做？"></a>2. 如果让你从 0 到 1 设计 AI 模型网关及计费平台，前三个月你怎么做？</h3><p><strong>回答要点</strong></p>
+<ul>
+<li>第一阶段先做统一接入、鉴权、日志、限流、基础路由，保证能稳定接入多个模型。</li>
+<li>第二阶段补 Token usage、成本归集、预算告警和基础配额。</li>
+<li>第三阶段再做高级路由、fallback、多 provider 容灾、账单和管理后台。</li>
+<li>原则是先完成“稳定接入 + 看得见 + 控得住成本”的闭环，再追求复杂能力。</li>
+</ul>
+<p><strong>追问</strong></p>
+<ul>
+<li>哪些能力你会明确延后？</li>
+<li>第一版如何降低账单错误风险？</li>
+<li>如果业务催得很急，你会如何定义 MVP 边界？</li>
+</ul>
+<p><strong>追问参考答案</strong></p>
+<ul>
+<li>哪些能力你会明确延后？<br>会延后复杂套餐系统、运营后台、自动调价、复杂对账和细粒度质量路由。第一版先完成稳定接入、usage 采集、基础计费和预算控制。</li>
+<li>第一版如何降低账单错误风险？<br>先用简单透明的计费规则，比如按模型版本、input&#x2F;output 单价直接算；同时保留 usage 原始事件和价格版本，方便回溯和补账；账单先小范围灰度给内部租户验证。</li>
+<li>如果业务催得很急，你会如何定义 MVP 边界？<br>我会把边界定义成“能接、能用、能控风险”。具体就是统一 API、准入、路由、限流、usage 采集、基础成本展示，暂不承诺复杂账单和自动化运营能力。</li>
+</ul>
+<p><strong>继续追问</strong></p>
+<ul>
+<li>第一版没有运营后台，规则怎么管理？</li>
+<li>你会优先支持一个 provider 还是多 provider？</li>
+<li>如果业务要求第一版就支持流式和非流式，你怎么控复杂度？</li>
+</ul>
+<p><strong>继续追问参考答案</strong></p>
+<ul>
+<li>第一版没有运营后台，规则怎么管理？<br>可以先通过配置中心、DB 配置表和受控脚本管理，前提是有审批和审计。后台不是第一优先级，但规则管理不能失控。</li>
+<li>你会优先支持一个 provider 还是多 provider？<br>第一版优先把一个主 provider 做深做稳，再抽象出适配层接口，为后续扩 provider 留口子。这样可以控制复杂度，也能尽快形成闭环。</li>
+<li>如果业务要求第一版就支持流式和非流式，你怎么控复杂度？<br>会在统一抽象层上做协议收敛，尽量复用相同的鉴权、路由、限流和 usage 事件模型，只把响应发送和时序控制做差异化处理。</li>
+</ul>
+<hr>
+<h3 id="3-AI-模型网关最核心的工程难点是什么？"><a href="#3-AI-模型网关最核心的工程难点是什么？" class="headerlink" title="3. AI 模型网关最核心的工程难点是什么？"></a>3. AI 模型网关最核心的工程难点是什么？</h3><p><strong>回答要点</strong></p>
+<ul>
+<li>不是单纯高并发，而是流量治理、模型路由、Token 计量、成本控制和账单一致性耦合在一起。</li>
+<li>传统网关更多是把请求正确转发出去；AI 网关还要控制花费、模型选择和异常退化。</li>
+<li>计量和账单链路要可追踪，否则财务和运营都无法闭环。</li>
+</ul>
+<p><strong>追问</strong></p>
+<ul>
+<li>如果只能选一个最难点，你选哪个？</li>
+<li>成本治理为什么会比纯性能问题更难？</li>
+<li>哪些问题必须在架构设计阶段解决，不能后补？</li>
+</ul>
+<p><strong>追问参考答案</strong></p>
+<ul>
+<li>如果只能选一个最难点，你选哪个？<br>我会选计量到账单的一致性。因为这条链路一旦设计差了，后面会同时影响收入、客户信任、风控和排障，而且修复成本很高。</li>
+<li>成本治理为什么会比纯性能问题更难？<br>性能问题通常可以通过扩容、优化链路、做隔离逐步逼近目标；成本治理涉及产品、财务、运营和技术多方口径统一，而且错误可能直接变成收入损失或客户投诉。</li>
+<li>哪些问题必须在架构设计阶段解决，不能后补？<br>usage 事件模型、价格版本化、requestId 到账单的可追踪链路、准入和结算的边界、租户与模型维度的配额设计，这些如果早期没打好，后期很难无损补齐。</li>
+</ul>
+<p><strong>继续追问</strong></p>
+<ul>
+<li>如果业务先跑起来，再补 usage 事件模型，会有哪些坑？</li>
+<li>账单不准和限流不准，哪个影响更大？</li>
+<li>你会如何向总监解释“先做可追踪，再做复杂计费”的必要性？</li>
+</ul>
+<p><strong>继续追问参考答案</strong></p>
+<ul>
+<li>如果业务先跑起来，再补 usage 事件模型，会有哪些坑？<br>最大的问题是历史调用无法准确回放，账单和成本分析会缺底账，后续很难追责和补账，甚至连问题到底出在哪一段都无法确认。</li>
+<li>账单不准和限流不准，哪个影响更大？<br>对短期稳定性来说，限流不准更容易引发系统故障；但从平台长期信誉和收入来看，账单不准影响更大。两者都重要，但账单问题更难补救。</li>
+<li>你会如何向总监解释“先做可追踪，再做复杂计费”的必要性？<br>因为复杂计费建立在可靠 usage 和可回溯链路之上，没有底层可追踪能力，后面的价格规则、账单、补账都没有可信基础。</li>
+</ul>
+<hr>
+<h3 id="4-你会怎么拆网关、计量、计费、账单、对账这几个子系统的边界？"><a href="#4-你会怎么拆网关、计量、计费、账单、对账这几个子系统的边界？" class="headerlink" title="4. 你会怎么拆网关、计量、计费、账单、对账这几个子系统的边界？"></a>4. 你会怎么拆网关、计量、计费、账单、对账这几个子系统的边界？</h3><p><strong>回答要点</strong></p>
+<ul>
+<li>网关负责接入、治理、路由和原始 usage 采集。</li>
+<li>计量服务负责沉淀标准 usage 事件。</li>
+<li>计费服务负责价格规则、套餐规则和成本计算。</li>
+<li>账单服务负责按周期出账，面向租户和运营展示。</li>
+<li>对账服务负责校验 usage、账单和实际支付或应收数据的一致性。</li>
+</ul>
+<p><strong>追问</strong></p>
+<ul>
+<li>哪些环节要同步，哪些环节适合异步？</li>
+<li>使用事件丢了怎么办？</li>
+<li>价格规则变更时如何保证老账不受影响？</li>
+</ul>
+<p><strong>追问参考答案</strong></p>
+<ul>
+<li>哪些环节要同步，哪些环节适合异步？<br>准入鉴权、额度校验、价格版本命中适合同步；usage 事件投递、账单汇总、报表统计和对账适合异步。这样可以避免把账单系统性能压力压回网关主链路。</li>
+<li>使用事件丢了怎么办？<br>使用事件必须具备幂等 ID、重放能力和补偿机制。主链路上优先保证事件落本地可靠队列或消息系统，消费端按幂等键落库；如果仍丢失，则结合网关日志和 provider usage 做补偿。</li>
+<li>价格规则变更时如何保证老账不受影响？<br>价格规则要版本化，调用发生时只命中当时有效的版本。后续调价只影响新请求，不回溯覆盖历史调用的计费结果。</li>
+</ul>
+<p><strong>继续追问</strong></p>
+<ul>
+<li>计量事件是先落库再发 MQ，还是先发 MQ 再落库？</li>
+<li>如果补偿时发现 usage 和账单冲突，谁是最终真相源？</li>
+<li>你会如何设计幂等键，避免重复出账？</li>
+</ul>
+<p><strong>继续追问参考答案</strong></p>
+<ul>
+<li>计量事件是先落库再发 MQ，还是先发 MQ 再落库？<br>我更倾向本地可靠落盘或事务消息方案，核心目标是保证事件不丢。具体实现可以是先落本地 outbox 再异步发 MQ，再由消费端幂等入库。</li>
+<li>如果补偿时发现 usage 和账单冲突，谁是最终真相源？<br>原始 usage 事件更接近事实源，账单是 usage 加规则的结果。如果冲突，优先回到原始 usage 和价格版本重算。</li>
+<li>你会如何设计幂等键，避免重复出账？<br>至少要包含 requestId、subCallId、usageType、计费周期等信息，确保同一子调用、同一 usage 片段不会重复进入账单。</li>
+</ul>
+<hr>
+<h3 id="5-多-provider、多模型并存时，如何做统一抽象？"><a href="#5-多-provider、多模型并存时，如何做统一抽象？" class="headerlink" title="5. 多 provider、多模型并存时，如何做统一抽象？"></a>5. 多 provider、多模型并存时，如何做统一抽象？</h3><p><strong>回答要点</strong></p>
+<ul>
+<li>对外统一能力模型，例如 chat、embedding、rerank、image，不直接暴露 provider 差异。</li>
+<li>对内维护 provider 适配层，屏蔽不同协议、字段、usage 口径、错误码差异。</li>
+<li>在统一抽象上增加能力标签、价格、稳定性、区域、SLA 等元数据，支撑策略路由。</li>
+</ul>
+<p><strong>追问</strong></p>
+<ul>
+<li>如果 provider 不支持标准 usage 字段怎么办？</li>
+<li>如何处理不同 provider 的流式协议差异？</li>
+<li>模型版本频繁变更时，兼容性如何管理？</li>
+</ul>
+<p><strong>追问参考答案</strong></p>
+<ul>
+<li>如果 provider 不支持标准 usage 字段怎么办？<br>一方面通过适配层尽量补齐 usage 估算，另一方面把这类 provider 标记为低可信计量源，限制其用于正式商用计费，或者单独走估算账单。</li>
+<li>如何处理不同 provider 的流式协议差异？<br>在适配层统一成平台内部事件流协议，比如统一 chunk、finish reason、usage 增量和异常格式。对外只暴露统一 SSE 或内部流式接口。</li>
+<li>模型版本频繁变更时，兼容性如何管理？<br>需要把逻辑模型名和物理版本解耦，对业务暴露稳定的逻辑模型，对内维护版本映射和灰度策略。这样底层版本变更不会直接冲击业务。</li>
+</ul>
+<p><strong>继续追问</strong></p>
+<ul>
+<li>如果 provider 协议升级导致字段缺失，你如何快速止血？</li>
+<li>统一抽象会不会掩盖 provider 的独特能力？</li>
+<li>逻辑模型和物理模型分层后，监控和账单按哪一层展示？</li>
+</ul>
+<p><strong>继续追问参考答案</strong></p>
+<ul>
+<li>如果 provider 协议升级导致字段缺失，你如何快速止血？<br>先在适配层做兼容分支，必要时临时降级到估算 usage 或关闭该 provider 的商用流量，优先保证主链路可用和账单风险可控。</li>
+<li>统一抽象会不会掩盖 provider 的独特能力？<br>会，所以统一抽象只收敛共性能力，独特能力应通过扩展字段或高级接口暴露，不能为了统一把所有差异都抹平。</li>
+<li>逻辑模型和物理模型分层后，监控和账单按哪一层展示？<br>两层都要有。业务侧更多看逻辑模型，平台侧需要看物理模型和 provider 维度，这样既利于业务理解，也利于平台优化。</li>
+</ul>
+<hr>
+<h3 id="6-计费平台的核心指标有哪些？"><a href="#6-计费平台的核心指标有哪些？" class="headerlink" title="6. 计费平台的核心指标有哪些？"></a>6. 计费平台的核心指标有哪些？</h3><p><strong>回答要点</strong></p>
+<ul>
+<li>网关侧：成功率、P99、超时率、熔断率、fallback 成功率。</li>
+<li>计量侧：usage 采集完整率、usage 修正率、事件丢失率。</li>
+<li>计费侧：账单准确率、价格命中率、对账差异率。</li>
+<li>业务侧：租户成本、ARPU、预算超限率、异常成本波动率。</li>
+</ul>
+<p><strong>追问</strong></p>
+<ul>
+<li>哪个指标最能体现平台成熟度？</li>
+<li>成本和体验冲突时，怎么平衡？</li>
+<li>账单准确率怎么验证？</li>
+</ul>
+<p><strong>追问参考答案</strong></p>
+<ul>
+<li>哪个指标最能体现平台成熟度？<br>如果只选一个，我会选账单准确率及其可追溯性。因为它同时要求 usage 采集、价格版本、幂等、对账和观测链路都做对。</li>
+<li>成本和体验冲突时，怎么平衡？<br>不能一刀切，要按业务和租户分层。核心租户优先体验，非核心或低价租户优先成本，通过模型档位、配额策略和 SLA 来做差异化治理。</li>
+<li>账单准确率怎么验证？<br>可以做三层校验：usage 汇总与 provider 回执对比、账单与价格规则回放对比、账单与实际支付&#x2F;应收对账。必要时抽样回放单请求账单链路。</li>
+</ul>
+<p><strong>继续追问</strong></p>
+<ul>
+<li>如果业务方认为“账单准但太慢”，你怎么处理？</li>
+<li>预算超限率高说明了什么问题？</li>
+<li>你会把质量指标纳入平台 KPI 吗？</li>
+</ul>
+<p><strong>继续追问参考答案</strong></p>
+<ul>
+<li>如果业务方认为“账单准但太慢”，你怎么处理？<br>可以把账单分成预计账单和正式账单两层。预计账单追求实时性，正式账单追求准确性，等 usage 和对账完成后再最终确认。</li>
+<li>预算超限率高说明了什么问题？<br>可能说明套餐设计不合理、预算阈值过紧、业务增长超预期，或者模型选择策略偏贵，需要结合租户结构和调用路径具体分析。</li>
+<li>你会把质量指标纳入平台 KPI 吗？<br>会，但不会直接由网关单独背全部质量结果。平台至少要关注成功率、fallback 成功率、异常率和基础质量代理指标，避免只优化成本把体验做坏。</li>
+</ul>
+<hr>
+<h3 id="7-如果模型价格频繁调整，系统怎么保证计费准确？"><a href="#7-如果模型价格频繁调整，系统怎么保证计费准确？" class="headerlink" title="7. 如果模型价格频繁调整，系统怎么保证计费准确？"></a>7. 如果模型价格频繁调整，系统怎么保证计费准确？</h3><p><strong>回答要点</strong></p>
+<ul>
+<li>价格表必须配置化、版本化，至少包含生效时间、模型、provider、input&#x2F;output 单价。</li>
+<li>计费时按调用发生时刻命中价格版本，而不是使用当前价格。</li>
+<li>对账和补账也要基于当时的规则版本，避免历史账单被覆盖。</li>
+</ul>
+<p><strong>追问</strong></p>
+<ul>
+<li>灰度价格如何设计？</li>
+<li>价格规则配置错了怎么办？</li>
+<li>价格回滚后已出账部分怎么处理？</li>
+</ul>
+<p><strong>追问参考答案</strong></p>
+<ul>
+<li>灰度价格如何设计？<br>可以按租户、模型、时间窗口做灰度，让小流量租户先命中新价格版本，并保留旧版本并行运行，用于结果对比和回滚。</li>
+<li>价格规则配置错了怎么办？<br>首先要有发布审批、预演校验和模拟回放。真出错后，需要立即停用错误版本，回滚到上一个稳定版本，并对已受影响请求做补账或冲正。</li>
+<li>价格回滚后已出账部分怎么处理？<br>已出账部分不能简单覆盖，要通过补账、冲正或账单调整单处理，并保留审计记录，确保财务可追踪。</li>
+</ul>
+<p><strong>继续追问</strong></p>
+<ul>
+<li>你会不会允许运营人员直接改价格规则？</li>
+<li>历史账单是否允许重算，边界怎么定？</li>
+<li>如果灰度期间新旧价格同时存在，账单展示怎么避免租户困惑？</li>
+</ul>
+<p><strong>继续追问参考答案</strong></p>
+<ul>
+<li>你会不会允许运营人员直接改价格规则？<br>可以改，但不能直接裸改生产规则，必须经过审批、预演和灰度流程。价格规则本质上是高风险配置，不能当普通文案配置处理。</li>
+<li>历史账单是否允许重算，边界怎么定？<br>原则上不直接覆盖已确认账单，历史修正通过补账或冲正处理。只有在账单未锁定的窗口期内，才允许重算。</li>
+<li>如果灰度期间新旧价格同时存在，账单展示怎么避免租户困惑？<br>账单明细必须带价格版本、生效时间和适用请求范围，让租户知道哪些调用命中了旧价、哪些命中了新价。</li>
+</ul>
+<hr>
+<h3 id="8-为什么这个岗位要选你？"><a href="#8-为什么这个岗位要选你？" class="headerlink" title="8. 为什么这个岗位要选你？"></a>8. 为什么这个岗位要选你？</h3><p><strong>回答要点</strong></p>
+<ul>
+<li>你最强的不是某个单点技术，而是核心链路治理能力：高并发、异步化、隔离、灰度、可观测性、稳定性。</li>
+<li>这些能力正好是 AI 模型网关的底座。</li>
+<li>新增的 Token&#x2F;计费&#x2F;账单部分，你已经形成了清晰的系统拆分和设计思路。</li>
+<li>你不是只会做实现，更能做关键链路方案设计与落地推进。</li>
+</ul>
+<p><strong>追问</strong></p>
+<ul>
+<li>你和已经做过 AI 商业化平台的人相比，优势是什么？</li>
+<li>入职后你最先能贡献的是什么？</li>
+<li>如果业务落地不如预期，你会怎么调整推进策略？</li>
+</ul>
+<p><strong>追问参考答案</strong></p>
+<ul>
+<li>你和已经做过 AI 商业化平台的人相比，优势是什么？<br>我的优势是底层关键链路治理能力更扎实，尤其是高并发、异步化、隔离、灰度和观测。这些是 AI 网关能否稳定运行的基础，而计费规则是可以在这个基础上快速补齐的。</li>
+<li>入职后你最先能贡献的是什么？<br>最先能贡献的是网关底座建设和稳定性框架，包括统一链路追踪、限流隔离、超时熔断、灰度和可观测性，这些能直接提高平台上线成功率。</li>
+<li>如果业务落地不如预期，你会怎么调整推进策略？<br>我会先收窄目标，围绕一个核心场景形成稳定闭环，比如先把单一 provider、单一模型档的 usage 和预算跑通，再逐步扩展，不会一开始铺太大。</li>
+</ul>
+<p><strong>继续追问</strong></p>
+<ul>
+<li>如果团队更看重“短期上线”，你如何争取必要的基础设施投入？</li>
+<li>你会如何证明自己在前 30 天内就有可见产出？</li>
+<li>为什么你的职业主线和这个岗位是自然延伸？</li>
+</ul>
+<p><strong>继续追问参考答案</strong></p>
+<ul>
+<li>如果团队更看重“短期上线”，你如何争取必要的基础设施投入？<br>我会把基础设施投入和业务风险直接挂钩，比如没有 usage 底账就无法补账，没有链路追踪就无法定位成本异常，让团队看到不投入的代价，而不是只谈技术理想。</li>
+<li>你会如何证明自己在前 30 天内就有可见产出？<br>可以先交付网关主链路设计、usage 事件模型、关键指标看板和限流隔离方案，这些都是可验证、可落地的阶段性成果。</li>
+<li>为什么你的职业主线和这个岗位是自然延伸？<br>因为我过去一直在做核心链路、高并发、网关和稳定性治理，AI 模型网关只是把下游从内部服务扩展到模型服务，再叠加计量和成本治理，这条技术路径是连续的。</li>
+</ul>
+<h2 id="你需要重点准备的补充点"><a href="#你需要重点准备的补充点" class="headerlink" title="你需要重点准备的补充点"></a>你需要重点准备的补充点</h2><ul>
+<li>Token 预估、实际 usage、预冻结、最终结算之间的关系。</li>
+<li>集群限流和单机保护的边界。</li>
+<li>用户显式指定模型、能力级映射、异常 fallback 这三种模型路由场景。</li>
+<li>计量、计费、账单、对账四层边界。</li>
+<li>从 0 到 1 做平台时，先做什么、后做什么。</li>
+</ul>
+<h2 id="面试表达建议"><a href="#面试表达建议" class="headerlink" title="面试表达建议"></a>面试表达建议</h2><ul>
+<li>一面多讲“我做过什么”和“如果迁移到 AI 网关我会怎么做”。</li>
+<li>总监面多讲“平台边界、优先级、风险控制、为什么是我”。</li>
+<li>不要硬说自己已经完整做过 AI 计费平台，重点是把传统网关经验迁移成可信的 AI 网关设计能力。</li>
+</ul>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/interview/" class="category-chain-item">interview</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/interview/">#interview</a>
+      
+        <a href="/tags/gateway/">#gateway</a>
+      
+        <a href="/tags/ai/">#ai</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>AI模型网关及计费平台面试题</div>
+      <div>http://localhost:4000/2026/09/29/interview/AI模型网关及计费平台面试题/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>pc-xie</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2026年9月29日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2026/09/29/interview/%E4%BC%A0%E7%BB%9F%E7%BD%91%E5%85%B3%E9%9D%A2%E8%AF%95%E9%87%8D%E7%82%B9%E4%B8%8E%E8%A1%A5%E5%BC%BA%E6%B8%85%E5%8D%95/" title="传统网关面试重点与补强清单">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">传统网关面试重点与补强清单</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2026/09/24/interview/%E9%9D%A2%E8%AF%95%E5%87%86%E5%A4%87%E5%AF%B9%E8%AF%9D%E7%BA%AA%E8%A6%81/" title="面试准备对话纪要">
+                        <span class="hidden-mobile">面试准备对话纪要</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>
