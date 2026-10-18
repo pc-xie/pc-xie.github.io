@@ -231,7 +231,7 @@
       
       <a class="index-excerpt index-excerpt__noimg" href="/2026/10/18/interview/interview-answers-java-mysql-middleware/" target="_self">
         <div>
-          Java基础JVM1. 简述JVM内存区域划分，堆和元空间的区别？JVM运行时数据区主要包括：程序计数器、虚拟机栈、本地方法栈、堆、方法区。    程序计数器：记录当前线程执行字节码的位置，线程私有。   虚拟机栈：存方法调用的栈帧，包含局部变量表、操作数栈等，线程私有。   本地方法栈：给Native方法服务，线程私有。   堆：存放对象实例和数组，是GC主要管理区域。   方法区：存类元信息、
+          Java基础JVM1. 简述JVM内存区域划分，堆和元空间的区别？JVM运行时内存大致可以分成程序计数器、虚拟机栈、本地方法栈、堆和方法区。程序计数器、虚拟机栈、本地方法栈是线程私有的；堆和方法区是线程共享的。 其中程序计数器可以理解成当前线程执行字节码的位置指示器；虚拟机栈主要存方法调用过程中的栈帧，比如局部变量表、操作数栈这些；本地方法栈是给 Native 方法用的。堆主要存对象实例和数组，也
         </div>
       </a>
 
@@ -239,7 +239,7 @@
         
           <div class="post-meta mr-3">
             <i class="iconfont icon-date"></i>
-            <time datetime="2026-10-18 14:08" pubdate>
+            <time datetime="2026-10-18 22:09" pubdate>
               2026-10-18
             </time>
           </div>
