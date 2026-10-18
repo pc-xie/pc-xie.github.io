@@ -24,7 +24,7 @@
 <meta property="og:description" content="Java基础JVM1. 简述JVM内存区域划分，堆和元空间的区别？JVM运行时数据区主要包括：程序计数器、虚拟机栈、本地方法栈、堆、方法区。    程序计数器：记录当前线程执行字节码的位置，线程私有。   虚拟机栈：存方法调用的栈帧，包含局部变量表、操作数栈等，线程私有。   本地方法栈：给Native方法服务，线程私有。   堆：存放对象实例和数组，是GC主要管理区域。   方法区：存类元信息、">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2026-10-18T06:08:55.591Z">
-<meta property="article:modified_time" content="2026-10-18T06:16:50.223Z">
+<meta property="article:modified_time" content="2026-10-18T13:53:54.134Z">
 <meta property="article:author" content="pc-xie">
 <meta name="twitter:card" content="summary_large_image">
   
@@ -218,7 +218,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          9.1k 字
+          9.4k 字
         
       </span>
     
@@ -229,7 +229,7 @@
         
         
         
-          76 分钟
+          79 分钟
         
       </span>
     
@@ -318,13 +318,13 @@
 <p>它设计成标记接口，是因为这里不需要调用方去实现具体方法，只需要一个“可序列化”的声明能力，序列化逻辑由JVM&#x2F;ObjectOutputStream处理。</p>
 <h3 id="线程池"><a href="#线程池" class="headerlink" title="线程池"></a>线程池</h3><p><strong>5. ThreadPoolExecutor有哪些核心参数？任务提交之后完整执行流程是什么？</strong><br>核心参数：  </p>
 <ul>
-<li><code>corePoolSize</code>：核心线程数  </li>
-<li><code>maximumPoolSize</code>：最大线程数  </li>
-<li><code>keepAliveTime</code>：非核心线程空闲存活时间  </li>
+<li><code>corePoolSize</code>：核心线程数，表示线程池平时长期保留的线程数量。任务提交后，如果当前线程数还没达到核心线程数，线程池会优先创建新线程来执行任务，而不是先进入队列  </li>
+<li><code>maximumPoolSize</code>：最大线程数, 表示线程池最多能创建多少线程。当核心线程都在忙，并且阻塞队列也满了，线程池才会继续创建非核心线程，直到达到这个上限</li>
+<li><code>keepAliveTime</code>：非核心线程空闲存活时间, 超过核心线程数的那些临时线程，在空闲一段时间后会被回收，这样可以避免流量高峰过去之后线程一直占着资源  </li>
 <li><code>unit</code>：时间单位  </li>
-<li><code>workQueue</code>：阻塞队列  </li>
-<li><code>threadFactory</code>：线程工厂  </li>
-<li><code>handler</code>：拒绝策略</li>
+<li><code>workQueue</code>：阻塞队列, 当核心线程都在工作时，新任务会先进入队列排队等待执行。队列类型会直接影响线程池的行为，比如有界队列、无界队列、同步移交队列，效果都不一样</li>
+<li><code>threadFactory</code>：线程工厂, ，负责创建线程。实际开发里通常会自定义它，给线程起一个有业务含义的名字，方便问题排查和监控  </li>
+<li><code>handler</code>：拒绝策略, 当线程数已经达到 maximumPoolSize，并且队列也满了，这时候再来新任务，就会执行拒绝策略，比如直接抛异常、让提交任务的线程自己执行，或者丢弃任</li>
 </ul>
 <p>执行流程：  </p>
 <ol>
